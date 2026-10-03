@@ -60,11 +60,7 @@ function setupDedicatedRole(role) {
   var f2Title = document.getElementById("feature2Title");
   var f2Desc = document.getElementById("feature2Desc");
 
-  var topBadge = document.getElementById("topRegBadge");
-  var topTitle = document.getElementById("topRegTitle");
-  var topDesc = document.getElementById("topRegDesc");
-  var topBtn = document.getElementById("topRegisterBtn");
-
+  var loginBadge = document.getElementById("loginRoleBadge");
   var loginTitle = document.getElementById("loginHeaderTitle");
   var loginSub = document.getElementById("loginHeaderSubtitle");
 
@@ -79,7 +75,7 @@ function setupDedicatedRole(role) {
       brandBadge.innerText = "Workshop Admin";
       brandBadge.className = "badge bg-danger text-uppercase px-2 py-1 mb-2";
     }
-    if (brandHeading) brandHeading.innerText = "Workshop Admin Floor Portal";
+    if (brandHeading) brandHeading.innerText = "Workshop Floor Portal";
     if (brandDesc) brandDesc.innerText = "Sign in to manage mechanic duty rosters, live repair queues, and billing.";
 
     if (f1Title) f1Title.innerText = "Mechanics Duty Floor";
@@ -87,14 +83,10 @@ function setupDedicatedRole(role) {
     if (f2Title) f2Title.innerText = "Inspection Approvals";
     if (f2Desc) f2Desc.innerText = "Report unexpected defects to vehicle owners for instant customer approval.";
 
-    if (topBadge) topBadge.innerText = "New Admin?";
-    if (topTitle) topTitle.innerText = "First Time Workshop Admin?";
-    if (topDesc) topDesc.innerText = "If you have not registered your Admin profile yet, please register first.";
-    if (topBtn) {
-      topBtn.href = "signup.html?role=admin";
-      topBtn.innerHTML = '<i class="bi bi-person-plus-fill me-1"></i> Register as Admin &rarr;';
+    if (loginBadge) {
+      loginBadge.innerText = "Workshop Admin Portal";
+      loginBadge.className = "badge bg-danger-subtle text-danger fw-bold text-uppercase px-2 py-1 mb-2";
     }
-
     if (loginTitle) loginTitle.innerText = "Workshop Admin Sign In";
     if (loginSub) loginSub.innerText = "Enter your registered Admin email and password to access the floor console.";
 
@@ -113,7 +105,7 @@ function setupDedicatedRole(role) {
       brandBadge.innerText = "Vehicle Customer";
       brandBadge.className = "badge bg-primary text-uppercase px-2 py-1 mb-2";
     }
-    if (brandHeading) brandHeading.innerText = "Vehicle Service & Repair Portal";
+    if (brandHeading) brandHeading.innerText = "Vehicle Service Portal";
     if (brandDesc) brandDesc.innerText = "Sign in to follow live repairs, review mechanic findings, and view bills.";
 
     if (f1Title) f1Title.innerText = "Live Repair Stages";
@@ -121,14 +113,10 @@ function setupDedicatedRole(role) {
     if (f2Title) f2Title.innerText = "Defect Approval";
     if (f2Desc) f2Desc.innerText = "Accept or decline extra mechanic findings directly from your phone or PC.";
 
-    if (topBadge) topBadge.innerText = "New Customer?";
-    if (topTitle) topTitle.innerText = "First Time Vehicle Customer?";
-    if (topDesc) topDesc.innerText = "If you have not created your account yet, please register first.";
-    if (topBtn) {
-      topBtn.href = "signup.html?role=customer";
-      topBtn.innerHTML = '<i class="bi bi-person-plus-fill me-1"></i> Register as Customer &rarr;';
+    if (loginBadge) {
+      loginBadge.innerText = "Vehicle Customer Portal";
+      loginBadge.className = "badge bg-primary-subtle text-primary fw-bold text-uppercase px-2 py-1 mb-2";
     }
-
     if (loginTitle) loginTitle.innerText = "Vehicle Customer Sign In";
     if (loginSub) loginSub.innerText = "Enter your registered customer email and password to view your vehicle.";
 
@@ -233,7 +221,7 @@ if (signinForm) {
 
     if (matchedUser == null) {
       var roleName = (selectedRole === "admin") ? "Workshop Admin" : "Vehicle Customer";
-      showError("Invalid email or password for " + roleName + ". If you have not registered yet, please click 'Register First' above.");
+      showError("Invalid email or password for " + roleName + ". If you have not registered yet, please click 'Register here' below.");
       passField.focus();
       return;
     }

@@ -35,8 +35,8 @@ body.admin-body {
 
 .adm-tab-link.active {
   color: #ffffff !important;
-  background-color: rgba(230, 51, 18, 0.2);
-  border-bottom: 2px solid #e63312;
+  background-color: rgba(220, 38, 38, 0.2);
+  border-bottom: 2px solid var(--mc-primary);
 }
 
 /* Stat KPI Cards (Top 4 Summary Metric Boxes) */
@@ -121,8 +121,8 @@ body.admin-body {
 }
 
 .filter-pill.active {
-  background-color: #e63312;
-  border-color: #e63312;
+  background-color: var(--mc-primary);
+  border-color: var(--mc-primary);
   color: #ffffff;
 }
 

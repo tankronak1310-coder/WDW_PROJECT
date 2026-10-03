@@ -1,21 +1,23 @@
 /* ================================================================
    style.css — MechControl Design System & Shared Styles
    Consistent, minimal, high-contrast, professional across all pages.
+   Refined color palette for comfortable, long-duration work.
    ================================================================ */
 
 :root {
-  /* Brand Palette */
-  --mc-primary:       #e63312;       /* MechControl Engine Red */
-  --mc-primary-hover: #c4270b;       /* Darker red on hover */
+  /* Brand Palette (Refined Precision Crimson & Slate) */
+  --mc-primary:       #dc2626;       /* MechControl Precision Red */
+  --mc-primary-hover: #b91c1c;       /* Darker ruby red on hover */
   --mc-dark:          #0f172a;       /* Deep slate navy header */
-  --mc-surface:       #f8fafc;       /* Crisp clean light slate background */
+  --mc-surface:       #f8fafc;       /* Soothing clean light slate canvas */
   --mc-card:          #ffffff;       /* Pure white card surface */
   --mc-border:        #e2e8f0;       /* Modern subtle border */
-  --mc-text:          #1e293b;       /* High-contrast readable slate text */
-  --mc-muted:         #64748b;       /* Secondary text */
-  --mc-success:       #10b981;       /* Green for ready/success */
-  --mc-warning:       #f59e0b;       /* Amber for inspection findings */
-  --mc-focus:         rgba(230, 51, 18, 0.25);
+  --mc-border-hover:  #cbd5e1;       /* Border on focus/hover */
+  --mc-text:          #0f172a;       /* High-contrast readable slate text */
+  --mc-muted:         #64748b;       /* Secondary neutral text */
+  --mc-success:       #059669;       /* Emerald for ready/success */
+  --mc-warning:       #d97706;       /* Amber for inspection findings */
+  --mc-focus:         rgba(220, 38, 38, 0.15);
 
   /* Aliases for backwards compatibility */
   --gms-primary:      var(--mc-primary);
@@ -32,12 +34,13 @@
 body {
   background-color: var(--mc-surface);
   color: var(--mc-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
   margin: 0;
   padding: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ================================================================
@@ -47,8 +50,8 @@ body {
   background-color: var(--mc-dark);
   height: 64px;
   padding: 0 1.5rem;
-  border-bottom: 3px solid var(--mc-primary);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-bottom: 2px solid var(--mc-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   position: sticky;
@@ -59,8 +62,8 @@ body {
 
 .mc-brand, .gms-nav-brand, .gms-navbar-brand {
   color: #ffffff !important;
-  font-weight: 800;
-  font-size: 1.3rem;
+  font-weight: 700;
+  font-size: 1.25rem;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -71,13 +74,13 @@ body {
 
 .mc-brand i, .gms-nav-brand i, .gms-navbar-brand i {
   color: var(--mc-primary);
-  font-size: 1.45rem;
+  font-size: 1.35rem;
 }
 
 .mc-brand-badge {
-  background-color: rgba(230, 51, 18, 0.2);
-  border: 1px solid rgba(230, 51, 18, 0.5);
-  color: #ff765e;
+  background-color: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.5);
+  color: #fca5a5;
   font-size: 0.72rem;
   padding: 0.2rem 0.55rem;
   border-radius: 4px;
@@ -86,8 +89,8 @@ body {
 }
 
 .mc-accent-bar, .gms-accent-bar {
-  height: 3px;
-  background: linear-gradient(90deg, var(--mc-primary) 0%, #ff6b4a 100%);
+  height: 2px;
+  background: linear-gradient(90deg, var(--mc-primary) 0%, #f43f5e 100%);
   width: 100%;
 }
 
@@ -105,15 +108,15 @@ body {
 .auth-split-card {
   background: #ffffff;
   border: 1px solid var(--mc-border);
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   width: 100%;
-  max-width: 980px;
-  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+  max-width: 960px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
 }
 
 .auth-brand-side {
-  background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+  background: linear-gradient(150deg, #0f172a 0%, #1e293b 100%);
   color: #ffffff;
   padding: 3rem 2.5rem;
   display: flex;
@@ -138,8 +141,8 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: rgba(230, 51, 18, 0.15);
-  color: var(--mc-primary);
+  background: rgba(220, 38, 38, 0.15);
+  color: #f87171;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,7 +151,7 @@ body {
 }
 
 /* ================================================================
-   3. FORMS & INPUTS (Consistent Styling)
+   3. FORMS & INPUTS (Crisp, High-Legibility Styling)
    ================================================================ */
 .form-label {
   font-size: 0.85rem;
@@ -158,9 +161,9 @@ body {
 }
 
 .form-control, .form-select {
-  border: 1px solid var(--mc-border);
-  border-radius: 6px;
-  padding: 0.62rem 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
   font-size: 0.92rem;
   color: var(--mc-text);
   background-color: #ffffff;
@@ -173,31 +176,32 @@ body {
   outline: none;
 }
 
-/* Eye Toggle Button */
+.input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .btn-eye {
-  border: 1px solid var(--mc-border);
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
   border-left: none;
-  background: #ffffff;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
   color: var(--mc-muted);
-  border-radius: 0 6px 6px 0;
   padding: 0 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: color 0.15s ease;
+  transition: color 0.15s;
 }
 
 .btn-eye:hover {
-  color: var(--mc-primary);
+  color: var(--mc-text);
 }
 
-.btn-eye:focus {
-  outline: 2px solid var(--mc-primary);
-  outline-offset: 1px;
-}
-
-/* Primary Button */
+/* ================================================================
+   4. BUTTONS & MICRO-INTERACTIONS
+   =============================================================== */
 .btn-mc-primary, .btn-gms-primary {
   width: 100%;
   padding: 0.72rem 1.25rem;
@@ -205,170 +209,57 @@ body {
   border: 1px solid var(--mc-primary);
   color: #ffffff !important;
   font-weight: 600;
-  font-size: 0.95rem;
-  border-radius: 6px;
+  font-size: 0.92rem;
+  border-radius: 8px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-mc-primary:hover, .btn-gms-primary:hover {
   background: var(--mc-primary-hover);
   border-color: var(--mc-primary-hover);
-  box-shadow: 0 4px 14px rgba(230, 51, 18, 0.3);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.28);
+  transform: translateY(-1px);
 }
 
 .btn-mc-primary:active, .btn-gms-primary:active {
-  transform: translateY(1px);
+  transform: translateY(0);
 }
 
-/* Role Selector Tabs (Admin vs Customer) */
-.role-tabs {
-  display: flex;
-  border: 1.5px solid var(--mc-border);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-  background-color: #ffffff;
+/* Interactive Category Cards (index.html) */
+.hover-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 1px solid var(--mc-border) !important;
 }
 
-.role-tab-btn {
-  flex: 1;
-  padding: 0.6rem 0.5rem;
-  border: none;
+.hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Card Containers */
+.mc-card, .gms-card {
   background: #ffffff;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--mc-muted);
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
+  border: 1px solid var(--mc-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-.role-tab-btn:not(:last-child) {
-  border-right: 1.5px solid var(--mc-border);
-}
-
-.role-tab-btn.active {
-  background: var(--mc-primary);
-  color: #ffffff;
-}
-
-.role-tab-btn:hover:not(.active) {
-  background: #fff3f1;
-  color: var(--mc-primary);
-}
-
-/* Role Pills for Registration Form */
-.role-pills {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.role-pill-option {
-  flex: 1;
-  position: relative;
-}
-
-.role-pill-option input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.role-pill-option label {
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-  padding: 0.62rem 0.5rem;
-  border: 1.5px solid var(--mc-border);
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--mc-muted);
-  background: #ffffff;
-  transition: all 0.2s ease;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-}
-
-.role-pill-option input[type="radio"]:checked + label {
-  background: var(--mc-primary);
-  border-color: var(--mc-primary);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(230, 51, 18, 0.25);
-}
-
-.role-pill-option label:hover {
-  border-color: var(--mc-primary);
-  color: var(--mc-primary);
-}
-
-/* Divider ("or" line) */
-.gms-divider {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--mc-muted);
-  font-size: 0.8rem;
-  margin: 1.25rem 0;
-}
-
-.gms-divider::before,
-.gms-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--mc-border);
-}
-
-/* Validation Feedback */
-.field-invalid .invalid-feedback {
-  display: block;
-}
-
-.field-invalid .form-control,
-.field-invalid .form-select,
-.field-invalid .btn-eye {
-  border-color: #dc3545;
-}
-
-.field-valid .form-control,
-.field-valid .form-select {
-  border-color: #198754;
-}
-
-/* Success & Alert States */
-.gms-success, .mc-success {
-  display: none;
-  text-align: center;
-  padding: 1.5rem 0.5rem;
-}
-
-.success-icon {
-  font-size: 3.5rem;
-  color: var(--mc-success);
-}
-
+/* Alerts & Notifications */
 .gms-alert {
   display: none;
   background-color: #fef2f2;
-  border-left: 4px solid #dc3545;
+  border: 1px solid #fecaca;
   color: #991b1b;
+  border-radius: 8px;
   padding: 0.75rem 1rem;
-  border-radius: 6px;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   margin-bottom: 1.25rem;
   align-items: center;
   gap: 0.5rem;
@@ -376,6 +267,17 @@ body {
 
 .gms-alert.visible {
   display: flex;
+}
+
+.mc-success, .gms-success {
+  display: none;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: var(--mc-success);
 }
 
 /* Footer */
@@ -399,15 +301,4 @@ footer, .mc-footer {
   .auth-form-side {
     padding: 2rem 1.5rem;
   }
-}
-
-/* Interactive Category Cards */
-.hover-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  border: 2px solid transparent !important;
-}
-.hover-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12) !important;
-  border-color: var(--mc-primary) !important;
 }

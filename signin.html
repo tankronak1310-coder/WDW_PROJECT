@@ -32,20 +32,20 @@
         <span>MechControl</span>
       </a>
       <a href="index.html" class="text-white-50 text-decoration-none small">
-        <i class="bi bi-arrow-left me-1"></i> <span class="text-white fw-bold">Change Category</span>
+        <i class="bi bi-arrow-left me-1"></i> <span class="text-white fw-bold">Change Portal</span>
       </a>
     </div>
   </header>
   <div class="mc-accent-bar" role="presentation"></div>
 
   <!-- ============================================================
-       MAIN AUTH WRAPPER (Horizontal Split-Screen)
+       MAIN AUTH WRAPPER (Minimal Horizontal Split-Screen)
        ============================================================ -->
   <main class="auth-wrapper">
     <div class="auth-split-card">
       <div class="row g-0">
 
-        <!-- LEFT COLUMN: Brand Panel (Dynamically adapted to category) -->
+        <!-- LEFT COLUMN: Brand Panel -->
         <div class="col-lg-5 auth-brand-side">
           <div>
             <div class="d-flex align-items-center gap-2 mb-3">
@@ -54,7 +54,7 @@
             </div>
             
             <span class="badge bg-danger text-uppercase px-2 py-1 mb-2" id="brandRoleBadge">Portal</span>
-            <h2 class="fw-bold mb-3" id="brandHeading">Sign In to Your Portal</h2>
+            <h2 class="fw-bold mb-3" id="brandHeading">Sign In to MechControl</h2>
             <p class="text-white-50 small mb-4" id="brandDesc">
               Enter your registered Email ID and Password to access your dashboard.
             </p>
@@ -63,7 +63,7 @@
               <div class="auth-feature-icon" id="feature1Icon"><i class="bi bi-shield-lock-fill"></i></div>
               <div>
                 <h6 class="fw-bold text-white mb-0 small" id="feature1Title">Verified Access</h6>
-                <p class="text-white-50 small mb-0" id="feature1Desc">Secure authentication protecting garage and repair data.</p>
+                <p class="text-white-50 small mb-0" id="feature1Desc">Secure authentication protecting workshop and repair data.</p>
               </div>
             </div>
 
@@ -82,7 +82,7 @@
         </div>
 
         <!-- RIGHT COLUMN: Sign In Form Side -->
-        <div class="col-lg-7 auth-form-side">
+        <div class="col-lg-7 auth-form-side d-flex flex-column justify-content-center">
 
           <!-- Success Alert Screen -->
           <div class="mc-success" id="successMsg" role="alert" tabindex="-1">
@@ -94,35 +94,17 @@
             </div>
           </div>
 
-          <!-- ========================================================
-               TOP REGISTRATION NOTICE & BUTTON (Professional Banner)
-               As requested: Top of login page write msg that if not registered
-               then first register and show register button!
-               ======================================================== -->
-          <div class="p-3 mb-4 rounded-3 border bg-light d-flex align-items-center justify-content-between flex-wrap gap-2" id="topRegisterNotice">
-            <div>
-              <div class="d-flex align-items-center gap-1 mb-1">
-                <span class="badge bg-danger-subtle text-danger fw-bold" id="topRegBadge">New User?</span>
-                <strong class="text-dark small" id="topRegTitle">First Time at MechControl?</strong>
-              </div>
-              <p class="mb-0 text-muted small" id="topRegDesc">
-                If you have not registered your details yet, please register first to create your account.
-              </p>
-            </div>
-            <a href="signup.html" class="btn btn-sm btn-mc-primary fw-semibold px-3 py-2 text-nowrap" id="topRegisterBtn">
-              <i class="bi bi-person-plus-fill me-1"></i> Register First &rarr;
-            </a>
-          </div>
-
           <!-- Sign-in form -->
           <form id="signinForm" novalidate aria-label="Sign in form">
 
-            <div class="mb-3">
+            <!-- Heading & Context -->
+            <div class="mb-4">
+              <span class="badge bg-danger-subtle text-danger fw-bold text-uppercase px-2 py-1 mb-2" id="loginRoleBadge">Workshop Admin</span>
               <h3 class="fw-bold text-dark mb-1" id="loginHeaderTitle">Sign In</h3>
-              <p class="text-muted small" id="loginHeaderSubtitle">Enter your registered email and password to continue.</p>
+              <p class="text-muted small mb-0" id="loginHeaderSubtitle">Enter your registered email and password to continue.</p>
             </div>
 
-            <!-- Role Hidden Input (No category selection list in form!) -->
+            <!-- Role Hidden Input -->
             <input type="hidden" id="selectedRole" value="customer" />
 
             <!-- Error Banner -->
@@ -171,7 +153,6 @@
                 Not registered yet? <a href="signup.html" id="bottomRegisterLink" class="fw-bold text-danger text-decoration-none">Register here &rarr;</a>
               </div>
               <div class="text-secondary" id="switchCategoryWrapper">
-                <!-- Dynamically populated: e.g. "Looking for Workshop Admin Login? Switch here" -->
                 <span id="switchCategoryPrompt">Looking for Workshop Admin Login?</span>
                 <a href="signin.html?role=admin" id="switchCategoryLink" class="fw-bold text-dark text-decoration-none ms-1">Switch to Admin Portal &rarr;</a>
               </div>

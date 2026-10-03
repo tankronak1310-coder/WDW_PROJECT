@@ -51,6 +51,7 @@ function selectRole(role) {
   var tabAdmin = document.getElementById("tabAdmin");
   var tabCustomer = document.getElementById("tabCustomer");
   var roleInput = document.getElementById("selectedRole");
+  var regLink = document.getElementById("registerRedirectLink");
 
   if (role === "customer") {
     if (tabAdmin) {
@@ -62,6 +63,7 @@ function selectRole(role) {
       tabCustomer.setAttribute("aria-selected", "true");
     }
     if (roleInput) roleInput.value = "customer";
+    if (regLink) regLink.href = "signup.html?role=customer";
   } else {
     if (tabCustomer) {
       tabCustomer.classList.remove("active");
@@ -72,6 +74,7 @@ function selectRole(role) {
       tabAdmin.setAttribute("aria-selected", "true");
     }
     if (roleInput) roleInput.value = "admin";
+    if (regLink) regLink.href = "signup.html?role=admin";
   }
 
   hideError();

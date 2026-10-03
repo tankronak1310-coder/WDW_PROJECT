@@ -400,3 +400,14 @@ footer, .mc-footer {
     padding: 2rem 1.5rem;
   }
 }
+
+/* Interactive Category Cards */
+.hover-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 2px solid transparent !important;
+}
+.hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12) !important;
+  border-color: var(--mc-primary) !important;
+}

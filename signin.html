@@ -31,8 +31,8 @@
         <i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
         <span>MechControl</span>
       </a>
-      <a href="signup.html" class="text-white-50 text-decoration-none small">
-        New here? <span class="text-white fw-bold">Register First &rarr;</span>
+      <a href="index.html" class="text-white-50 text-decoration-none small">
+        <i class="bi bi-arrow-left me-1"></i> <span class="text-white fw-bold">Categories</span>
       </a>
     </div>
   </header>
@@ -131,7 +131,7 @@
               <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
               <input
                 type="email" id="email" name="email"
-                class="form-control" placeholder="e.g. admin@mechcontrol.com"
+                class="form-control" placeholder="you@example.com"
                 autocomplete="email" required
               />
               <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
@@ -162,7 +162,7 @@
 
             <!-- Bottom Redirect Link -->
             <div class="mt-4 pt-2 border-top text-center small text-muted">
-              Don't have an account yet? <a href="signup.html" class="fw-bold text-danger text-decoration-none">Register first &rarr;</a>
+              Don't have an account yet? <a href="signup.html" id="registerRedirectLink" class="fw-bold text-danger text-decoration-none">Register first &rarr;</a>
             </div>
 
           </form>

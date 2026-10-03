@@ -37,146 +37,137 @@
   <div class="mc-accent-bar" role="presentation"></div>
 
   <!-- ============================================================
-       MAIN CONTENT: STEP 1 - CHOOSE CATEGORY FIRST
+       MAIN CONTENT: TWO-STEP CATEGORY FIRST FLOW
        ============================================================ -->
   <main class="container py-5 my-auto">
 
-    <!-- Top Headline -->
-    <div class="text-center mb-5">
-      <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold text-uppercase small mb-2">
-        <i class="bi bi-layers-fill me-1"></i> Step 1: Select Your Category
-      </span>
-      <h1 class="fw-bold text-dark mt-2 mb-2">Welcome to MechControl</h1>
-      <p class="text-muted mx-auto" style="max-width: 650px;">
-        Please select your category below. If you are a new user or admin, register your details first. If you are already registered, log in directly with your email and password.
-      </p>
+    <!-- ========================================================
+         STEP 1: CHOOSE YOUR CATEGORY (Admin or Customer)
+         ======================================================== -->
+    <div id="stepCategory">
+      <!-- Title -->
+      <div class="text-center mb-5">
+        <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold text-uppercase small mb-2">
+          <i class="bi bi-person-badge-fill me-1"></i> Step 1: Select Your Category
+        </span>
+        <h1 class="fw-bold text-dark mt-2 mb-2">Welcome to MechControl</h1>
+        <p class="text-muted mx-auto" style="max-width: 600px;">
+          Please choose your category below to proceed with registration or sign-in.
+        </p>
+      </div>
+
+      <!-- Category Selection Cards -->
+      <div class="row g-4 justify-content-center">
+
+        <!-- CATEGORY CARD A: Workshop Admin -->
+        <div class="col-lg-5 col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column text-center p-4 bg-white hover-card" style="cursor: pointer;" onclick="chooseCategory('admin')">
+            <div class="p-3 bg-danger bg-opacity-10 text-danger rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-shield-shaded fs-1"></i>
+            </div>
+            <span class="badge bg-danger text-uppercase px-2 py-1 mx-auto mb-2">Category A</span>
+            <h3 class="fw-bold text-dark mb-1">Workshop Admin</h3>
+            <p class="text-muted small mb-4">
+              For garage owners, supervisors, and floor managers managing repair queues, mechanics, and customer billing.
+            </p>
+            <div class="mt-auto">
+              <button type="button" class="btn btn-mc-primary w-100 py-2 fw-semibold" onclick="chooseCategory('admin'); event.stopPropagation();">
+                Select Workshop Admin &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY CARD B: Vehicle Customer -->
+        <div class="col-lg-5 col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column text-center p-4 bg-white hover-card" style="cursor: pointer;" onclick="chooseCategory('customer')">
+            <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-car-front-fill fs-1"></i>
+            </div>
+            <span class="badge bg-primary text-uppercase px-2 py-1 mx-auto mb-2">Category B</span>
+            <h3 class="fw-bold text-dark mb-1">Vehicle Customer</h3>
+            <p class="text-muted small mb-4">
+              For vehicle owners tracking real-time repairs, inspecting mechanic findings, and booking service appointments.
+            </p>
+            <div class="mt-auto">
+              <button type="button" class="btn btn-outline-dark w-100 py-2 fw-semibold" onclick="chooseCategory('customer'); event.stopPropagation();">
+                Select Vehicle Customer &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <!-- Category Selection Cards (Horizontal Grid) -->
-    <div class="row g-4 justify-content-center">
-
-      <!-- ========================================================
-           CATEGORY 1: WORKSHOP ADMIN
-           ======================================================== -->
-      <div class="col-lg-5 col-md-6">
-        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
-          <!-- Card Header Banner -->
-          <div class="p-4 bg-dark text-white d-flex align-items-center justify-content-between">
-            <div>
-              <span class="badge bg-danger text-uppercase px-2 py-1 mb-2">Category A</span>
-              <h3 class="fw-bold mb-0 text-white">Workshop Admin</h3>
-              <small class="text-white-50">Garage Owners, Supervisors & Floor Managers</small>
-            </div>
-            <div class="p-3 bg-danger bg-opacity-25 rounded-circle text-danger fs-2">
-              <i class="bi bi-shield-shaded"></i>
-            </div>
-          </div>
-
-          <!-- Card Body -->
-          <div class="p-4 d-flex flex-column flex-grow-1 bg-white">
-            <h6 class="fw-bold text-dark mb-3">Admin Portal Capabilities:</h6>
-            <ul class="list-unstyled text-muted small mb-4 flex-grow-1">
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>Manage mechanics roster & assign live repair jobs.</span>
-              </li>
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>Update vehicle repair progress percentage & stages.</span>
-              </li>
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>Report unexpected defects found during inspection to customer.</span>
-              </li>
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>Generate itemized digital bills & track workshop revenue.</span>
-              </li>
-            </ul>
-
-            <!-- Admin Actions: Register First -> Login -->
-            <div class="p-3 bg-light rounded-3 border">
-              <div class="text-muted small fw-bold mb-2 text-uppercase">Admin Access Flow:</div>
-              <a href="signup.html?role=admin" class="btn btn-mc-primary w-100 py-2 mb-2">
-                <i class="bi bi-person-plus-fill me-1"></i> 1. Register as Admin (New)
-              </a>
-              <a href="signin.html?role=admin" class="btn btn-outline-dark w-100 py-2 fw-semibold">
-                <i class="bi bi-box-arrow-in-right me-1"></i> 2. Admin Login (Already Registered)
-              </a>
-            </div>
-          </div>
+    <!-- ========================================================
+         STEP 2: REGISTER OR LOGIN (According to Selected Category)
+         ======================================================== -->
+    <div id="stepAction" class="d-none">
+      
+      <!-- Back / Change Category Header -->
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 p-3 bg-white rounded-3 border shadow-sm mx-auto" style="max-width: 850px;">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-danger px-2 py-1" id="activeCategoryBadge">Workshop Admin</span>
+          <span class="text-dark fw-bold" id="activeCategoryTitle">Workshop Admin Portal</span>
         </div>
+        <button class="btn btn-sm btn-outline-secondary" onclick="resetCategory()">
+          <i class="bi bi-arrow-left me-1"></i> Change Category
+        </button>
       </div>
 
-      <!-- ========================================================
-           CATEGORY 2: VEHICLE CUSTOMER
-           ======================================================== -->
-      <div class="col-lg-5 col-md-6">
-        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
-          <!-- Card Header Banner -->
-          <div class="p-4 bg-dark text-white d-flex align-items-center justify-content-between">
-            <div>
-              <span class="badge bg-primary text-uppercase px-2 py-1 mb-2">Category B</span>
-              <h3 class="fw-bold mb-0 text-white">Vehicle Customer</h3>
-              <small class="text-white-50">Car, Bike & Scooter Owners</small>
-            </div>
-            <div class="p-3 bg-primary bg-opacity-25 rounded-circle text-primary fs-2">
-              <i class="bi bi-car-front-fill"></i>
-            </div>
-          </div>
+      <div class="text-center mb-4">
+        <h2 class="fw-bold text-dark mb-1">Proceed as <span id="categoryNameText" class="text-danger">Workshop Admin</span></h2>
+        <p class="text-muted small">Are you a new user or returning user? Choose an option below:</p>
+      </div>
 
-          <!-- Card Body -->
-          <div class="p-4 d-flex flex-column flex-grow-1 bg-white">
-            <h6 class="fw-bold text-dark mb-3">Customer Portal Capabilities:</h6>
-            <ul class="list-unstyled text-muted small mb-4 flex-grow-1">
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>Track live repair progress & estimated completion time.</span>
-              </li>
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>See assigned mechanic details and workshop admin supervisor.</span>
-              </li>
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>Accept or decline additional mechanic findings directly.</span>
-              </li>
-              <li class="mb-2 d-flex align-items-start gap-2">
-                <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                <span>Schedule service appointments and review total itemized bills.</span>
-              </li>
-            </ul>
+      <!-- Action Choice Cards (Register vs Login) -->
+      <div class="row g-4 justify-content-center mx-auto" style="max-width: 850px;">
 
-            <!-- Customer Actions: Register First -> Login -->
-            <div class="p-3 bg-light rounded-3 border">
-              <div class="text-muted small fw-bold mb-2 text-uppercase">Customer Access Flow:</div>
-              <a href="signup.html?role=customer" class="btn btn-mc-primary w-100 py-2 mb-2">
-                <i class="bi bi-person-plus-fill me-1"></i> 1. Register as Customer (New)
-              </a>
-              <a href="signin.html?role=customer" class="btn btn-outline-dark w-100 py-2 fw-semibold">
-                <i class="bi bi-box-arrow-in-right me-1"></i> 2. Customer Login (Already Registered)
-              </a>
+        <!-- Option 1: Register (New User) -->
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <span class="badge bg-danger mb-2">Step 1: First Time</span>
+                <h4 class="fw-bold text-dark mb-1">Register Account</h4>
+              </div>
+              <div class="p-2 bg-danger-subtle text-danger rounded-circle fs-4">
+                <i class="bi bi-person-plus-fill"></i>
+              </div>
             </div>
+            <p class="text-muted small mb-4 flex-grow-1">
+              If you have never used MechControl before, enter your details once to create your registered account.
+            </p>
+            <a href="signup.html" id="btnRegisterLink" class="btn btn-mc-primary w-100 py-2">
+              <i class="bi bi-person-plus-fill me-1"></i> Register as <span class="role-label">Admin</span>
+            </a>
           </div>
         </div>
+
+        <!-- Option 2: Sign In (Returning User) -->
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <span class="badge bg-secondary mb-2">Step 2: Returning User</span>
+                <h4 class="fw-bold text-dark mb-1">Sign In</h4>
+              </div>
+              <div class="p-2 bg-secondary-subtle text-secondary rounded-circle fs-4">
+                <i class="bi bi-box-arrow-in-right"></i>
+              </div>
+            </div>
+            <p class="text-muted small mb-4 flex-grow-1">
+              If you already registered your details once, simply sign in with your registered email and password.
+            </p>
+            <a href="signin.html" id="btnSignInLink" class="btn btn-outline-dark w-100 py-2 fw-semibold">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Sign In as <span class="role-label">Admin</span>
+            </a>
+          </div>
+        </div>
+
       </div>
 
-    </div>
-
-    <!-- Testing Notice (For User Testing - Plain informative guidance) -->
-    <div class="mt-5 p-3 rounded-3 bg-white border text-center mx-auto" style="max-width: 750px;">
-      <div class="small text-muted mb-1">
-        <i class="bi bi-info-circle-fill text-primary me-1"></i>
-        <strong>Testing Credentials Guide:</strong>
-      </div>
-      <div class="row g-2 justify-content-center small text-secondary">
-        <div class="col-sm-6 text-sm-end">
-          <span class="fw-bold text-dark">Admin:</span> <code>admin@mechcontrol.com</code> | Pass: <code>admin</code>
-        </div>
-        <div class="col-sm-6 text-sm-start">
-          <span class="fw-bold text-dark">Customer:</span> <code>customer@mechcontrol.com</code> | Pass: <code>customer</code>
-        </div>
-      </div>
     </div>
 
   </main>
@@ -196,6 +187,64 @@
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"
   ></script>
+
+  <!-- Category Flow Logic (Basic Vanilla JS) -->
+  <script>
+    // Choose Category: switches from Step 1 to Step 2
+    function chooseCategory(role) {
+      var step1 = document.getElementById("stepCategory");
+      var step2 = document.getElementById("stepAction");
+
+      if (step1) step1.classList.add("d-none");
+      if (step2) step2.classList.remove("d-none");
+
+      var badgeEl = document.getElementById("activeCategoryBadge");
+      var titleEl = document.getElementById("activeCategoryTitle");
+      var nameTextEl = document.getElementById("categoryNameText");
+      var regBtn = document.getElementById("btnRegisterLink");
+      var signBtn = document.getElementById("btnSignInLink");
+      var labels = document.querySelectorAll(".role-label");
+
+      var displayRoleName = (role === "admin") ? "Workshop Admin" : "Vehicle Customer";
+      var shortLabel = (role === "admin") ? "Admin" : "Customer";
+
+      if (badgeEl) {
+        badgeEl.innerText = displayRoleName;
+        badgeEl.className = "badge px-2 py-1 " + (role === "admin" ? "bg-danger" : "bg-primary");
+      }
+      if (titleEl) titleEl.innerText = displayRoleName + " Access";
+      if (nameTextEl) {
+        nameTextEl.innerText = displayRoleName;
+        nameTextEl.className = (role === "admin" ? "text-danger" : "text-primary");
+      }
+
+      for (var i = 0; i < labels.length; i++) {
+        labels[i].innerText = shortLabel;
+      }
+
+      // Update Links to point to appropriate role
+      if (regBtn) regBtn.href = "signup.html?role=" + role;
+      if (signBtn) signBtn.href = "signin.html?role=" + role;
+    }
+
+    // Reset back to Step 1: Category selection
+    function resetCategory() {
+      var step1 = document.getElementById("stepCategory");
+      var step2 = document.getElementById("stepAction");
+
+      if (step2) step2.classList.add("d-none");
+      if (step1) step1.classList.remove("d-none");
+    }
+
+    // Check if URL has ?role= parameter
+    window.onload = function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var role = urlParams.get("role");
+      if (role === "admin" || role === "customer") {
+        chooseCategory(role);
+      }
+    };
+  </script>
 
 </body>
 </html>

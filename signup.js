@@ -46,6 +46,14 @@ function ensureDefaultUsersExist() {
   localStorage.setItem("gms_users", JSON.stringify(users));
 }
 
+// Update the sign-in link at bottom
+function updateSignLink(role) {
+  var link = document.getElementById("signinRedirectLink");
+  if (link) {
+    link.href = "signin.html?role=" + role;
+  }
+}
+
 // Pre-select category based on URL query parameter (e.g. signup.html?role=admin)
 window.onload = function() {
   ensureDefaultUsersExist();
@@ -56,9 +64,13 @@ window.onload = function() {
   if (roleParam === "admin") {
     var adminRadio = document.getElementById("roleAdmin");
     if (adminRadio) adminRadio.checked = true;
+    updateSignLink("admin");
   } else if (roleParam === "customer") {
     var custRadio = document.getElementById("roleCustomer");
     if (custRadio) custRadio.checked = true;
+    updateSignLink("customer");
+  } else {
+    updateSignLink("customer");
   }
 };
 

@@ -31,8 +31,8 @@
         <i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
         <span>MechControl</span>
       </a>
-      <a href="signin.html" class="text-white-50 text-decoration-none small">
-        Already registered? <span class="text-white fw-bold">Sign In &rarr;</span>
+      <a href="index.html" class="text-white-50 text-decoration-none small">
+        <i class="bi bi-arrow-left me-1"></i> <span class="text-white fw-bold">Categories</span>
       </a>
     </div>
   </header>
@@ -52,7 +52,7 @@
               <i class="bi bi-gear-wide-connected text-danger fs-3"></i>
               <span class="fs-4 fw-bold tracking-tight text-white">MechControl</span>
             </div>
-            <h2 class="fw-bold mb-3">Step 1: Register Account</h2>
+            <h2 class="fw-bold mb-3">Register Account</h2>
             <p class="text-white-50 small mb-4">
               Enter your details once to register. Once registered, you will sign in using just your Email ID and Password.
             </p>
@@ -111,11 +111,11 @@
               <label class="form-label">Account Category <span class="text-danger">*</span></label>
               <div class="role-pills">
                 <div class="role-pill-option">
-                  <input type="radio" id="roleCustomer" name="role" value="customer" checked />
+                  <input type="radio" id="roleCustomer" name="role" value="customer" checked onchange="updateSignLink('customer')" />
                   <label for="roleCustomer"><i class="bi bi-person-fill"></i> Vehicle Customer</label>
                 </div>
                 <div class="role-pill-option">
-                  <input type="radio" id="roleAdmin" name="role" value="admin" />
+                  <input type="radio" id="roleAdmin" name="role" value="admin" onchange="updateSignLink('admin')" />
                   <label for="roleAdmin"><i class="bi bi-shield-lock-fill"></i> Workshop Admin</label>
                 </div>
               </div>
@@ -193,7 +193,7 @@
 
             <!-- Bottom Redirect Link -->
             <div class="mt-4 pt-2 border-top text-center small text-muted">
-              Already registered? <a href="signin.html" class="fw-bold text-danger text-decoration-none">Sign In here &rarr;</a>
+              Already registered? <a href="signin.html" id="signinRedirectLink" class="fw-bold text-danger text-decoration-none">Sign In here &rarr;</a>
             </div>
 
           </form>

@@ -1,241 +1,233 @@
 /* ============================================================
-   signin.js — MechControl Sign-In Logic
-   Handles: role tab switch, validation, localStorage login check
+   signin.js — MechControl Sign In Logic
+   Written in Basic, Easy-to-Understand Vanilla JavaScript
    ============================================================ */
 
-// ── DOM References ──────────────────────────────────────────
-const form        = document.getElementById('signinForm');
-const submitBtn   = document.getElementById('submitBtn');
-const successMsg  = document.getElementById('successMsg');
-const errorBanner = document.getElementById('errorBanner');
-const errorMsgEl  = document.getElementById('errorMsg');
-const roleInput   = document.getElementById('selectedRole');
-
-const fieldEmail    = document.getElementById('email');
-const fieldPassword = document.getElementById('password');
-
-// ── Role Tab Switching (Admin / Customer) ────────────────────
-function selectRole(role) {
-  const tabAdmin = document.getElementById('tabAdmin');
-  const tabCustomer = document.getElementById('tabCustomer');
-  if (!tabAdmin || !tabCustomer) return;
-
-  if (role === 'customer') {
-    tabAdmin.classList.remove('active');
-    tabAdmin.setAttribute('aria-selected', 'false');
-    tabCustomer.classList.add('active');
-    tabCustomer.setAttribute('aria-selected', 'true');
-    roleInput.value = 'customer';
-  } else {
-    tabCustomer.classList.remove('active');
-    tabCustomer.setAttribute('aria-selected', 'false');
-    tabAdmin.classList.add('active');
-    tabAdmin.setAttribute('aria-selected', 'true');
-    roleInput.value = 'admin';
+// Seed default accounts in localStorage for testing
+function ensureDefaultAccounts() {
+  var data = localStorage.getItem("gms_users");
+  var users = [];
+  if (data != null && data != "") {
+    users = JSON.parse(data);
   }
+
+  var hasAdmin = false;
+  var hasCustomer = false;
+
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].email === "admin@mechcontrol.com") {
+      hasAdmin = true;
+    }
+    if (users[i].email === "customer@mechcontrol.com") {
+      hasCustomer = true;
+    }
+  }
+
+  if (!hasAdmin) {
+    users.push({
+      name: "Ronak Tank (Admin)",
+      phone: "9876543210",
+      email: "admin@mechcontrol.com",
+      password: "admin",
+      role: "admin"
+    });
+  }
+
+  if (!hasCustomer) {
+    users.push({
+      name: "Deep Sondagar (Customer)",
+      phone: "9825012345",
+      email: "customer@mechcontrol.com",
+      password: "customer",
+      role: "customer"
+    });
+  }
+
+  localStorage.setItem("gms_users", JSON.stringify(users));
+}
+
+// Category / Role Tab Switching
+function selectRole(role) {
+  var tabAdmin = document.getElementById("tabAdmin");
+  var tabCustomer = document.getElementById("tabCustomer");
+  var roleInput = document.getElementById("selectedRole");
+
+  if (role === "customer") {
+    if (tabAdmin) {
+      tabAdmin.classList.remove("active");
+      tabAdmin.setAttribute("aria-selected", "false");
+    }
+    if (tabCustomer) {
+      tabCustomer.classList.add("active");
+      tabCustomer.setAttribute("aria-selected", "true");
+    }
+    if (roleInput) roleInput.value = "customer";
+  } else {
+    if (tabCustomer) {
+      tabCustomer.classList.remove("active");
+      tabCustomer.setAttribute("aria-selected", "false");
+    }
+    if (tabAdmin) {
+      tabAdmin.classList.add("active");
+      tabAdmin.setAttribute("aria-selected", "true");
+    }
+    if (roleInput) roleInput.value = "admin";
+  }
+
   hideError();
 }
 
-document.querySelectorAll('.role-tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    selectRole(btn.dataset.role);
-  });
-});
+// On Page Load: setup tabs & query param check
+window.onload = function() {
+  ensureDefaultAccounts();
 
-// Check URL query parameters (e.g. signin.html?role=customer)
-window.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const paramRole = urlParams.get('role');
-  if (paramRole === 'customer' || paramRole === 'admin') {
-    selectRole(paramRole);
+  var tabAdmin = document.getElementById("tabAdmin");
+  var tabCustomer = document.getElementById("tabCustomer");
+
+  if (tabAdmin) {
+    tabAdmin.onclick = function() { selectRole("admin"); };
   }
-});
+  if (tabCustomer) {
+    tabCustomer.onclick = function() { selectRole("customer"); };
+  }
 
-// ── Error Banner helpers ─────────────────────────────────────
+  // Check URL query parameters (e.g. signin.html?role=customer)
+  var urlParams = new URLSearchParams(window.location.search);
+  var roleParam = urlParams.get("role");
+  if (roleParam === "customer" || roleParam === "admin") {
+    selectRole(roleParam);
+  }
+};
+
+// Toggle password visibility
+var toggleBtn = document.getElementById("togglePassword");
+var passInput = document.getElementById("password");
+var eyeIcon = document.getElementById("eyeIcon");
+
+if (toggleBtn && passInput && eyeIcon) {
+  toggleBtn.onclick = function() {
+    if (passInput.type === "password") {
+      passInput.type = "text";
+      eyeIcon.className = "bi bi-eye-slash";
+    } else {
+      passInput.type = "password";
+      eyeIcon.className = "bi bi-eye";
+    }
+  };
+}
+
+// Error handling helpers
 function showError(msg) {
-  if (errorMsgEl) errorMsgEl.textContent = msg;
-  if (errorBanner) errorBanner.classList.add('visible');
+  var banner = document.getElementById("errorBanner");
+  var msgEl = document.getElementById("errorMsg");
+  if (msgEl) msgEl.innerText = msg;
+  if (banner) banner.classList.add("visible");
 }
 
 function hideError() {
-  if (errorBanner) errorBanner.classList.remove('visible');
+  var banner = document.getElementById("errorBanner");
+  if (banner) banner.classList.remove("visible");
 }
 
-// ── Helper: mark a field group valid or invalid ──────────────
-function setValidity(groupId, isValid) {
-  const grp = document.getElementById(groupId);
-  if (!grp) return;
-  grp.classList.toggle('field-invalid', !isValid);
-  grp.classList.toggle('field-valid',   isValid);
-}
-
-// ── Helper: email format check ───────────────────────────────
-function isValidEmail(val) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val.trim());
-}
-
-// ── Per-field validators ─────────────────────────────────────
-function validateEmail() {
-  if (!fieldEmail) return true;
-  const ok = isValidEmail(fieldEmail.value);
-  setValidity('grp-email', ok);
-  return ok;
-}
-
-function validatePassword() {
-  if (!fieldPassword) return true;
-  const ok = fieldPassword.value.length > 0;
-  setValidity('grp-password', ok);
-  return ok;
-}
-
-// ── Live validation on blur ──────────────────────────────────
-if (fieldEmail) {
-  fieldEmail.addEventListener('blur', validateEmail);
-  fieldEmail.addEventListener('input', hideError);
-}
-if (fieldPassword) {
-  fieldPassword.addEventListener('blur', validatePassword);
-  fieldPassword.addEventListener('input', hideError);
-}
-
-// ── Show / Hide password toggle ──────────────────────────────
-const toggleBtn = document.getElementById('togglePassword');
-const eyeIcon   = document.getElementById('eyeIcon');
-
-if (toggleBtn && eyeIcon && fieldPassword) {
-  toggleBtn.addEventListener('click', () => {
-    const hidden       = fieldPassword.type === 'password';
-    fieldPassword.type = hidden ? 'text' : 'password';
-    eyeIcon.className  = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
-    toggleBtn.setAttribute('aria-label',   hidden ? 'Hide password' : 'Show password');
-    toggleBtn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
-  });
-}
-
-// ── localStorage helper with Demo Accounts ────────────────────
-function getUsers() {
-  let users = JSON.parse(localStorage.getItem('gms_users') || '[]');
-
-  // Check if default demo admin exists
-  const hasAdmin = users.some(u => u.email === 'admin@mechcontrol.com' || u.email === 'admin@garage.com');
-  if (!hasAdmin) {
-    users.push({
-      name: 'Workshop Admin',
-      email: 'admin@mechcontrol.com',
-      password: 'admin',
-      role: 'admin'
-    });
-  }
-
-  // Check if default demo customer exists
-  const hasCustomer = users.some(u => u.email === 'customer@mechcontrol.com' || u.email === 'alex@email.com');
-  if (!hasCustomer) {
-    users.push({
-      name: 'Rahul Mehta',
-      email: 'customer@mechcontrol.com',
-      password: 'customer',
-      role: 'customer'
-    });
-  }
-
-  localStorage.setItem('gms_users', JSON.stringify(users));
-  return users;
-}
-
-// ── Form Submit ──────────────────────────────────────────────
-if (form) {
-  form.addEventListener('submit', e => {
-    e.preventDefault();
+// Sign In Form Submission
+var signinForm = document.getElementById("signinForm");
+if (signinForm) {
+  signinForm.onsubmit = function(event) {
+    event.preventDefault();
     hideError();
 
-    // Validate fields first
-    const emailOk    = validateEmail();
-    const passwordOk = validatePassword();
+    var emailField = document.getElementById("email");
+    var passField = document.getElementById("password");
+    var roleInput = document.getElementById("selectedRole");
 
-    if (!emailOk || !passwordOk) {
-      const first = form.querySelector('.field-invalid input');
-      if (first) first.focus();
+    var enteredEmail = emailField.value.trim().toLowerCase();
+    var enteredPassword = passField.value;
+    var selectedRole = roleInput ? roleInput.value : "admin";
+
+    if (enteredEmail === "") {
+      showError("Please enter your registered email address.");
+      emailField.focus();
       return;
     }
 
-    const selectedRole  = roleInput ? roleInput.value : 'admin';
-    const enteredEmail  = fieldEmail.value.trim().toLowerCase();
-    const enteredPass   = fieldPassword.value;
-
-    // 1. Load users array from localStorage
-    const users = getUsers();
-
-    // 2. Find a matching user object
-    const matchedUser = users.find(u =>
-      u.email.toLowerCase() === enteredEmail &&
-      u.password            === enteredPass  &&
-      u.role                === selectedRole
-    );
-
-    // Show spinner while "checking"
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML =
-        '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Signing in…';
+    if (enteredPassword === "") {
+      showError("Please enter your password.");
+      passField.focus();
+      return;
     }
 
-    setTimeout(() => {
+    // Read registered users from localStorage
+    var data = localStorage.getItem("gms_users");
+    var users = [];
+    if (data != null && data != "") {
+      users = JSON.parse(data);
+    }
 
-      if (!matchedUser) {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML =
-            '<i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Sign In';
-        }
-        showError('Invalid email, password, or role for ' + selectedRole.toUpperCase() + '. Please try again.');
-        if (fieldPassword) fieldPassword.focus();
-        return;
+    // Find matching user with same email, password, and role
+    var matchedUser = null;
+    for (var i = 0; i < users.length; i++) {
+      var u = users[i];
+      if (u.email.toLowerCase() === enteredEmail && u.password === enteredPassword && u.role === selectedRole) {
+        matchedUser = u;
+        break;
+      }
+    }
+
+    var submitBtn = document.getElementById("submitBtn");
+
+    if (matchedUser == null) {
+      showError("Invalid email, password, or category for " + (selectedRole === "admin" ? "Workshop Admin" : "Vehicle Customer") + ". If you are new, please register first.");
+      passField.focus();
+      return;
+    }
+
+    // Disable button and show signing in state
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
+    }
+
+    // Store active session in localStorage
+    localStorage.setItem("mc_current_user", JSON.stringify(matchedUser));
+
+    // If logged in as admin, also store active admin name for customer dashboard to display
+    if (matchedUser.role === "admin") {
+      localStorage.setItem("mc_active_admin_name", matchedUser.name);
+    }
+
+    setTimeout(function() {
+      // Display success card
+      signinForm.style.display = "none";
+      var successMsg = document.getElementById("successMsg");
+      var successHeading = document.getElementById("successHeading");
+      var successSub = document.getElementById("successSub");
+      var successIcon = document.getElementById("successIcon");
+
+      if (successHeading) {
+        successHeading.innerText = "Welcome back, " + matchedUser.name + "!";
       }
 
-      // 3. Match found – show success screen
-      const isAdmin = matchedUser.role === 'admin';
-
-      const successIcon    = document.getElementById('successIcon');
-      const successHeading = document.getElementById('successHeading');
-      const successSub     = document.getElementById('successSub');
+      if (successSub) {
+        successSub.innerText = "Signed in as " + (matchedUser.role === "admin" ? "Workshop Admin" : "Vehicle Customer") + " — loading your dashboard...";
+      }
 
       if (successIcon) {
-        successIcon.className = `bi ${isAdmin ? 'bi-shield-check-fill text-danger' : 'bi-person-check-fill text-success'} success-icon`;
-      }
-      if (successHeading) {
-        successHeading.textContent = `Welcome back, ${matchedUser.name}!`;
-      }
-      if (successSub) {
-        successSub.textContent = `Signed in as ${isAdmin ? 'Admin' : 'Customer'} — loading your MechControl dashboard…`;
+        successIcon.className = "bi " + (matchedUser.role === "admin" ? "bi-shield-check-fill text-danger" : "bi-person-check-fill text-success") + " success-icon";
       }
 
-      form.style.display       = 'none';
       if (successMsg) {
-        successMsg.style.display = 'block';
-        successMsg.focus();
+        successMsg.style.display = "block";
       }
 
-      // Redirect to the correct dashboard after 1 second
-      setTimeout(() => {
-        window.location.href = isAdmin
-          ? 'admin-dashboard.html'
-          : 'customer-dashboard.html';
+      // Redirect to appropriate dashboard
+      setTimeout(function() {
+        if (matchedUser.role === "admin") {
+          window.location.href = "admin-dashboard.html";
+        } else {
+          window.location.href = "customer-dashboard.html";
+        }
       }, 1000);
 
-    }, 800);
-  });
-}
-
-// Quick autofill demo credentials helper
-function fillDemoCredentials(role) {
-  selectRole(role);
-  if (role === 'admin') {
-    if (fieldEmail) fieldEmail.value = 'admin@mechcontrol.com';
-    if (fieldPassword) fieldPassword.value = 'admin';
-  } else {
-    if (fieldEmail) fieldEmail.value = 'customer@mechcontrol.com';
-    if (fieldPassword) fieldPassword.value = 'customer';
-  }
-  hideError();
+    }, 600);
+  };
 }

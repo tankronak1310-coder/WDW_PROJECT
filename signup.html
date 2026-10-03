@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register Account – MechControl</title>
+  <title>Register Account — MechControl</title>
 
   <!-- Bootstrap 5 CSS -->
   <link
@@ -22,7 +22,9 @@
 
 <body>
 
-  <!-- ════ STATIC TOP NAVBAR (Exact same on every page) ════ -->
+  <!-- ============================================================
+       STATIC TOP NAVBAR (Exact same on every page)
+       ============================================================ -->
   <header class="mc-navbar">
     <div class="container d-flex align-items-center justify-content-between">
       <a href="index.html" class="mc-brand">
@@ -36,44 +38,38 @@
   </header>
   <div class="mc-accent-bar" role="presentation"></div>
 
-  <!-- ════ MAIN AUTH WRAPPER (Horizontal Split-Screen) ════ -->
+  <!-- ============================================================
+       MAIN AUTH WRAPPER (Horizontal Split-Screen)
+       ============================================================ -->
   <main class="auth-wrapper">
     <div class="auth-split-card">
       <div class="row g-0">
 
-        <!-- ── LEFT COLUMN: Brand Overview & Value ── -->
+        <!-- LEFT COLUMN: Brand Overview & Value -->
         <div class="col-lg-5 auth-brand-side">
           <div>
             <div class="d-flex align-items-center gap-2 mb-3">
               <i class="bi bi-gear-wide-connected text-danger fs-3"></i>
               <span class="fs-4 fw-bold tracking-tight text-white">MechControl</span>
             </div>
-            <h2 class="fw-bold mb-3">Smart Workshop & Vehicle Management</h2>
+            <h2 class="fw-bold mb-3">Step 1: Register Account</h2>
             <p class="text-white-50 small mb-4">
-              Join MechControl to connect vehicle owners and workshop mechanics in one unified, real-time platform.
+              Enter your details once to register. Once registered, you will sign in using just your Email ID and Password.
             </p>
 
             <div class="auth-feature-item">
-              <div class="auth-feature-icon"><i class="bi bi-speedometer2"></i></div>
+              <div class="auth-feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
               <div>
-                <h6 class="fw-bold text-white mb-0 small">Live Service Tracking</h6>
-                <p class="text-white-50 small mb-0">Follow your vehicle from In Queue to Ready for Pickup.</p>
+                <h6 class="fw-bold text-white mb-0 small">Workshop Admin</h6>
+                <p class="text-white-50 small mb-0">Manage repair queues, mechanics duty roster, and billings.</p>
               </div>
             </div>
 
             <div class="auth-feature-item">
-              <div class="auth-feature-icon"><i class="bi bi-tools"></i></div>
+              <div class="auth-feature-icon"><i class="bi bi-person-fill-check"></i></div>
               <div>
-                <h6 class="fw-bold text-white mb-0 small">Inspection Findings</h6>
-                <p class="text-white-50 small mb-0">Review & approve unexpected defects discovered by mechanics.</p>
-              </div>
-            </div>
-
-            <div class="auth-feature-item">
-              <div class="auth-feature-icon"><i class="bi bi-receipt"></i></div>
-              <div>
-                <h6 class="fw-bold text-white mb-0 small">Digital Invoices & Privacy</h6>
-                <p class="text-white-50 small mb-0">Transparent billing with automatic data cleanup on vehicle pickup.</p>
+                <h6 class="fw-bold text-white mb-0 small">Vehicle Customer</h6>
+                <p class="text-white-50 small mb-0">Track real-time repair progress, approve extra defects, view bills.</p>
               </div>
             </div>
           </div>
@@ -83,24 +79,25 @@
           </div>
         </div>
 
-        <!-- ── RIGHT COLUMN: Registration Form (Horizontal 2-Column Grid) ── -->
+        <!-- RIGHT COLUMN: Registration Form (Horizontal 2-Column Grid) -->
         <div class="col-lg-7 auth-form-side">
 
           <!-- Success Alert Screen -->
           <div class="gms-success" id="successMsg" role="alert" tabindex="-1">
             <i class="bi bi-check-circle-fill success-icon text-success" aria-hidden="true"></i>
-            <h3 class="mt-3 mb-2 fw-bold text-dark">Account Created!</h3>
-            <p class="text-muted small mb-4">Welcome to MechControl. Redirecting you to Sign In with your email & password…</p>
+            <h3 class="mt-3 mb-2 fw-bold text-dark">Registration Successful!</h3>
+            <p class="text-muted small mb-4">Your details have been saved. Redirecting you to Login with your credentials...</p>
             <div class="spinner-border text-danger" role="status">
-              <span class="visually-hidden">Loading…</span>
+              <span class="visually-hidden">Loading...</span>
             </div>
           </div>
 
           <!-- Registration Form -->
           <form id="signupForm" novalidate aria-label="Create account form">
-            <div class="mb-4">
+
+            <div class="mb-3">
               <h3 class="fw-bold text-dark mb-1">Create Account</h3>
-              <p class="text-muted small">New user or admin? Enter your details once to register, then use email & password to sign in.</p>
+              <p class="text-muted small">Select your category and enter your information below.</p>
             </div>
 
             <!-- Error Banner -->
@@ -109,13 +106,28 @@
               <span id="errorMsgText">Please check all required fields.</span>
             </div>
 
-            <!-- Row 1: Full Name & Phone Number -->
+            <!-- Row 1: Category Selector -->
+            <div class="mb-3" id="grp-role">
+              <label class="form-label">Account Category <span class="text-danger">*</span></label>
+              <div class="role-pills">
+                <div class="role-pill-option">
+                  <input type="radio" id="roleCustomer" name="role" value="customer" checked />
+                  <label for="roleCustomer"><i class="bi bi-person-fill"></i> Vehicle Customer</label>
+                </div>
+                <div class="role-pill-option">
+                  <input type="radio" id="roleAdmin" name="role" value="admin" />
+                  <label for="roleAdmin"><i class="bi bi-shield-lock-fill"></i> Workshop Admin</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 2: Full Name & Phone Number -->
             <div class="row g-3 mb-3">
               <div class="col-md-6" id="grp-name">
                 <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
                 <input
                   type="text" id="fullName" name="fullName"
-                  class="form-control" placeholder="e.g. Rahul Mehta" required
+                  class="form-control" placeholder="e.g. Ronak Tank" required
                 />
                 <div class="invalid-feedback" id="fullName-error">Please enter your full name.</div>
               </div>
@@ -130,45 +142,30 @@
               </div>
             </div>
 
-            <!-- Row 2: Email Address & Role Selector -->
-            <div class="row g-3 mb-3">
-              <div class="col-md-6" id="grp-email">
-                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
-                <input
-                  type="email" id="email" name="email"
-                  class="form-control" placeholder="you@example.com" required
-                />
-                <div class="invalid-feedback" id="email-error">Enter a valid email address.</div>
-              </div>
-              <div class="col-md-6" id="grp-role">
-                <label class="form-label">Select Account Role <span class="text-danger">*</span></label>
-                <div class="role-pills">
-                  <div class="role-pill-option">
-                    <input type="radio" id="roleCustomer" name="role" value="customer" checked />
-                    <label for="roleCustomer"><i class="bi bi-person-fill"></i> Customer</label>
-                  </div>
-                  <div class="role-pill-option">
-                    <input type="radio" id="roleAdmin" name="role" value="admin" />
-                    <label for="roleAdmin"><i class="bi bi-shield-lock-fill"></i> Admin</label>
-                  </div>
-                </div>
-              </div>
+            <!-- Row 3: Email Address -->
+            <div class="mb-3" id="grp-email">
+              <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+              <input
+                type="email" id="email" name="email"
+                class="form-control" placeholder="you@example.com" required
+              />
+              <div class="invalid-feedback" id="email-error">Enter a valid email address.</div>
             </div>
 
-            <!-- Row 3: Password & Confirm Password -->
+            <!-- Row 4: Password & Confirm Password -->
             <div class="row g-3 mb-3">
               <div class="col-md-6" id="grp-password">
                 <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
                 <div class="input-group">
                   <input
                     type="password" id="password" name="password"
-                    class="form-control" placeholder="Min. 6 characters" required
+                    class="form-control" placeholder="Min. 4 characters" required
                   />
                   <button type="button" class="btn-eye" id="togglePassword">
                     <i class="bi bi-eye" id="eyeIcon"></i>
                   </button>
                 </div>
-                <div class="invalid-feedback" id="password-error">Password must be at least 6 characters.</div>
+                <div class="invalid-feedback" id="password-error">Password must be at least 4 characters.</div>
               </div>
               <div class="col-md-6" id="grp-confirm">
                 <label for="confirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
@@ -191,12 +188,12 @@
 
             <!-- Submit Button -->
             <button type="submit" class="btn-mc-primary" id="submitBtn">
-              <i class="bi bi-person-plus-fill me-1"></i>Create Account
+              <i class="bi bi-person-check-fill me-1"></i> Register Account
             </button>
 
             <!-- Bottom Redirect Link -->
             <div class="mt-4 pt-2 border-top text-center small text-muted">
-              Already have an account? <a href="signin.html" class="fw-bold text-danger text-decoration-none">Sign in here &rarr;</a>
+              Already registered? <a href="signin.html" class="fw-bold text-danger text-decoration-none">Sign In here &rarr;</a>
             </div>
 
           </form>
@@ -213,7 +210,7 @@
     crossorigin="anonymous"
   ></script>
 
-  <!-- Registration Logic -->
+  <!-- Registration Logic (Basic Vanilla JS) -->
   <script src="signup.js"></script>
 
 </body>

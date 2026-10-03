@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Customer Portal – MechControl</title>
+  <title>Customer Portal — MechControl</title>
 
   <!-- Bootstrap 5 CSS -->
   <link
@@ -23,7 +23,9 @@
 
 <body>
 
-  <!-- ════ NAVBAR ════ -->
+  <!-- ============================================================
+       TOP NAVBAR
+       ============================================================ -->
   <nav class="navbar navbar-expand-lg mc-navbar sticky-top" aria-label="Main navigation">
     <div class="container px-3 px-md-4">
       
@@ -44,7 +46,7 @@
         <i class="bi bi-list text-white fs-4"></i>
       </button>
 
-      <!-- Nav links -->
+      <!-- Nav links & User Badge -->
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
           <li class="nav-item">
@@ -62,7 +64,17 @@
               <i class="bi bi-telephone me-1"></i>Contact Garage
             </a>
           </li>
+
+          <!-- Customer Name Display in Top Navbar -->
           <li class="nav-item ms-lg-2">
+            <span class="badge bg-dark border border-secondary text-white py-2 px-2">
+              <i class="bi bi-person-circle text-danger me-1"></i>
+              <span id="custNavName">Deep Sondagar</span>
+            </span>
+          </li>
+
+          <!-- Sign Out -->
+          <li class="nav-item ms-lg-1">
             <a class="btn btn-sm btn-outline-danger text-light border-secondary" href="signin.html">
               <i class="bi bi-box-arrow-right me-1"></i>Sign Out
             </a>
@@ -74,21 +86,25 @@
   </nav>
   <div class="mc-accent-bar" role="presentation"></div>
 
-  <!-- ════ MAIN CONTENT ════ -->
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
   <main class="container py-4 py-md-5" id="mainContent">
 
-    <!-- ── SECTION 1: LIVE REPAIR DASHBOARD ── -->
+    <!-- ============================================================
+         SECTION 1: LIVE REPAIR DASHBOARD
+         ============================================================ -->
     <section id="sec-dashboard" class="customer-section">
 
-      <!-- Welcome Banner -->
-      <div class="mc-card p-4 mb-4">
+      <!-- Welcome Banner: Displays Customer Name -->
+      <div class="mc-card p-4 mb-3">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
           <div class="d-flex align-items-center gap-3">
             <div class="p-3 bg-danger-subtle text-danger rounded-circle fs-3">
               <i class="bi bi-person-fill"></i>
             </div>
             <div>
-              <h3 class="fw-bold mb-1">Welcome back, <span id="custNameDisplay">Customer</span>!</h3>
+              <h3 class="fw-bold mb-1">Welcome back, <span id="custNameDisplay" class="text-danger">Deep Sondagar</span>!</h3>
               <p class="text-muted small mb-0">Here is the real-time repair and service tracking for your vehicle.</p>
             </div>
           </div>
@@ -100,14 +116,29 @@
         </div>
       </div>
 
-      <!-- Vehicle Tracking Card (Loaded Dynamically) -->
+      <!-- Workshop Admin Information Bar (Customer sees the Admin's Name) -->
+      <div class="p-3 bg-white rounded-3 border shadow-sm d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-danger-subtle text-danger p-2"><i class="bi bi-shield-shaded fs-6"></i></span>
+          <span class="small text-muted">
+            Workshop Supervised by Admin: <strong id="adminNameDisplay" class="text-dark fs-6">Ronak Tank (Admin)</strong>
+          </span>
+        </div>
+        <div class="small text-muted">
+          <i class="bi bi-geo-alt-fill text-danger me-1"></i> MechControl Central Workshop & Service Floor
+        </div>
+      </div>
+
+      <!-- Vehicle Tracking Card & Additional Issue Prompt (Loaded Dynamically) -->
       <div id="customerVehicleContainer">
         <!-- Rendered by customer-dashboard.js -->
       </div>
 
     </section>
 
-    <!-- ── SECTION 2: BOOK A SERVICE ── -->
+    <!-- ============================================================
+         SECTION 2: BOOK A SERVICE
+         ============================================================ -->
     <section id="sec-book" class="customer-section d-none">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-7">
@@ -121,7 +152,7 @@
             <form id="bookServiceForm">
               <div class="mb-3">
                 <label class="form-label small fw-bold">Your Full Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="bookName" required placeholder="e.g. Rahul Mehta" />
+                <input type="text" class="form-control" id="bookName" required placeholder="e.g. Deep Sondagar" />
               </div>
               <div class="row g-3 mb-3">
                 <div class="col-md-6">
@@ -163,23 +194,32 @@
       </div>
     </section>
 
-    <!-- ── SECTION 3: CONTACT WORKSHOP ── -->
+    <!-- ============================================================
+         SECTION 3: CONTACT WORKSHOP
+         ============================================================ -->
     <section id="sec-contact" class="customer-section d-none">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8">
           <div class="mc-card p-4">
             <h4 class="fw-bold mb-3"><i class="bi bi-geo-alt-fill text-danger me-2"></i>MechControl Workshop Information</h4>
+            
+            <div class="p-3 mb-3 bg-light rounded border">
+              <div class="fw-bold text-dark mb-1"><i class="bi bi-person-badge text-danger me-2"></i>Workshop Floor Supervision</div>
+              <div class="small text-muted">Workshop Floor Admin / Manager: <strong id="adminNameDisplayContact" class="text-dark">Ronak Tank (Admin)</strong></div>
+              <div class="small text-muted">Certified Service Center: MechControl Central Floor</div>
+            </div>
+
             <div class="row g-4 mt-1">
               <div class="col-md-6">
                 <div class="p-3 bg-light rounded border h-100">
                   <div class="fw-bold text-dark mb-1"><i class="bi bi-clock text-primary me-2"></i>Working Hours</div>
-                  <div class="small text-muted">Monday – Saturday: 9:00 AM – 7:30 PM</div>
-                  <div class="small text-muted">Sunday: 10:00 AM – 2:00 PM (Emergency Pickups)</div>
+                  <div class="small text-muted">Monday — Saturday: 9:00 AM — 7:30 PM</div>
+                  <div class="small text-muted">Sunday: 10:00 AM — 2:00 PM (Emergency Pickups)</div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="p-3 bg-light rounded border h-100">
-                  <div class="fw-bold text-dark mb-1"><i class="bi bi-telephone text-success me-2"></i>Emergency Hotline</div>
+                  <div class="fw-bold text-dark mb-1"><i class="bi bi-telephone text-success me-2"></i>Garage Helpline</div>
                   <div class="small text-muted">Support Phone: +91 98765-43210</div>
                   <div class="small text-muted">Email: support@mechcontrol.com</div>
                 </div>
@@ -199,13 +239,15 @@
 
   </main>
 
-  <!-- ════ MODAL: INVOICE BREAKDOWN ════ -->
+  <!-- ============================================================
+       MODAL: CUSTOMER INVOICE
+       ============================================================ -->
   <div class="modal fade" id="customerInvoiceModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content border-0 shadow">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title fw-bold">
-            <i class="bi bi-receipt text-danger me-2"></i>Your MechControl Service Bill
+            <i class="bi bi-receipt text-danger me-2"></i>Itemized Service Invoice
           </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
@@ -215,28 +257,20 @@
         <div class="modal-footer bg-light">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-dark" onclick="window.print()">
-            <i class="bi bi-printer me-1"></i>Print Bill
+            <i class="bi bi-printer me-1"></i>Print Invoice
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ════ FOOTER ════ -->
-  <footer class="mc-footer mt-auto">
-    <div class="container text-center">
-      <p class="mb-1"><strong>MechControl</strong> – Vehicle Service & Workshop Management System</p>
-      <p class="small text-muted mb-0">Connected live to workshop mechanics</p>
-    </div>
-  </footer>
-
-  <!-- Bootstrap 5 JS -->
+  <!-- Bootstrap 5 Bundle JS -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"
   ></script>
 
-  <!-- Customer Dashboard Logic (Basic Vanilla JS) -->
+  <!-- Customer Dashboard Logic (Basic Level Vanilla JS) -->
   <script src="customer-dashboard.js"></script>
 
 </body>

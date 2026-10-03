@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign In – MechControl</title>
+  <title>Sign In — MechControl</title>
 
   <!-- Bootstrap 5 CSS -->
   <link
@@ -22,7 +22,9 @@
 
 <body>
 
-  <!-- ════ STATIC TOP NAVBAR (Exact same on every page) ════ -->
+  <!-- ============================================================
+       STATIC TOP NAVBAR (Exact same on every page)
+       ============================================================ -->
   <header class="mc-navbar">
     <div class="container d-flex align-items-center justify-content-between">
       <a href="index.html" class="mc-brand">
@@ -36,27 +38,29 @@
   </header>
   <div class="mc-accent-bar" role="presentation"></div>
 
-  <!-- ════ MAIN AUTH WRAPPER (Horizontal Split-Screen) ════ -->
+  <!-- ============================================================
+       MAIN AUTH WRAPPER (Horizontal Split-Screen)
+       ============================================================ -->
   <main class="auth-wrapper">
     <div class="auth-split-card">
       <div class="row g-0">
 
-        <!-- ── LEFT COLUMN: Brand Panel ── -->
+        <!-- LEFT COLUMN: Brand Panel -->
         <div class="col-lg-5 auth-brand-side">
           <div>
             <div class="d-flex align-items-center gap-2 mb-3">
               <i class="bi bi-gear-wide-connected text-danger fs-3"></i>
               <span class="fs-4 fw-bold tracking-tight text-white">MechControl</span>
             </div>
-            <h2 class="fw-bold mb-3">Workshop & Vehicle Service Portal</h2>
+            <h2 class="fw-bold mb-3">Sign In to Your Portal</h2>
             <p class="text-white-50 small mb-4">
-              Sign in to manage your workshop or track your vehicle repairs in real time.
+              Enter your registered Email ID and Password to access your dashboard.
             </p>
 
             <div class="auth-feature-item">
               <div class="auth-feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
               <div>
-                <h6 class="fw-bold text-white mb-0 small">Admin Control Floor</h6>
+                <h6 class="fw-bold text-white mb-0 small">Admin Floor Dashboard</h6>
                 <p class="text-white-50 small mb-0">Mechanic duty rosters, repair queues, and billing management.</p>
               </div>
             </div>
@@ -75,16 +79,16 @@
           </div>
         </div>
 
-        <!-- ── RIGHT COLUMN: Sign In Form ── -->
+        <!-- RIGHT COLUMN: Sign In Form -->
         <div class="col-lg-7 auth-form-side">
 
           <!-- Success Alert Screen -->
           <div class="mc-success" id="successMsg" role="alert" tabindex="-1">
             <i class="bi bi-person-check-fill success-icon" id="successIcon" aria-hidden="true"></i>
             <h3 class="mt-3 mb-2 fw-bold text-dark" id="successHeading">Welcome back!</h3>
-            <p class="text-muted small mb-4" id="successSub">Signing you in and loading your dashboard…</p>
+            <p class="text-muted small mb-4" id="successSub">Signing you in and loading your dashboard...</p>
             <div class="spinner-border text-danger" role="status">
-              <span class="visually-hidden">Loading…</span>
+              <span class="visually-hidden">Loading...</span>
             </div>
           </div>
 
@@ -93,24 +97,24 @@
 
             <div class="mb-3">
               <h3 class="fw-bold text-dark mb-1">Sign In</h3>
-              <p class="text-muted small">Select your role and enter your registered email and password.</p>
+              <p class="text-muted small">Select your category and enter your registered credentials.</p>
             </div>
 
-            <!-- Role tab switcher -->
-            <div class="role-tabs" role="tablist" aria-label="Sign in as">
+            <!-- Role / Category tab switcher -->
+            <div class="role-tabs" role="tablist" aria-label="Sign in category">
               <button
                 type="button" role="tab"
                 class="role-tab-btn active" id="tabAdmin"
                 aria-selected="true" data-role="admin"
               >
-                <i class="bi bi-shield-lock-fill"></i> Admin
+                <i class="bi bi-shield-lock-fill"></i> Workshop Admin
               </button>
               <button
                 type="button" role="tab"
                 class="role-tab-btn" id="tabCustomer"
                 aria-selected="false" data-role="customer"
               >
-                <i class="bi bi-person-fill"></i> Customer
+                <i class="bi bi-person-fill"></i> Vehicle Customer
               </button>
             </div>
 
@@ -119,30 +123,29 @@
             <!-- Error Banner -->
             <div class="gms-alert" id="errorBanner" role="alert" aria-live="assertive">
               <i class="bi bi-exclamation-triangle-fill me-2"></i>
-              <span id="errorMsg">Invalid email or password. Please try again.</span>
+              <span id="errorMsg">Invalid email, password, or category. Please check your credentials.</span>
             </div>
 
-            <!-- Email -->
+            <!-- Email Address -->
             <div class="mb-3" id="grp-email">
               <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
               <input
                 type="email" id="email" name="email"
-                class="form-control" placeholder="you@example.com"
+                class="form-control" placeholder="e.g. admin@mechcontrol.com"
                 autocomplete="email" required
               />
               <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
             </div>
 
             <!-- Password with Eye Toggle -->
-            <div class="mb-2" id="grp-password">
+            <div class="mb-4" id="grp-password">
               <div class="d-flex justify-content-between align-items-center mb-1">
                 <label for="password" class="form-label mb-0">Password <span class="text-danger">*</span></label>
-                <a href="#" class="forgot-link small">Forgot password?</a>
               </div>
               <div class="input-group">
                 <input
                   type="password" id="password" name="password"
-                  class="form-control" placeholder="Enter password"
+                  class="form-control" placeholder="Enter your password"
                   autocomplete="current-password" required
                 />
                 <button type="button" class="btn-eye" id="togglePassword" aria-label="Toggle password visibility">
@@ -152,27 +155,14 @@
               <div class="invalid-feedback" id="password-error">Please enter your password.</div>
             </div>
 
-            <!-- Quick Demo Autofill Helper -->
-            <div class="p-2 mb-3 bg-light rounded border small">
-              <span class="text-muted d-block mb-1 fw-bold">Instant 1-Click Demo Login:</span>
-              <div class="d-flex gap-2">
-                <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" onclick="fillDemoCredentials('admin')">
-                  <i class="bi bi-shield-lock me-1"></i>Fill Admin
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" onclick="fillDemoCredentials('customer')">
-                  <i class="bi bi-person me-1"></i>Fill Customer
-                </button>
-              </div>
-            </div>
-
             <!-- Submit Button -->
             <button type="submit" class="btn-mc-primary" id="submitBtn">
-              <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+              <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Portal
             </button>
 
             <!-- Bottom Redirect Link -->
             <div class="mt-4 pt-2 border-top text-center small text-muted">
-              New to MechControl? <a href="signup.html" class="fw-bold text-danger text-decoration-none">Register here first &rarr;</a>
+              Don't have an account yet? <a href="signup.html" class="fw-bold text-danger text-decoration-none">Register first &rarr;</a>
             </div>
 
           </form>
@@ -189,7 +179,7 @@
     crossorigin="anonymous"
   ></script>
 
-  <!-- Sign In Logic -->
+  <!-- Sign In Logic (Basic Vanilla JS) -->
   <script src="signin.js"></script>
 
 </body>

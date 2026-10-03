@@ -1,148 +1,196 @@
 /* ============================================================
    signup.js — MechControl Account Registration Logic
-   Handles: registration, validation, localStorage storage,
-            and automatic redirection to signin.html
+   Written in Basic, Easy-to-Understand Vanilla JavaScript
    ============================================================ */
 
-// DOM References
-const form          = document.getElementById('signupForm');
-const submitBtn     = document.getElementById('submitBtn');
-const successMsg    = document.getElementById('successMsg');
-const errorBanner   = document.getElementById('errorBanner');
-const errorMsgText  = document.getElementById('errorMsgText');
+// Seed default accounts if needed
+function ensureDefaultUsersExist() {
+  var data = localStorage.getItem("gms_users");
+  var users = [];
+  if (data != null && data != "") {
+    users = JSON.parse(data);
+  }
 
-const fieldFullName = document.getElementById('fullName');
-const fieldEmail    = document.getElementById('email');
-const fieldPhone    = document.getElementById('phone');
-const fieldPassword = document.getElementById('password');
-const fieldConfirm  = document.getElementById('confirmPassword');
-const fieldTerms    = document.getElementById('terms');
+  var hasAdmin = false;
+  var hasCustomer = false;
 
-// Helper: mark a field group valid or invalid
-function setValidity(groupId, isValid) {
-  const grp = document.getElementById(groupId);
-  if (!grp) return;
-  grp.classList.toggle('field-invalid', !isValid);
-  grp.classList.toggle('field-valid',   isValid);
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].email === "admin@mechcontrol.com") {
+      hasAdmin = true;
+    }
+    if (users[i].email === "customer@mechcontrol.com") {
+      hasCustomer = true;
+    }
+  }
+
+  if (!hasAdmin) {
+    users.push({
+      name: "Ronak Tank (Admin)",
+      phone: "9876543210",
+      email: "admin@mechcontrol.com",
+      password: "admin",
+      role: "admin"
+    });
+  }
+
+  if (!hasCustomer) {
+    users.push({
+      name: "Deep Sondagar (Customer)",
+      phone: "9825012345",
+      email: "customer@mechcontrol.com",
+      password: "customer",
+      role: "customer"
+    });
+  }
+
+  localStorage.setItem("gms_users", JSON.stringify(users));
 }
 
-// Error banner helpers
-function showError(msg) {
-  if (errorMsgText) errorMsgText.textContent = msg;
-  if (errorBanner) errorBanner.classList.add('visible');
+// Pre-select category based on URL query parameter (e.g. signup.html?role=admin)
+window.onload = function() {
+  ensureDefaultUsersExist();
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var roleParam = urlParams.get("role");
+
+  if (roleParam === "admin") {
+    var adminRadio = document.getElementById("roleAdmin");
+    if (adminRadio) adminRadio.checked = true;
+  } else if (roleParam === "customer") {
+    var custRadio = document.getElementById("roleCustomer");
+    if (custRadio) custRadio.checked = true;
+  }
+};
+
+// Toggle password visibility
+var toggleBtn = document.getElementById("togglePassword");
+var passInput = document.getElementById("password");
+var eyeIcon = document.getElementById("eyeIcon");
+
+if (toggleBtn && passInput && eyeIcon) {
+  toggleBtn.onclick = function() {
+    if (passInput.type === "password") {
+      passInput.type = "text";
+      eyeIcon.className = "bi bi-eye-slash";
+    } else {
+      passInput.type = "password";
+      eyeIcon.className = "bi bi-eye";
+    }
+  };
 }
 
+// Show error message
+function showError(message) {
+  var errorBanner = document.getElementById("errorBanner");
+  var errorMsgText = document.getElementById("errorMsgText");
+  if (errorMsgText) errorMsgText.innerText = message;
+  if (errorBanner) errorBanner.classList.add("visible");
+}
+
+// Hide error message
 function hideError() {
-  if (errorBanner) errorBanner.classList.remove('visible');
-}
-
-// Helper: email format check
-function isValidEmail(val) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val.trim());
-}
-
-// Helper: phone 10 digits check
-function isValidPhone(val) {
-  return /^\d{10}$/.test(val.trim());
-}
-
-// Restrict phone input to numbers only
-if (fieldPhone) {
-  fieldPhone.addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, '');
-    hideError();
-  });
-}
-
-// Show/Hide password toggle
-const toggleBtn = document.getElementById('togglePassword');
-const eyeIcon   = document.getElementById('eyeIcon');
-if (toggleBtn && eyeIcon && fieldPassword) {
-  toggleBtn.addEventListener('click', () => {
-    const hidden = fieldPassword.type === 'password';
-    fieldPassword.type = hidden ? 'text' : 'password';
-    eyeIcon.className  = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
-  });
-}
-
-// Read users from localStorage
-function getStoredUsers() {
-  return JSON.parse(localStorage.getItem('gms_users') || '[]');
+  var errorBanner = document.getElementById("errorBanner");
+  if (errorBanner) errorBanner.classList.remove("visible");
 }
 
 // Form Submission
-if (form) {
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
+var signupForm = document.getElementById("signupForm");
+if (signupForm) {
+  signupForm.onsubmit = function(event) {
+    event.preventDefault();
     hideError();
 
-    // 1. Validation
-    const nameVal  = fieldFullName.value.trim();
-    const emailVal = fieldEmail.value.trim().toLowerCase();
-    const phoneVal = fieldPhone.value.trim();
-    const passVal  = fieldPassword.value;
-    const confVal  = fieldConfirm.value;
-    const termsOk  = fieldTerms.checked;
+    var nameVal = document.getElementById("fullName").value.trim();
+    var phoneVal = document.getElementById("phone").value.trim();
+    var emailVal = document.getElementById("email").value.trim().toLowerCase();
+    var passVal = document.getElementById("password").value;
+    var confVal = document.getElementById("confirmPassword").value;
+    var termsOk = document.getElementById("terms").checked;
 
-    const nameOk  = nameVal.length >= 2;
-    const emailOk = isValidEmail(emailVal);
-    const phoneOk = isValidPhone(phoneVal);
-    const passOk  = passVal.length >= 6;
-    const confOk  = confVal === passVal && confVal.length > 0;
+    // Determine selected role
+    var selectedRole = "customer";
+    var adminRadio = document.getElementById("roleAdmin");
+    if (adminRadio && adminRadio.checked) {
+      selectedRole = "admin";
+    }
 
-    setValidity('grp-name', nameOk);
-    setValidity('grp-email', emailOk);
-    setValidity('grp-phone', phoneOk);
-    setValidity('grp-password', passOk);
-    setValidity('grp-confirm', confOk);
-    setValidity('grp-terms', termsOk);
-
-    if (!nameOk || !emailOk || !phoneOk || !passOk || !confOk || !termsOk) {
-      showError('Please correct the highlighted fields before submitting.');
+    // Validation checks
+    if (nameVal.length < 2) {
+      showError("Please enter your full name.");
+      document.getElementById("fullName").focus();
       return;
     }
 
-    // Get selected role
-    const roleRadio = document.querySelector('input[name="role"]:checked');
-    const selectedRole = roleRadio ? roleRadio.value : 'customer';
-
-    // 2. Check if email already registered
-    const existingUsers = getStoredUsers();
-    const duplicate = existingUsers.find(u => u.email.toLowerCase() === emailVal);
-
-    if (duplicate) {
-      showError('This email is already registered! Please sign in with your email & password.');
-      setValidity('grp-email', false);
-      fieldEmail.focus();
+    if (phoneVal.length != 10) {
+      showError("Please enter a valid 10-digit phone number.");
+      document.getElementById("phone").focus();
       return;
     }
 
-    // 3. Save new user object
-    const newUser = {
+    if (emailVal.indexOf("@") == -1 || emailVal.indexOf(".") == -1) {
+      showError("Please enter a valid email address.");
+      document.getElementById("email").focus();
+      return;
+    }
+
+    if (passVal.length < 4) {
+      showError("Password must be at least 4 characters long.");
+      document.getElementById("password").focus();
+      return;
+    }
+
+    if (passVal !== confVal) {
+      showError("Passwords do not match. Please re-enter.");
+      document.getElementById("confirmPassword").focus();
+      return;
+    }
+
+    if (!termsOk) {
+      showError("You must agree to the Terms of Service & Privacy Policy.");
+      return;
+    }
+
+    // Check if email already registered in localStorage
+    var rawUsers = localStorage.getItem("gms_users");
+    var usersList = [];
+    if (rawUsers != null && rawUsers != "") {
+      usersList = JSON.parse(rawUsers);
+    }
+
+    for (var i = 0; i < usersList.length; i++) {
+      if (usersList[i].email.toLowerCase() === emailVal) {
+        showError("This email is already registered! Please sign in with your email & password.");
+        return;
+      }
+    }
+
+    // Add new user
+    var newUser = {
       name: nameVal,
-      email: emailVal,
       phone: phoneVal,
-      role: selectedRole,
+      email: emailVal,
       password: passVal,
-      registeredAt: new Date().toLocaleDateString()
+      role: selectedRole
     };
 
-    existingUsers.push(newUser);
-    localStorage.setItem('gms_users', JSON.stringify(existingUsers));
+    usersList.push(newUser);
+    localStorage.setItem("gms_users", JSON.stringify(usersList));
 
-    // 4. Show success screen & redirect to signin.html
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Account…';
+    // Show success screen and redirect to signin.html
+    var submitBtn = document.getElementById("submitBtn");
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving Account...';
+    }
 
-    setTimeout(() => {
-      form.style.display = 'none';
-      successMsg.style.display = 'block';
+    setTimeout(function() {
+      signupForm.style.display = "none";
+      var successMsg = document.getElementById("successMsg");
+      if (successMsg) successMsg.style.display = "block";
 
-      // Redirect to signin.html with the registered role pre-selected!
-      setTimeout(() => {
-        window.location.href = 'signin.html?role=' + selectedRole;
+      setTimeout(function() {
+        window.location.href = "signin.html?role=" + selectedRole;
       }, 1200);
     }, 600);
-
-  });
+  };
 }

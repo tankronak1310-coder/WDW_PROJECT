@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard – MechControl</title>
+  <title>Admin Dashboard — MechControl</title>
 
   <!-- Bootstrap 5 CSS -->
   <link
@@ -24,7 +24,9 @@
 
 <body class="admin-body">
 
-  <!-- ════ TOP NAVBAR ════ -->
+  <!-- ============================================================
+       TOP NAVBAR
+       ============================================================ -->
   <header class="mc-navbar sticky-top">
     <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-3 px-3 px-md-4">
       
@@ -37,7 +39,7 @@
         <span class="mc-brand-badge">Admin</span>
       </div>
 
-      <!-- Navigation Tabs (Best of Friend's Design) -->
+      <!-- Navigation Tabs -->
       <nav class="d-flex align-items-center gap-1">
         <button class="adm-tab-link active" onclick="switchAdminTab('dashboard')" id="tab-dashboard">
           <i class="bi bi-speedometer2"></i> Dashboard
@@ -53,9 +55,14 @@
         </button>
       </nav>
 
-      <!-- Action Buttons -->
+      <!-- Action Buttons & Admin Name Display -->
       <div class="d-flex align-items-center gap-2 flex-wrap">
-        <span class="text-white-50 small d-none d-lg-inline" id="liveClock">Loading...</span>
+        <!-- Display Admin Name in Navbar -->
+        <span class="badge bg-danger text-white px-2 py-1 fs-7">
+          <i class="bi bi-person-fill me-1"></i> Admin: <strong id="adminNavName">Ronak Tank (Admin)</strong>
+        </span>
+
+        <span class="text-white-50 small d-none d-xl-inline" id="liveClock">Loading...</span>
         
         <button class="btn btn-sm btn-mc-primary" data-bs-toggle="modal" data-bs-target="#checkinModal">
           <i class="bi bi-plus-circle-fill me-1"></i>Check-in Vehicle
@@ -70,10 +77,32 @@
   </header>
   <div class="mc-accent-bar" role="presentation"></div>
 
-  <!-- ════ MAIN CONTAINER ════ -->
+  <!-- ============================================================
+       MAIN CONTAINER
+       ============================================================ -->
   <main class="container-fluid px-3 px-md-4 pt-4">
 
-    <!-- ── TAB 1: DASHBOARD OVERVIEW ── -->
+    <!-- Admin Welcome Header Banner -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 p-3 bg-white border rounded-3 shadow-sm">
+      <div class="d-flex align-items-center gap-3">
+        <div class="p-2 bg-danger-subtle text-danger rounded-circle fs-3">
+          <i class="bi bi-shield-shaded"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-0 text-dark">Welcome back, <span id="adminWelcomeName" class="text-danger">Ronak Tank (Admin)</span>!</h4>
+          <p class="text-muted small mb-0">Workshop Management Console & Mechanic Operations Floor</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-success-subtle text-success px-3 py-2 fw-semibold">
+          <i class="bi bi-circle-fill fs-8 me-1 text-success"></i> Workshop Status: Active
+        </span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         TAB 1: DASHBOARD OVERVIEW
+         ============================================================ -->
     <div id="section-dashboard" class="admin-tab-section active">
       
       <!-- KPI Metrics Row -->
@@ -101,248 +130,294 @@
           <div class="stat-box">
             <div class="d-flex justify-content-between align-items-start">
               <div>
-                <div class="stat-title">Currently Repairing</div>
-                <div class="stat-number text-warning" id="statRepairingCount">0</div>
-                <p class="stat-desc">Active in workshop queue</p>
+                <div class="stat-title">Vehicles Under Repair</div>
+                <div class="stat-number text-danger" id="statRepairing">0</div>
+                <p class="stat-desc">
+                  <span class="text-danger fw-bold"><i class="bi bi-arrow-up-short"></i> Active</span> currently on floor
+                </p>
               </div>
-              <div class="stat-icon icon-amber"><i class="bi bi-wrench-adjustable"></i></div>
+              <div class="stat-icon icon-red"><i class="bi bi-wrench-adjustable-circle-fill"></i></div>
             </div>
           </div>
         </div>
 
-        <!-- Metric 3: Ready for Pickup -->
+        <!-- Metric 3: Ready for Delivery -->
         <div class="col-12 col-sm-6 col-xl-3">
           <div class="stat-box">
             <div class="d-flex justify-content-between align-items-start">
               <div>
                 <div class="stat-title">Ready for Pickup</div>
-                <div class="stat-number text-success" id="statReadyCount">0</div>
-                <p class="stat-desc">Waiting for customer collection</p>
+                <div class="stat-number text-success" id="statReady">0</div>
+                <p class="stat-desc">
+                  <span class="badge bg-success-subtle text-success">Service Completed</span>
+                </p>
               </div>
-              <div class="stat-icon icon-green"><i class="bi bi-check2-circle"></i></div>
+              <div class="stat-icon icon-green"><i class="bi bi-check-circle-fill"></i></div>
             </div>
           </div>
         </div>
 
-        <!-- Metric 4: Completed & Revenue -->
+        <!-- Metric 4: Revenue Estimate -->
         <div class="col-12 col-sm-6 col-xl-3">
           <div class="stat-box">
             <div class="d-flex justify-content-between align-items-start">
               <div>
-                <div class="stat-title">Completed & Total Revenue</div>
-                <div class="stat-number text-dark" id="statTotalRevenue">₹0</div>
-                <p class="stat-desc">Total Completed: <strong id="statCompletedCount">0</strong></p>
+                <div class="stat-title">Active Repair Value</div>
+                <div class="stat-number text-warning" id="statRevenue">₹0</div>
+                <p class="stat-desc">
+                  Total approved repair estimates
+                </p>
               </div>
-              <div class="stat-icon icon-purple"><i class="bi bi-cash-stack"></i></div>
+              <div class="stat-icon icon-amber"><i class="bi bi-currency-rupee"></i></div>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Quick Recent Repairs Table Preview -->
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-          <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-activity text-danger me-2"></i>Live Workshop Floor Quick View</h6>
-          <button class="btn btn-sm btn-outline-danger" onclick="switchAdminTab('repairs')">View Full Details &rarr;</button>
+      <!-- Quick Duty Roster Preview & Live Floor -->
+      <div class="row g-3 mb-4">
+        
+        <!-- Left: Quick Mechanics Attendance -->
+        <div class="col-12 col-lg-5">
+          <div class="mc-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-person-badge text-danger me-2"></i>Mechanics Duty Roster
+              </h6>
+              <button class="btn btn-sm btn-outline-secondary" onclick="switchAdminTab('mechanics')">Full Roster &rarr;</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover align-middle mb-0">
+                <thead class="table-light small">
+                  <tr>
+                    <th>Mechanic</th>
+                    <th>Specialty</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="quickMechanicsList">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light small">
-              <tr>
-                <th>Job #</th>
-                <th>Customer</th>
-                <th>Vehicle & Plate</th>
-                <th>Assigned Mechanic</th>
-                <th>Repair Stage</th>
-                <th>Estimated Time</th>
-                <th>Total Cost</th>
-                <th class="text-end">Action</th>
-              </tr>
-            </thead>
-            <tbody id="quickTableBody">
-              <!-- Populated by JS -->
-            </tbody>
-          </table>
+
+        <!-- Right: Active Repair Queue -->
+        <div class="col-12 col-lg-7">
+          <div class="mc-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-speedometer text-danger me-2"></i>Live Repair Queue
+              </h6>
+              <button class="btn btn-sm btn-outline-danger" onclick="switchAdminTab('repairs')">View Full Details &rarr;</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover align-middle mb-0">
+                <thead class="table-light small">
+                  <tr>
+                    <th>Job ID</th>
+                    <th>Vehicle</th>
+                    <th>Customer</th>
+                    <th>Mechanic</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="quickJobsList">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
       </div>
 
     </div>
 
-    <!-- ── TAB 2: FULL REPAIRS & VEHICLES TRACKING ── -->
+    <!-- ============================================================
+         TAB 2: REPAIRS & VEHICLES (Full Detailed Management)
+         ============================================================ -->
     <div id="section-repairs" class="admin-tab-section">
       
-      <!-- Filter & Search Bar -->
-      <div class="filter-card">
-        <div class="row g-3 align-items-center">
-          <div class="col-12 col-md-5">
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+      <div class="mc-card p-3 mb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+          
+          <div class="d-flex align-items-center gap-2">
+            <h5 class="fw-bold mb-0 text-dark">Vehicle Repairs Management</h5>
+            <span class="badge bg-secondary" id="repairsCountBadge">0 Total</span>
+          </div>
+
+          <!-- Filter & Search Controls -->
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            
+            <!-- Search -->
+            <div class="input-group input-group-sm" style="width: 220px;">
+              <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
               <input
-                type="text"
-                id="searchInput"
-                class="form-control border-start-0"
-                placeholder="Search by Customer, Phone, Vehicle, or Plate..."
+                type="text" class="form-control" id="repairSearchInput"
+                placeholder="Search plate, customer..."
+                oninput="handleRepairSearch(this.value)"
               />
             </div>
-          </div>
 
-          <div class="col-6 col-md-3">
-            <select id="vehicleTypeFilter" class="form-select">
-              <option value="all">All Vehicle Types</option>
-              <option value="Bike">Bikes & Motorcycles</option>
-              <option value="Scooter">Scooters</option>
-              <option value="Car">Cars</option>
-            </select>
-          </div>
-
-          <div class="col-12 col-md-4">
-            <div class="d-flex flex-wrap gap-2 justify-content-md-end">
-              <button class="filter-pill active" data-status="all">All</button>
-              <button class="filter-pill" data-status="repairing">In Progress</button>
-              <button class="filter-pill" data-status="awaiting-parts">Awaiting Parts</button>
-              <button class="filter-pill" data-status="ready">Ready for Pickup</button>
-              <button class="filter-pill" data-status="completed">Completed</button>
+            <!-- Status Filter Buttons -->
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-outline-secondary active" onclick="filterRepairs('all', this)">All</button>
+              <button class="btn btn-outline-secondary" onclick="filterRepairs('pending', this)">Pending</button>
+              <button class="btn btn-outline-secondary" onclick="filterRepairs('repairing', this)">Repairing</button>
+              <button class="btn btn-outline-secondary" onclick="filterRepairs('awaiting-parts', this)">Parts</button>
+              <button class="btn btn-outline-secondary" onclick="filterRepairs('ready', this)">Ready</button>
             </div>
+
+            <!-- Check-in button -->
+            <button class="btn btn-sm btn-mc-primary" data-bs-toggle="modal" data-bs-target="#checkinModal">
+              <i class="bi bi-plus-lg me-1"></i>Check-in
+            </button>
+
           </div>
+
         </div>
       </div>
 
-      <!-- Main Vehicle Jobs Grid -->
-      <div class="row" id="jobsContainer">
-        <!-- Rendered dynamically -->
+      <!-- Repairs Cards Grid -->
+      <div class="row g-3" id="repairsCardsGrid">
+        <!-- Rendered by JS -->
       </div>
 
     </div>
 
-    <!-- ── TAB 3: MECHANICS ROSTER (Requirement 3) ── -->
+    <!-- ============================================================
+         TAB 3: MECHANICS ROSTER (Working / Leave Toggle)
+         ============================================================ -->
     <div id="section-mechanics" class="admin-tab-section">
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+      
+      <div class="mc-card p-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-person-gear text-primary me-2"></i>Workshop Mechanics Duty Management</h6>
-            <small class="text-muted">Control who is on duty today and track their active vehicle workload.</small>
+            <h5 class="fw-bold mb-0 text-dark">Mechanics Attendance & Duty Roster</h5>
+            <p class="text-muted small mb-0">Toggle duty status (Working vs On Leave) to manage workshop availability.</p>
           </div>
-          <span class="badge bg-light text-dark border"><span id="mechanicDutySummary">0</span> Active Today</span>
-        </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light small">
-              <tr>
-                <th>Mechanic Name</th>
-                <th>Specialty</th>
-                <th>Phone Number</th>
-                <th>Duty Status</th>
-                <th>Active Vehicles Load</th>
-                <th class="text-end">Change Duty</th>
-              </tr>
-            </thead>
-            <tbody id="mechanicsRosterBody">
-              <!-- Populated by JS -->
-            </tbody>
-          </table>
+          <span class="badge bg-danger fs-6" id="mechanicsTotalBadge">6 Mechanics</span>
         </div>
       </div>
+
+      <div class="row g-3" id="fullMechanicsGrid">
+        <!-- Rendered by JS -->
+      </div>
+
     </div>
 
-    <!-- ── TAB 4: CUSTOMERS DIRECTORY ── -->
+    <!-- ============================================================
+         TAB 4: CUSTOMERS DIRECTORY
+         ============================================================ -->
     <div id="section-customers" class="admin-tab-section">
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-people-fill text-success me-2"></i>Registered Customers Directory</h6>
-          <small class="text-muted">Contact details and vehicle service records.</small>
+      
+      <div class="mc-card p-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="fw-bold mb-0 text-dark">Registered Customer Directory</h5>
+            <p class="text-muted small mb-0">List of customers with active or past workshop repair jobs.</p>
+          </div>
+          <button class="btn btn-sm btn-mc-primary" data-bs-toggle="modal" data-bs-target="#checkinModal">
+            <i class="bi bi-person-plus-fill me-1"></i>New Customer Job
+          </button>
         </div>
+      </div>
+
+      <div class="mc-card p-0 overflow-hidden">
         <div class="table-responsive">
           <table class="table table-hover align-middle mb-0">
             <thead class="table-light small">
               <tr>
                 <th>Customer Name</th>
-                <th>Contact Phone</th>
-                <th>Registered Vehicle</th>
-                <th>Plate Number</th>
-                <th>Current Status</th>
-                <th class="text-end">Quick Contact</th>
+                <th>Phone Number</th>
+                <th>Vehicle Model & Number</th>
+                <th>Assigned Mechanic</th>
+                <th>Repair Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="customersDirectoryBody">
-              <!-- Populated by JS -->
+            <tbody id="customersTableBody">
+              <!-- Rendered by JS -->
             </tbody>
           </table>
         </div>
       </div>
+
     </div>
 
   </main>
 
-  <!-- ════ MODAL: CHECK-IN NEW VEHICLE ════ -->
+  <!-- ============================================================
+       MODAL: VEHICLE CHECK-IN (Requirement 4)
+       ============================================================ -->
   <div class="modal fade" id="checkinModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title fw-bold">
-            <i class="bi bi-plus-circle text-danger me-2"></i>Check-in Vehicle for Repair
+            <i class="bi bi-plus-circle-fill text-danger me-2"></i>Check-in New Vehicle
           </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
-        <form id="newVehicleForm">
+        <form id="checkinForm">
           <div class="modal-body p-4">
-            
-            <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">1. CUSTOMER INFORMATION</h6>
+
+            <!-- Customer Details -->
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Customer Details</h6>
             <div class="row g-3 mb-3">
               <div class="col-md-6">
-                <label class="form-label small fw-bold">Customer Full Name <span class="text-danger">*</span></label>
+                <label class="form-label small fw-bold">Customer Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="newCustomerName" required placeholder="e.g. Ronak Tank" />
               </div>
               <div class="col-md-6">
-                <label class="form-label small fw-bold">Mobile Phone <span class="text-danger">*</span></label>
-                <input type="tel" class="form-control" id="newCustomerPhone" required placeholder="e.g. 9876543210" maxlength="10" />
+                <label class="form-label small fw-bold">Customer Phone <span class="text-danger">*</span></label>
+                <input type="tel" class="form-control" id="newCustomerPhone" required placeholder="e.g. 9825012345" maxlength="10" />
               </div>
             </div>
 
-            <h6 class="fw-bold text-muted mb-3 border-bottom pb-2 mt-4">2. VEHICLE DETAILS</h6>
+            <!-- Vehicle Details -->
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">2. Vehicle Information</h6>
             <div class="row g-3 mb-3">
               <div class="col-md-4">
                 <label class="form-label small fw-bold">Vehicle Type <span class="text-danger">*</span></label>
                 <select id="newVehicleType" class="form-select" required>
-                  <option value="Bike">Motorcycle / Bike</option>
+                  <option value="Bike">Motorcycle</option>
                   <option value="Scooter">Scooter</option>
                   <option value="Car">Car</option>
                 </select>
               </div>
               <div class="col-md-4">
-                <label class="form-label small fw-bold">Make & Model <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="newVehicleModel" required placeholder="e.g. Honda Activa 6G / Pulsar" />
+                <label class="form-label small fw-bold">Vehicle Model <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="newVehicleModel" required placeholder="e.g. Pulsar 150" />
               </div>
               <div class="col-md-4">
-                <label class="form-label small fw-bold">Plate / Registration No. <span class="text-danger">*</span></label>
+                <label class="form-label small fw-bold">Plate Number <span class="text-danger">*</span></label>
                 <input type="text" class="form-control text-uppercase" id="newPlateNumber" required placeholder="e.g. GJ-01-AB-1234" />
               </div>
             </div>
 
+            <!-- Problem & Mechanic Assignment -->
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">3. Service & Mechanic Assignment</h6>
             <div class="mb-3">
-              <label class="form-label small fw-bold">Customer Reported Problem <span class="text-danger">*</span></label>
-              <textarea class="form-control" id="newReportedIssue" rows="2" required placeholder="Describe issue: e.g. Engine knocking, brake failure, periodic oil change..."></textarea>
+              <label class="form-label small fw-bold">Reported Problem / Service Required <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="newReportedIssue" rows="2" required placeholder="Describe the customer's vehicle problem..."></textarea>
             </div>
 
-            <h6 class="fw-bold text-muted mb-3 border-bottom pb-2 mt-4">3. ASSIGN MECHANIC & ESTIMATES</h6>
-            <div class="row g-3">
+            <div class="row g-3 mb-3">
               <div class="col-md-6">
                 <label class="form-label small fw-bold">Assign Mechanic <span class="text-danger">*</span></label>
-                <select id="mechanicSelect" class="form-select" required>
+                <select id="newAssignedMechanic" class="form-select" required>
                   <!-- Populated by JS -->
                 </select>
               </div>
               <div class="col-md-6">
-                <label class="form-label small fw-bold">Estimated Delivery Time</label>
-                <input type="text" class="form-control" id="newEstimatedDuration" placeholder="e.g. Today 5:30 PM, Tomorrow 12 PM" />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label small fw-bold">Base Parts / Service Cost (₹)</label>
-                <input type="number" class="form-control" id="newBaseCost" value="800" min="0" />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label small fw-bold">Labor / Inspection Charge (₹)</label>
-                <input type="number" class="form-control" id="newLaborCost" value="350" min="0" />
+                <label class="form-label small fw-bold">Initial Cost Estimate (₹) <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="newBaseCost" required placeholder="e.g. 1200" min="0" />
               </div>
             </div>
 
@@ -358,7 +433,9 @@
     </div>
   </div>
 
-  <!-- ════ MODAL: ADD UNEXPECTED MECHANIC FINDING (Requirement 2) ════ -->
+  <!-- ============================================================
+       MODAL: ADD UNEXPECTED MECHANIC FINDING (Requirement 3)
+       ============================================================ -->
   <div class="modal fade" id="addIssueModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow">
@@ -371,38 +448,29 @@
         <form id="addIssueForm">
           <div class="modal-body p-4">
             <div class="alert alert-warning small mb-3">
-              <strong>Notice:</strong> Record unexpected problems found during vehicle teardown so the customer can approve or decline the repair.
+              <strong>Notice:</strong> This unexpected defect will be displayed immediately to the customer on their dashboard. If they accept, the cost will increment directly; if they decline, the cost remains unchanged.
             </div>
 
             <div class="mb-3">
-              <small class="text-muted d-block">APPLYING TO JOB:</small>
+              <small class="text-muted d-block">APPLYING TO VEHICLE JOB:</small>
               <span class="badge bg-dark fs-6" id="issueJobIdDisplay">JOB-101</span>
             </div>
 
             <div class="mb-3">
               <label class="form-label small fw-bold">Discovered Problem Description <span class="text-danger">*</span></label>
-              <textarea class="form-control" id="issueDescription" rows="3" required placeholder="e.g. Front fork oil seal leaking; rear brake rotor warped; dead battery cell..."></textarea>
+              <textarea class="form-control" id="issueDescription" rows="3" required placeholder="e.g. Front brake pads heavily worn; rotor skim recommended..."></textarea>
             </div>
 
             <div class="mb-3">
               <label class="form-label small fw-bold">Estimated Additional Cost (₹) <span class="text-danger">*</span></label>
-              <input type="number" class="form-control" id="issueCost" placeholder="e.g. 650" required min="0" />
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label small fw-bold">Customer Approval Status</label>
-              <select id="issueApproval" class="form-select">
-                <option value="pending">Pending Customer Approval</option>
-                <option value="approved">Approved by Customer</option>
-                <option value="declined">Customer Declined</option>
-              </select>
+              <input type="number" class="form-control" id="issueCost" placeholder="e.g. 850" required min="1" />
             </div>
 
           </div>
           <div class="modal-footer bg-light">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-warning fw-bold" style="width: auto;">
-              <i class="bi bi-save me-1"></i>Save Finding
+              <i class="bi bi-send-fill me-1"></i> Send Finding to Customer
             </button>
           </div>
         </form>
@@ -410,7 +478,9 @@
     </div>
   </div>
 
-  <!-- ════ MODAL: INVOICE (Requirement 5) ════ -->
+  <!-- ============================================================
+       MODAL: INVOICE
+       ============================================================ -->
   <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content border-0 shadow">
@@ -428,26 +498,6 @@
           <button type="button" class="btn btn-dark" onclick="window.print()">
             <i class="bi bi-printer me-1"></i>Print Invoice
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════ MODAL: CUSTOMER VIEW PREVIEW ════ -->
-  <div class="modal fade" id="customerViewModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow">
-        <div class="modal-header bg-dark text-white">
-          <h5 class="modal-title fw-bold">
-            <i class="bi bi-phone text-primary me-2"></i>Customer Live View Preview
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4 bg-light" id="customerViewContent">
-          <!-- Populated by JS -->
-        </div>
-        <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

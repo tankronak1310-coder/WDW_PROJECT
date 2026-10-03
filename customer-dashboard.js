@@ -3,28 +3,62 @@
    Written in Basic, Easy-to-Understand Vanilla JavaScript
    ================================================================ */
 
-// Helper: Read jobs from browser storage
+// ----------------------------------------------------------------
+// 1. LOCALSTORAGE HELPERS
+// ----------------------------------------------------------------
 function getStoredJobs() {
   var data = localStorage.getItem("gms_jobs");
-  if (data == null) {
+  if (data == null || data == "") {
     return [];
   }
   return JSON.parse(data);
 }
 
-// Helper: Save jobs to browser storage
 function saveStoredJobs(list) {
   localStorage.setItem("gms_jobs", JSON.stringify(list));
 }
 
-// Startup
+// ----------------------------------------------------------------
+// 2. STARTUP & DISPLAY NAMES (Requirement 2)
+// ----------------------------------------------------------------
 window.onload = function() {
+  displayNames();
   loadCustomerVehicleData();
   setupCustomerForms();
 };
 
+function displayNames() {
+  // Display Customer Name
+  var custName = "Deep Sondagar (Customer)";
+  var userStr = localStorage.getItem("mc_current_user");
+  if (userStr != null && userStr != "") {
+    var userObj = JSON.parse(userStr);
+    if (userObj && userObj.name) {
+      custName = userObj.name;
+    }
+  }
+
+  var c1 = document.getElementById("custNameDisplay");
+  if (c1) c1.innerText = custName;
+
+  var c2 = document.getElementById("custNavName");
+  if (c2) c2.innerText = custName;
+
+  // Display Workshop Admin Name (Requirement 2: customer sees admin name)
+  var adminName = localStorage.getItem("mc_active_admin_name");
+  if (adminName == null || adminName == "") {
+    adminName = "Ronak Tank (Admin)";
+  }
+
+  var a1 = document.getElementById("adminNameDisplay");
+  if (a1) a1.innerText = adminName;
+
+  var a2 = document.getElementById("adminNameDisplayContact");
+  if (a2) a2.innerText = adminName;
+}
+
 // ----------------------------------------------------------------
-// 1. SECTION NAVIGATION (Dashboard, Book Service, Contact)
+// 3. TAB NAVIGATION (Dashboard, Book Service, Contact)
 // ----------------------------------------------------------------
 function showCustomerSection(sectionName) {
   var sections = document.querySelectorAll(".customer-section");
@@ -45,7 +79,7 @@ function showCustomerSection(sectionName) {
 }
 
 // ----------------------------------------------------------------
-// 2. LOAD & DISPLAY VEHICLE LIVE TRACKING (From LocalStorage)
+// 4. LOAD & DISPLAY VEHICLE LIVE TRACKING (Requirement 2 & 3)
 // ----------------------------------------------------------------
 function loadCustomerVehicleData() {
   var container = document.getElementById("customerVehicleContainer");
@@ -53,52 +87,81 @@ function loadCustomerVehicleData() {
 
   var jobs = getStoredJobs();
 
-  // If no jobs exist
+  // If no jobs exist in storage
   if (jobs.length == 0) {
     container.innerHTML = '<div class="mc-card text-center p-5 text-muted"><h5>No active vehicle in service.</h5><p class="small">Click "Book Service" in the top menu to schedule your vehicle check-up.</p></div>';
     return;
   }
 
-  // Display the first vehicle (Customer's active vehicle)
-  var job = jobs[0];
+  // Find customer's job or fallback to the first job
+  var userStr = localStorage.getItem("mc_current_user");
+  var loggedInName = "Deep Sondagar";
+  if (userStr != null && userStr != "") {
+    var uObj = JSON.parse(userStr);
+    if (uObj && uObj.name) {
+      loggedInName = uObj.name;
+    }
+  }
 
-  // Update customer name header
-  var nameEl = document.getElementById("custNameDisplay");
-  if (nameEl) nameEl.innerText = job.customerName;
+  var job = jobs[0]; // Default to active vehicle
 
-  // Calculate costs
-  var extraCost = 0;
-  var extraFindingsHtml = "";
+  // Sync customer name on job
+  job.customerName = loggedInName;
+  saveStoredJobs(jobs);
+
+  var adminName = localStorage.getItem("mc_active_admin_name") || "Ronak Tank (Admin)";
+
+  // ----------------------------------------------------------------
+  // REQUIREMENT 3: ADDITIONAL PROBLEM MESSAGE LOGIC
+  // If pending: show message with Accept / Decline
+  // If accepted: directly increment cost
+  // If declined: cost remains same
+  // After whatever is selected: remove that message!
+  // ----------------------------------------------------------------
+  var pendingAlertHtml = "";
+  var approvedExtraCost = 0;
 
   if (job.discoveredIssues && job.discoveredIssues.length > 0) {
     for (var i = 0; i < job.discoveredIssues.length; i++) {
-      var issue = job.discoveredIssues[i];
-      if (issue.approvalStatus == "approved") {
-        extraCost += issue.estimatedCost;
+      var iss = job.discoveredIssues[i];
+
+      // If approved by customer, accumulate to cost
+      if (iss.approvalStatus == "approved") {
+        approvedExtraCost += iss.estimatedCost;
       }
 
-      var badgeHtml = '<span class="badge bg-warning text-dark">Awaiting Your Approval</span>';
-      if (issue.approvalStatus == "approved") {
-        badgeHtml = '<span class="badge bg-success">Approved by You</span>';
-      } else if (issue.approvalStatus == "declined") {
-        badgeHtml = '<span class="badge bg-danger">Declined by You</span>';
+      // Only show prompt message if status is "pending"
+      if (iss.approvalStatus == "pending") {
+        pendingAlertHtml += '<div class="alert alert-warning border-warning border-2 p-3 mb-4 rounded-3 shadow-sm" id="defectAlertBox">';
+        pendingAlertHtml += '  <div class="d-flex align-items-start gap-3">';
+        pendingAlertHtml += '    <span class="fs-2 text-warning"><i class="bi bi-exclamation-triangle-fill"></i></span>';
+        pendingAlertHtml += '    <div class="w-100">';
+        pendingAlertHtml += '      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">';
+        pendingAlertHtml += '        <h5 class="fw-bold text-dark mb-0">Unexpected Defect Found by Workshop Mechanic!</h5>';
+        pendingAlertHtml += '        <span class="badge bg-warning text-dark px-2 py-1"><i class="bi bi-hourglass-split me-1"></i>Awaiting Your Action</span>';
+        pendingAlertHtml += '      </div>';
+        pendingAlertHtml += '      <p class="text-muted small mb-2">Our workshop mechanic inspected your vehicle and found the following problem:</p>';
+        pendingAlertHtml += '      <div class="p-3 bg-white rounded border mb-3">';
+        pendingAlertHtml += '        <div class="fw-bold text-dark fs-6">' + iss.description + '</div>';
+        pendingAlertHtml += '        <div class="text-muted small mt-1">Estimated Additional Repair Cost: <strong class="text-danger fs-6">₹' + iss.estimatedCost.toLocaleString("en-IN") + '</strong></div>';
+        pendingAlertHtml += '      </div>';
+        pendingAlertHtml += '      <div class="d-flex gap-2 flex-wrap">';
+        pendingAlertHtml += '        <button class="btn btn-success btn-sm px-3 fw-bold" onclick="customerRespondToIssue(' + iss.id + ', \'accept\')">';
+        pendingAlertHtml += '          <i class="bi bi-check-circle-fill me-1"></i> Accept (+₹' + iss.estimatedCost.toLocaleString("en-IN") + ')';
+        pendingAlertHtml += '        </button>';
+        pendingAlertHtml += '        <button class="btn btn-outline-danger btn-sm px-3 fw-bold" onclick="customerRespondToIssue(' + iss.id + ', \'decline\')">';
+        pendingAlertHtml += '          <i class="bi bi-x-circle me-1"></i> Decline (Cost Remains Same)';
+        pendingAlertHtml += '        </button>';
+        pendingAlertHtml += '      </div>';
+        pendingAlertHtml += '    </div>';
+        pendingAlertHtml += '  </div>';
+        pendingAlertHtml += '</div>';
       }
-
-      extraFindingsHtml += '<div class="d-flex justify-content-between align-items-center py-2 border-bottom small">';
-      extraFindingsHtml += '  <div><strong>' + issue.description + '</strong><br><span class="text-muted">Extra Estimated Cost: ₹' + issue.estimatedCost + '</span></div>';
-      extraFindingsHtml += '  <div class="text-end">' + badgeHtml;
-      extraFindingsHtml += '    <div class="mt-1">';
-      extraFindingsHtml += '      <button class="btn btn-sm btn-outline-success py-0 px-2 me-1" onclick="customerApproveIssue(' + issue.id + ', \'approved\')"><i class="bi bi-check-lg me-1"></i>Approve</button>';
-      extraFindingsHtml += '      <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="customerApproveIssue(' + issue.id + ', \'declined\')"><i class="bi bi-x-lg me-1"></i>Decline</button>';
-      extraFindingsHtml += '    </div>';
-      extraFindingsHtml += '  </div>';
-      extraFindingsHtml += '</div>';
     }
-  } else {
-    extraFindingsHtml = '<div class="text-muted small">No unexpected problems found during mechanical inspection.</div>';
   }
 
-  var grandTotal = job.baseCost + job.laborCost + extraCost;
+  // Calculate Grand Total Cost: Base + Labor + Approved Extra Cost
+  var grandTotal = job.baseCost + job.laborCost + approvedExtraCost;
 
   // Status Badge
   var statusBadge = "bg-primary";
@@ -115,6 +178,11 @@ function loadCustomerVehicleData() {
 
   // Build the complete Customer Tracking Card HTML
   var html = "";
+
+  // Insert the pending alert message (if any pending issue exists).
+  // Once accepted or declined, pendingAlertHtml is empty, which completely removes the message!
+  html += pendingAlertHtml;
+
   html += '<div class="mc-card p-0 overflow-hidden mb-4">';
 
   // Top header banner
@@ -145,30 +213,23 @@ function loadCustomerVehicleData() {
   html += '      </div>';
   html += '    </div>';
 
-  // Two columns: Problem & Mechanic
-  html += '    <div class="row g-3 mb-3">';
+  // Two columns: Problem & Mechanic + Admin Supervisor
+  html += '    <div class="row g-3 mb-4">';
   html += '      <div class="col-md-6">';
   html += '        <div class="p-3 bg-light rounded border h-100">';
-  html += '          <small class="text-muted d-block fw-bold mb-1">YOUR SERVICE REQUEST</small>';
+  html += '          <small class="text-muted d-block fw-bold mb-1 text-uppercase">Primary Service Request</small>';
   html += '          <div class="text-dark">' + job.reportedIssue + '</div>';
   html += '          <div class="mt-2 text-muted small"><i class="bi bi-clock me-1"></i>Checked-in: ' + job.createdAt + '</div>';
   html += '        </div>';
   html += '      </div>';
   html += '      <div class="col-md-6">';
   html += '        <div class="p-3 bg-light rounded border h-100">';
-  html += '          <small class="text-muted d-block fw-bold mb-1">YOUR DEDICATED MECHANIC</small>';
+  html += '          <small class="text-muted d-block fw-bold mb-1 text-uppercase">Assigned Workshop Mechanic</small>';
   html += '          <div class="fw-bold text-dark fs-6">' + job.mechanicName + '</div>';
   html += '          <div class="small text-muted mb-2">Certified Workshop Technician</div>';
-  html += '          <a href="tel:9876543210" class="btn btn-sm btn-outline-success"><i class="bi bi-telephone-fill me-1"></i>Call Mechanic</a>';
+  html += '          <div class="small text-muted pt-2 border-top"><i class="bi bi-shield-shaded text-danger me-1"></i>Workshop Floor Admin: <strong class="text-dark">' + adminName + '</strong></div>';
   html += '        </div>';
   html += '      </div>';
-  html += '    </div>';
-
-  // Unexpected Mechanic Findings Box (Requirement 2)
-  html += '    <div class="p-3 bg-warning-subtle border border-warning rounded mb-4">';
-  html += '      <h6 class="fw-bold text-dark mb-1"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Mechanic Discovered Additional Findings</h6>';
-  html += '      <p class="text-muted small mb-2">Our technician discovered these defects during teardown. Please review and Approve or Decline:</p>';
-  html += '      <div>' + extraFindingsHtml + '</div>';
   html += '    </div>';
 
   // Cost and Invoice Row
@@ -182,50 +243,65 @@ function loadCustomerVehicleData() {
   html += '      </div>';
   html += '    </div>';
 
-  html += '  </div>'; // end p-4
+  html += '  </div>';
   html += '</div>';
 
   container.innerHTML = html;
 }
 
 // ----------------------------------------------------------------
-// 3. APPROVE OR DECLINE AN ISSUE AS CUSTOMER
+// 5. CUSTOMER ACTION ON ADDITIONAL PROBLEM (Requirement 3)
 // ----------------------------------------------------------------
-function customerApproveIssue(issueId, newStatus) {
+function customerRespondToIssue(issueId, action) {
   var jobs = getStoredJobs();
   if (jobs.length == 0) return;
 
   var job = jobs[0];
+
   if (job.discoveredIssues) {
     for (var i = 0; i < job.discoveredIssues.length; i++) {
-      if (job.discoveredIssues[i].id == issueId) {
-        job.discoveredIssues[i].approvalStatus = newStatus;
+      var item = job.discoveredIssues[i];
+
+      if (item.id == issueId) {
+        if (action === "accept") {
+          // If accepted: mark approved -> directly increments total cost
+          item.approvalStatus = "approved";
+          alert("Additional repair accepted! ₹" + item.estimatedCost + " has been added to your total bill.");
+        } else {
+          // If declined: mark declined -> cost remains unchanged
+          item.approvalStatus = "declined";
+          alert("Additional repair declined. Total cost remains unchanged.");
+        }
         break;
       }
     }
   }
 
+  // Save changes to browser storage
   saveStoredJobs(jobs);
+
+  // Reload view: Since approvalStatus is no longer "pending", the message is completely removed!
   loadCustomerVehicleData();
-  alert("Your response has been sent to the workshop mechanic!");
 }
 
 // ----------------------------------------------------------------
-// 4. SHOW INVOICE MODAL
+// 6. SHOW INVOICE MODAL
 // ----------------------------------------------------------------
 function showCustomerInvoice() {
   var jobs = getStoredJobs();
   if (jobs.length == 0) return;
   var job = jobs[0];
 
+  var adminName = localStorage.getItem("mc_active_admin_name") || "Ronak Tank (Admin)";
   var extraCost = 0;
   var extraRows = "";
+
   if (job.discoveredIssues) {
-    for (var i = 0; i < job.discoveredIssues.length; i++) {
-      var iss = job.discoveredIssues[i];
+    for (var k = 0; k < job.discoveredIssues.length; k++) {
+      var iss = job.discoveredIssues[k];
       if (iss.approvalStatus == "approved") {
         extraCost += iss.estimatedCost;
-        extraRows += '<tr><td>Inspection Finding: ' + iss.description + '</td><td class="text-end">₹' + iss.estimatedCost.toLocaleString("en-IN") + '</td></tr>';
+        extraRows += "<tr><td>Approved Additional Work: " + iss.description + "</td><td class='text-end'>₹" + iss.estimatedCost.toLocaleString("en-IN") + "</td></tr>";
       }
     }
   }
@@ -240,14 +316,14 @@ function showCustomerInvoice() {
   html += '  </div>';
   html += '  <div class="row mb-3 small">';
   html += '    <div class="col-6"><strong>Customer:</strong><br>' + job.customerName + '<br>Phone: ' + job.customerPhone + '<br>Vehicle: ' + job.vehicleModel + ' (' + job.plateNumber + ')</div>';
-  html += '    <div class="col-6 text-end"><strong>Dedicated Mechanic:</strong><br>' + job.mechanicName + '<br>Status: <span class="badge bg-success">' + job.status.toUpperCase() + '</span></div>';
+  html += '    <div class="col-6 text-end"><strong>Workshop Floor Admin:</strong><br>' + adminName + '<br>Mechanic: ' + job.mechanicName + '<br>Status: <span class="badge bg-success">' + job.status.toUpperCase() + '</span></div>';
   html += '  </div>';
   html += '  <table class="table table-bordered">';
-  html += '    <thead class="table-light small"><tr><th>Service Item / Spare Parts</th><th class="text-end">Cost</th></tr></thead>';
+  html += '    <thead class="table-light small"><tr><th>Service Item / Spares</th><th class="text-end">Cost</th></tr></thead>';
   html += '    <tbody>';
-  html += '      <tr><td>Primary Repair: ' + job.reportedIssue + '</td><td class="text-end">₹' + job.baseCost.toLocaleString("en-IN") + '</td></tr>';
+  html += '      <tr><td>Primary Repair & Servicing: ' + job.reportedIssue + '</td><td class="text-end">₹' + job.baseCost.toLocaleString("en-IN") + '</td></tr>';
   html += '      <tr><td>Mechanic Labor & Inspection Charges</td><td class="text-end">₹' + job.laborCost.toLocaleString("en-IN") + '</td></tr>';
-  html +=         extraRows;
+  html +=        extraRows;
   html += '      <tr class="table-light fw-bold"><td>TOTAL BILL AMOUNT</td><td class="text-end text-danger">₹' + total.toLocaleString("en-IN") + '</td></tr>';
   html += '    </tbody>';
   html += '  </table>';
@@ -261,7 +337,7 @@ function showCustomerInvoice() {
 }
 
 // ----------------------------------------------------------------
-// 5. BOOK A NEW SERVICE FORM SUBMIT
+// 7. BOOK A NEW SERVICE FORM SUBMIT
 // ----------------------------------------------------------------
 function setupCustomerForms() {
   var form = document.getElementById("bookServiceForm");
@@ -270,12 +346,12 @@ function setupCustomerForms() {
   form.onsubmit = function(event) {
     event.preventDefault();
 
-    var name = document.getElementById("bookName").value;
-    var phone = document.getElementById("bookPhone").value;
+    var name = document.getElementById("bookName").value.trim();
+    var phone = document.getElementById("bookPhone").value.trim();
     var type = document.getElementById("bookType").value;
-    var model = document.getElementById("bookModel").value;
-    var plate = document.getElementById("bookPlate").value.toUpperCase();
-    var problem = document.getElementById("bookProblem").value;
+    var model = document.getElementById("bookModel").value.trim();
+    var plate = document.getElementById("bookPlate").value.trim().toUpperCase();
+    var problem = document.getElementById("bookProblem").value.trim();
 
     var jobs = getStoredJobs();
     var newJob = {

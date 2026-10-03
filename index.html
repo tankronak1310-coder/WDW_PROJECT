@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MechControl – Smart Workshop & Vehicle Management</title>
+  <title>MechControl — Smart Workshop & Vehicle Management</title>
 
   <!-- Bootstrap 5 CSS -->
   <link
@@ -22,114 +22,176 @@
 
 <body>
 
-  <!-- ════ STATIC TOP NAVBAR (Exact same on every page) ════ -->
+  <!-- ============================================================
+       STATIC TOP NAVBAR (Identical across all pages)
+       ============================================================ -->
   <header class="mc-navbar">
     <div class="container d-flex align-items-center justify-content-between">
       <a href="index.html" class="mc-brand">
         <i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
         <span>MechControl</span>
       </a>
-      <span class="text-white-50 small">Vehicle Service Portal</span>
+      <span class="text-white-50 small d-none d-sm-inline">Workshop & Vehicle Service Portal</span>
     </div>
   </header>
   <div class="mc-accent-bar" role="presentation"></div>
 
-  <!-- ════ MAIN AUTH WRAPPER (Horizontal Split-Screen) ════ -->
-  <main class="auth-wrapper">
-    <div class="auth-split-card">
-      <div class="row g-0">
+  <!-- ============================================================
+       MAIN CONTENT: STEP 1 - CHOOSE CATEGORY FIRST
+       ============================================================ -->
+  <main class="container py-5 my-auto">
 
-        <!-- Left Column: Branding -->
-        <div class="col-lg-5 auth-brand-side">
-          <div>
-            <div class="d-flex align-items-center gap-2 mb-3">
-              <i class="bi bi-gear-wide-connected text-danger fs-3"></i>
-              <span class="fs-4 fw-bold tracking-tight text-white">MechControl</span>
+    <!-- Top Headline -->
+    <div class="text-center mb-5">
+      <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold text-uppercase small mb-2">
+        <i class="bi bi-layers-fill me-1"></i> Step 1: Select Your Category
+      </span>
+      <h1 class="fw-bold text-dark mt-2 mb-2">Welcome to MechControl</h1>
+      <p class="text-muted mx-auto" style="max-width: 650px;">
+        Please select your category below. If you are a new user or admin, register your details first. If you are already registered, log in directly with your email and password.
+      </p>
+    </div>
+
+    <!-- Category Selection Cards (Horizontal Grid) -->
+    <div class="row g-4 justify-content-center">
+
+      <!-- ========================================================
+           CATEGORY 1: WORKSHOP ADMIN
+           ======================================================== -->
+      <div class="col-lg-5 col-md-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
+          <!-- Card Header Banner -->
+          <div class="p-4 bg-dark text-white d-flex align-items-center justify-content-between">
+            <div>
+              <span class="badge bg-danger text-uppercase px-2 py-1 mb-2">Category A</span>
+              <h3 class="fw-bold mb-0 text-white">Workshop Admin</h3>
+              <small class="text-white-50">Garage Owners, Supervisors & Floor Managers</small>
             </div>
-            <h2 class="fw-bold mb-3">Smart Workshop & Vehicle Management</h2>
-            <p class="text-white-50 small mb-4">
-              Real-time vehicle repair tracking, unexpected mechanic inspection findings approval, and workshop management.
-            </p>
-
-            <div class="auth-feature-item">
-              <div class="auth-feature-icon"><i class="bi bi-person-check-fill"></i></div>
-              <div>
-                <h6 class="fw-bold text-white mb-0 small">Step 1: First Time User?</h6>
-                <p class="text-white-50 small mb-0">Register your account details once as Customer or Admin.</p>
-              </div>
-            </div>
-
-            <div class="auth-feature-item">
-              <div class="auth-feature-icon"><i class="bi bi-key-fill"></i></div>
-              <div>
-                <h6 class="fw-bold text-white mb-0 small">Step 2: Returning User?</h6>
-                <p class="text-white-50 small mb-0">Sign in anytime with just your Email ID and Password.</p>
-              </div>
+            <div class="p-3 bg-danger bg-opacity-25 rounded-circle text-danger fs-2">
+              <i class="bi bi-shield-shaded"></i>
             </div>
           </div>
 
-          <div class="pt-4 border-top border-secondary small text-white-50">
-            &copy; 2026 MechControl. All rights reserved.
+          <!-- Card Body -->
+          <div class="p-4 d-flex flex-column flex-grow-1 bg-white">
+            <h6 class="fw-bold text-dark mb-3">Admin Portal Capabilities:</h6>
+            <ul class="list-unstyled text-muted small mb-4 flex-grow-1">
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>Manage mechanics roster & assign live repair jobs.</span>
+              </li>
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>Update vehicle repair progress percentage & stages.</span>
+              </li>
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>Report unexpected defects found during inspection to customer.</span>
+              </li>
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>Generate itemized digital bills & track workshop revenue.</span>
+              </li>
+            </ul>
+
+            <!-- Admin Actions: Register First -> Login -->
+            <div class="p-3 bg-light rounded-3 border">
+              <div class="text-muted small fw-bold mb-2 text-uppercase">Admin Access Flow:</div>
+              <a href="signup.html?role=admin" class="btn btn-mc-primary w-100 py-2 mb-2">
+                <i class="bi bi-person-plus-fill me-1"></i> 1. Register as Admin (New)
+              </a>
+              <a href="signin.html?role=admin" class="btn btn-outline-dark w-100 py-2 fw-semibold">
+                <i class="bi bi-box-arrow-in-right me-1"></i> 2. Admin Login (Already Registered)
+              </a>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- Right Column: Clear Choice (Register First vs Sign In) -->
-        <div class="col-lg-7 auth-form-side d-flex flex-column justify-content-center">
-          
-          <div class="mb-4 text-center text-md-start">
-            <h3 class="fw-bold text-dark mb-2">Welcome to MechControl</h3>
-            <p class="text-muted small">Please select how you would like to proceed:</p>
-          </div>
-
-          <!-- Step 1 Card: New User / Admin -->
-          <div class="p-3 mb-3 border rounded-3 bg-light">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <div>
-                <span class="badge bg-danger mb-1">New User or Admin</span>
-                <h5 class="fw-bold text-dark mb-0">Create an Account (Register)</h5>
-              </div>
-              <span class="fs-4 text-danger"><i class="bi bi-person-plus-fill"></i></span>
+      <!-- ========================================================
+           CATEGORY 2: VEHICLE CUSTOMER
+           ======================================================== -->
+      <div class="col-lg-5 col-md-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
+          <!-- Card Header Banner -->
+          <div class="p-4 bg-dark text-white d-flex align-items-center justify-content-between">
+            <div>
+              <span class="badge bg-primary text-uppercase px-2 py-1 mb-2">Category B</span>
+              <h3 class="fw-bold mb-0 text-white">Vehicle Customer</h3>
+              <small class="text-white-50">Car, Bike & Scooter Owners</small>
             </div>
-            <p class="text-muted small mb-3">
-              If this is your first time using MechControl, register your details first so your account is saved in the system.
-            </p>
-            <a href="signup.html" class="btn-mc-primary py-2 text-center">
-              <i class="bi bi-person-plus-fill me-1"></i> Register New Account
-            </a>
-          </div>
-
-          <!-- Step 2 Card: Existing User -->
-          <div class="p-3 border rounded-3 bg-white shadow-sm">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <div>
-                <span class="badge bg-secondary mb-1">Returning User</span>
-                <h5 class="fw-bold text-dark mb-0">Already Registered? Sign In</h5>
-              </div>
-              <span class="fs-4 text-secondary"><i class="bi bi-box-arrow-in-right"></i></span>
+            <div class="p-3 bg-primary bg-opacity-25 rounded-circle text-primary fs-2">
+              <i class="bi bi-car-front-fill"></i>
             </div>
-            <p class="text-muted small mb-3">
-              If you have already entered your details once, simply enter your email and password to access your dashboard.
-            </p>
-            <a href="signin.html" class="btn btn-outline-dark w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center">
-              <i class="bi bi-box-arrow-in-right me-1"></i> Sign In with Email & Password
-            </a>
           </div>
 
+          <!-- Card Body -->
+          <div class="p-4 d-flex flex-column flex-grow-1 bg-white">
+            <h6 class="fw-bold text-dark mb-3">Customer Portal Capabilities:</h6>
+            <ul class="list-unstyled text-muted small mb-4 flex-grow-1">
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>Track live repair progress & estimated completion time.</span>
+              </li>
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>See assigned mechanic details and workshop admin supervisor.</span>
+              </li>
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>Accept or decline additional mechanic findings directly.</span>
+              </li>
+              <li class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                <span>Schedule service appointments and review total itemized bills.</span>
+              </li>
+            </ul>
+
+            <!-- Customer Actions: Register First -> Login -->
+            <div class="p-3 bg-light rounded-3 border">
+              <div class="text-muted small fw-bold mb-2 text-uppercase">Customer Access Flow:</div>
+              <a href="signup.html?role=customer" class="btn btn-mc-primary w-100 py-2 mb-2">
+                <i class="bi bi-person-plus-fill me-1"></i> 1. Register as Customer (New)
+              </a>
+              <a href="signin.html?role=customer" class="btn btn-outline-dark w-100 py-2 fw-semibold">
+                <i class="bi bi-box-arrow-in-right me-1"></i> 2. Customer Login (Already Registered)
+              </a>
+            </div>
+          </div>
         </div>
+      </div>
 
+    </div>
+
+    <!-- Testing Notice (For User Testing - Plain informative guidance) -->
+    <div class="mt-5 p-3 rounded-3 bg-white border text-center mx-auto" style="max-width: 750px;">
+      <div class="small text-muted mb-1">
+        <i class="bi bi-info-circle-fill text-primary me-1"></i>
+        <strong>Testing Credentials Guide:</strong>
+      </div>
+      <div class="row g-2 justify-content-center small text-secondary">
+        <div class="col-sm-6 text-sm-end">
+          <span class="fw-bold text-dark">Admin:</span> <code>admin@mechcontrol.com</code> | Pass: <code>admin</code>
+        </div>
+        <div class="col-sm-6 text-sm-start">
+          <span class="fw-bold text-dark">Customer:</span> <code>customer@mechcontrol.com</code> | Pass: <code>customer</code>
+        </div>
       </div>
     </div>
+
   </main>
 
-  <!-- ════ FOOTER ════ -->
-  <footer class="mc-footer">
+  <!-- ============================================================
+       STATIC FOOTER
+       ============================================================ -->
+  <footer class="mc-footer py-3 border-top bg-white mt-auto">
     <div class="container text-center">
-      <p class="mb-1"><strong>MechControl</strong> – Smart Workshop & Vehicle Management System</p>
+      <p class="mb-1 text-dark fw-bold">MechControl — Smart Workshop & Vehicle Management System</p>
       <p class="mb-0 text-muted small">Built with HTML5, CSS3, JavaScript & Bootstrap 5</p>
     </div>
   </footer>
 
-  <!-- Bootstrap 5 JS -->
+  <!-- Bootstrap 5 Bundle JS -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"

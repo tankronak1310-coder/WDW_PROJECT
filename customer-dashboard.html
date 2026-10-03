@@ -19,6 +19,7 @@
   <!-- Shared Style & Customer Style -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="customer-dashboard.css" />
+  <script src="theme.js"></script>
 </head>
 
 <body>
@@ -63,6 +64,13 @@
             <a class="mc-nav-link" href="#contact" id="nav-contact" onclick="showCustomerSection('contact')">
               <i class="bi bi-telephone me-1"></i>Contact Garage
             </a>
+          </li>
+
+          <!-- Circular Theme Toggle -->
+          <li class="nav-item ms-lg-2">
+            <button type="button" id="themeToggleBtn" class="mc-theme-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode" aria-label="Toggle theme">
+              <i class="bi bi-moon-stars-fill" id="themeToggleIcon"></i>
+            </button>
           </li>
 
           <!-- Customer Name Display in Top Navbar -->

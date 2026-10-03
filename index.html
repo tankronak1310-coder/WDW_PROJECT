@@ -18,12 +18,15 @@
   />
   <!-- Shared Style -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Theme Script (Applied early to prevent flash of wrong theme) -->
+  <script src="theme.js"></script>
 </head>
 
 <body>
 
   <!-- ============================================================
-       STATIC TOP NAVBAR (Identical across all pages)
+       STATIC TOP NAVBAR (Exact same on every page)
        ============================================================ -->
   <header class="mc-navbar">
     <div class="container d-flex align-items-center justify-content-between">
@@ -31,7 +34,21 @@
         <i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
         <span>MechControl</span>
       </a>
-      <span class="text-white-50 small d-none d-sm-inline">Workshop & Vehicle Service Portal</span>
+      
+      <!-- Right Side: Circular Theme Toggle & Tagline -->
+      <div class="d-flex align-items-center gap-3">
+        <button
+          type="button"
+          id="themeToggleBtn"
+          class="mc-theme-btn"
+          onclick="toggleTheme()"
+          title="Toggle Dark / Light Mode"
+          aria-label="Toggle theme"
+        >
+          <i class="bi bi-moon-stars-fill" id="themeToggleIcon"></i>
+        </button>
+        <span class="text-white-50 small d-none d-sm-inline">Workshop & Vehicle Service Portal</span>
+      </div>
     </div>
   </header>
   <div class="mc-accent-bar" role="presentation"></div>

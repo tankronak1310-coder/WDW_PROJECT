@@ -20,6 +20,7 @@
   <!-- Shared Style & Admin Custom Style -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="admin-dashboard.css" />
+  <script src="theme.js"></script>
 </head>
 
 <body class="admin-body">
@@ -57,6 +58,11 @@
 
       <!-- Action Buttons & Admin Name Display -->
       <div class="d-flex align-items-center gap-2 flex-wrap">
+        <!-- Circular Theme Toggle -->
+        <button type="button" id="themeToggleBtn" class="mc-theme-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode" aria-label="Toggle theme">
+          <i class="bi bi-moon-stars-fill" id="themeToggleIcon"></i>
+        </button>
+
         <!-- Display Admin Name in Navbar -->
         <span class="badge bg-danger text-white px-2 py-1 fs-7">
           <i class="bi bi-person-fill me-1"></i> Admin: <strong id="adminNavName">Ronak Tank (Admin)</strong>

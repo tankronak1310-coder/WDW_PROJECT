@@ -93,10 +93,19 @@ toggleBtn.addEventListener('click', () => {
 });
 
 // ── localStorage helper ──────────────────────────────────────
-
-// Read the users array saved by signup.js
 function getUsers() {
-  return JSON.parse(localStorage.getItem('gms_users') || '[]');
+  const existing = JSON.parse(localStorage.getItem('gms_users') || '[]');
+  // Ensure default demo admin exists for instant testing convenience
+  if (existing.length === 0) {
+    existing.push({
+      name: 'Workshop Admin',
+      email: 'admin@garage.com',
+      password: 'password123',
+      role: 'admin'
+    });
+    localStorage.setItem('gms_users', JSON.stringify(existing));
+  }
+  return existing;
 }
 
 // ── Form Submit ──────────────────────────────────────────────
@@ -122,7 +131,6 @@ form.addEventListener('submit', e => {
   const users = getUsers();
 
   // ── Step 2: Find a matching user object ──
-  // Must match email + password + role (all three must be correct)
   const matchedUser = users.find(u =>
     u.email    === enteredEmail &&
     u.password === enteredPass  &&
@@ -160,14 +168,18 @@ form.addEventListener('submit', e => {
 
     // Greet the user by their actual name from the stored object
     successHeading.textContent = `Welcome back, ${matchedUser.name}!`;
-    successSub.textContent     = `Signed in as ${isAdmin ? 'Admin' : 'Customer'} — redirecting to your dashboard…`;
+    successSub.textContent     = `Signed in as ${isAdmin ? 'Admin' : 'Customer'} — redirecting to dashboard…`;
 
     form.style.display       = 'none';
     successMsg.style.display = 'block';
     successMsg.focus();
 
-    // In a real app you would redirect here:
-    // window.location.href = isAdmin ? '/admin-dashboard.html' : '/customer-dashboard.html';
+    // Redirect to Admin Dashboard
+    setTimeout(() => {
+      if (isAdmin) {
+        window.location.href = 'admin-dashboard.html';
+      }
+    }, 1200);
 
   }, 1000);
 });

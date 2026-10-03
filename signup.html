@@ -31,8 +31,8 @@
         <i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
         <span>MechControl</span>
       </a>
-      <a href="index.html" class="text-white-50 text-decoration-none small">
-        <i class="bi bi-arrow-left me-1"></i> <span class="text-white fw-bold">Categories</span>
+      <a href="signin.html" id="topNavSignLink" class="text-white-50 text-decoration-none small">
+        Already registered? <span class="text-white fw-bold">Sign In &rarr;</span>
       </a>
     </div>
   </header>
@@ -52,24 +52,26 @@
               <i class="bi bi-gear-wide-connected text-danger fs-3"></i>
               <span class="fs-4 fw-bold tracking-tight text-white">MechControl</span>
             </div>
-            <h2 class="fw-bold mb-3">Register Account</h2>
-            <p class="text-white-50 small mb-4">
-              Enter your details once to register. Once registered, you will sign in using just your Email ID and Password.
+            
+            <span class="badge bg-danger text-uppercase px-2 py-1 mb-2" id="brandRegBadge">Registration</span>
+            <h2 class="fw-bold mb-3" id="brandRegHeading">Create Your Account</h2>
+            <p class="text-white-50 small mb-4" id="brandRegDesc">
+              Enter your details once to register. After registration, sign in anytime with your Email ID and Password.
             </p>
 
             <div class="auth-feature-item">
-              <div class="auth-feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
+              <div class="auth-feature-icon" id="regFeature1Icon"><i class="bi bi-shield-check"></i></div>
               <div>
-                <h6 class="fw-bold text-white mb-0 small">Workshop Admin</h6>
-                <p class="text-white-50 small mb-0">Manage repair queues, mechanics duty roster, and billings.</p>
+                <h6 class="fw-bold text-white mb-0 small" id="regFeature1Title">One-Time Registration</h6>
+                <p class="text-white-50 small mb-0" id="regFeature1Desc">Save your details securely so you only need your email & password to login.</p>
               </div>
             </div>
 
             <div class="auth-feature-item">
-              <div class="auth-feature-icon"><i class="bi bi-person-fill-check"></i></div>
+              <div class="auth-feature-icon" id="regFeature2Icon"><i class="bi bi-speedometer2"></i></div>
               <div>
-                <h6 class="fw-bold text-white mb-0 small">Vehicle Customer</h6>
-                <p class="text-white-50 small mb-0">Track real-time repair progress, approve extra defects, view bills.</p>
+                <h6 class="fw-bold text-white mb-0 small" id="regFeature2Title">Instant Access</h6>
+                <p class="text-white-50 small mb-0" id="regFeature2Desc">Immediate redirection to your dedicated dashboard upon sign-in.</p>
               </div>
             </div>
           </div>
@@ -79,14 +81,14 @@
           </div>
         </div>
 
-        <!-- RIGHT COLUMN: Registration Form (Horizontal 2-Column Grid) -->
+        <!-- RIGHT COLUMN: Registration Form -->
         <div class="col-lg-7 auth-form-side">
 
           <!-- Success Alert Screen -->
           <div class="gms-success" id="successMsg" role="alert" tabindex="-1">
             <i class="bi bi-check-circle-fill success-icon text-success" aria-hidden="true"></i>
             <h3 class="mt-3 mb-2 fw-bold text-dark">Registration Successful!</h3>
-            <p class="text-muted small mb-4">Your details have been saved. Redirecting you to Login with your credentials...</p>
+            <p class="text-muted small mb-4">Your account has been created. Redirecting you to sign in with your email & password...</p>
             <div class="spinner-border text-danger" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
@@ -95,10 +97,14 @@
           <!-- Registration Form -->
           <form id="signupForm" novalidate aria-label="Create account form">
 
-            <div class="mb-3">
-              <h3 class="fw-bold text-dark mb-1">Create Account</h3>
-              <p class="text-muted small">Select your category and enter your information below.</p>
+            <div class="mb-4">
+              <span class="badge bg-danger-subtle text-danger fw-bold text-uppercase px-2 py-1 mb-1" id="regSubBadge">Workshop Admin</span>
+              <h3 class="fw-bold text-dark mb-1" id="regHeaderTitle">Create Account</h3>
+              <p class="text-muted small" id="regHeaderSubtitle">Fill in your information below to register your account.</p>
             </div>
+
+            <!-- Role Hidden Input (Category selection list removed from form!) -->
+            <input type="hidden" id="selectedRole" value="customer" />
 
             <!-- Error Banner -->
             <div class="gms-alert" id="errorBanner" role="alert">
@@ -106,22 +112,7 @@
               <span id="errorMsgText">Please check all required fields.</span>
             </div>
 
-            <!-- Row 1: Category Selector -->
-            <div class="mb-3" id="grp-role">
-              <label class="form-label">Account Category <span class="text-danger">*</span></label>
-              <div class="role-pills">
-                <div class="role-pill-option">
-                  <input type="radio" id="roleCustomer" name="role" value="customer" checked onchange="updateSignLink('customer')" />
-                  <label for="roleCustomer"><i class="bi bi-person-fill"></i> Vehicle Customer</label>
-                </div>
-                <div class="role-pill-option">
-                  <input type="radio" id="roleAdmin" name="role" value="admin" onchange="updateSignLink('admin')" />
-                  <label for="roleAdmin"><i class="bi bi-shield-lock-fill"></i> Workshop Admin</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row 2: Full Name & Phone Number -->
+            <!-- Row 1: Full Name & Phone Number -->
             <div class="row g-3 mb-3">
               <div class="col-md-6" id="grp-name">
                 <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
@@ -142,7 +133,7 @@
               </div>
             </div>
 
-            <!-- Row 3: Email Address -->
+            <!-- Row 2: Email Address -->
             <div class="mb-3" id="grp-email">
               <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
               <input
@@ -152,7 +143,7 @@
               <div class="invalid-feedback" id="email-error">Enter a valid email address.</div>
             </div>
 
-            <!-- Row 4: Password & Confirm Password -->
+            <!-- Row 3: Password & Confirm Password -->
             <div class="row g-3 mb-3">
               <div class="col-md-6" id="grp-password">
                 <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
@@ -191,9 +182,15 @@
               <i class="bi bi-person-check-fill me-1"></i> Register Account
             </button>
 
-            <!-- Bottom Redirect Link -->
-            <div class="mt-4 pt-2 border-top text-center small text-muted">
-              Already registered? <a href="signin.html" id="signinRedirectLink" class="fw-bold text-danger text-decoration-none">Sign In here &rarr;</a>
+            <!-- Bottom Redirect Links -->
+            <div class="mt-4 pt-3 border-top text-center small text-muted">
+              <div class="mb-2">
+                Already registered? <a href="signin.html" id="bottomSignInLink" class="fw-bold text-danger text-decoration-none">Sign In here &rarr;</a>
+              </div>
+              <div class="text-secondary">
+                <span id="switchRegPrompt">Vehicle Customer?</span>
+                <a href="signup.html?role=customer" id="switchRegLink" class="fw-bold text-dark text-decoration-none ms-1">Switch to Customer Registration &rarr;</a>
+              </div>
             </div>
 
           </form>

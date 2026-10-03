@@ -46,15 +46,80 @@ function ensureDefaultUsersExist() {
   localStorage.setItem("gms_users", JSON.stringify(users));
 }
 
-// Update the sign-in link at bottom
-function updateSignLink(role) {
-  var link = document.getElementById("signinRedirectLink");
-  if (link) {
-    link.href = "signin.html?role=" + role;
+// Setup dedicated view for Admin vs Customer
+function setupDedicatedSignup(role) {
+  var roleInput = document.getElementById("selectedRole");
+  if (roleInput) roleInput.value = role;
+
+  var brandBadge = document.getElementById("brandRegBadge");
+  var brandHeading = document.getElementById("brandRegHeading");
+  var brandDesc = document.getElementById("brandRegDesc");
+
+  var subBadge = document.getElementById("regSubBadge");
+  var headerTitle = document.getElementById("regHeaderTitle");
+  var headerSubtitle = document.getElementById("regHeaderSubtitle");
+
+  var topLink = document.getElementById("topNavSignLink");
+  var bottomLink = document.getElementById("bottomSignInLink");
+  var switchPrompt = document.getElementById("switchRegPrompt");
+  var switchLink = document.getElementById("switchRegLink");
+
+  if (role === "admin") {
+    document.title = "Admin Registration — MechControl";
+
+    if (brandBadge) {
+      brandBadge.innerText = "Workshop Admin";
+      brandBadge.className = "badge bg-danger text-uppercase px-2 py-1 mb-2";
+    }
+    if (brandHeading) brandHeading.innerText = "Create Workshop Admin Account";
+    if (brandDesc) brandDesc.innerText = "Register your Admin account to manage garage repairs, staff, and customer vehicle records.";
+
+    if (subBadge) {
+      subBadge.innerText = "Workshop Admin";
+      subBadge.className = "badge bg-danger-subtle text-danger fw-bold text-uppercase px-2 py-1 mb-1";
+    }
+    if (headerTitle) headerTitle.innerText = "Create Admin Account";
+    if (headerSubtitle) headerSubtitle.innerText = "Enter your details once to register as a Workshop Admin.";
+
+    if (topLink) topLink.href = "signin.html?role=admin";
+    if (bottomLink) bottomLink.href = "signin.html?role=admin";
+
+    if (switchPrompt) switchPrompt.innerText = "Are you a Vehicle Customer?";
+    if (switchLink) {
+      switchLink.href = "signup.html?role=customer";
+      switchLink.innerText = "Switch to Customer Registration →";
+    }
+
+  } else {
+    // Default to Customer
+    document.title = "Customer Registration — MechControl";
+
+    if (brandBadge) {
+      brandBadge.innerText = "Vehicle Customer";
+      brandBadge.className = "badge bg-primary text-uppercase px-2 py-1 mb-2";
+    }
+    if (brandHeading) brandHeading.innerText = "Create Customer Account";
+    if (brandDesc) brandDesc.innerText = "Register your account to track vehicle servicing, approve mechanic findings, and view invoices.";
+
+    if (subBadge) {
+      subBadge.innerText = "Vehicle Customer";
+      subBadge.className = "badge bg-primary-subtle text-primary fw-bold text-uppercase px-2 py-1 mb-1";
+    }
+    if (headerTitle) headerTitle.innerText = "Create Customer Account";
+    if (headerSubtitle) headerSubtitle.innerText = "Enter your details once to register as a Vehicle Customer.";
+
+    if (topLink) topLink.href = "signin.html?role=customer";
+    if (bottomLink) bottomLink.href = "signin.html?role=customer";
+
+    if (switchPrompt) switchPrompt.innerText = "Workshop Owner or Supervisor?";
+    if (switchLink) {
+      switchLink.href = "signup.html?role=admin";
+      switchLink.innerText = "Switch to Admin Registration →";
+    }
   }
 }
 
-// Pre-select category based on URL query parameter (e.g. signup.html?role=admin)
+// On Page Load
 window.onload = function() {
   ensureDefaultUsersExist();
 
@@ -62,15 +127,9 @@ window.onload = function() {
   var roleParam = urlParams.get("role");
 
   if (roleParam === "admin") {
-    var adminRadio = document.getElementById("roleAdmin");
-    if (adminRadio) adminRadio.checked = true;
-    updateSignLink("admin");
-  } else if (roleParam === "customer") {
-    var custRadio = document.getElementById("roleCustomer");
-    if (custRadio) custRadio.checked = true;
-    updateSignLink("customer");
+    setupDedicatedSignup("admin");
   } else {
-    updateSignLink("customer");
+    setupDedicatedSignup("customer");
   }
 };
 
@@ -119,12 +178,8 @@ if (signupForm) {
     var confVal = document.getElementById("confirmPassword").value;
     var termsOk = document.getElementById("terms").checked;
 
-    // Determine selected role
-    var selectedRole = "customer";
-    var adminRadio = document.getElementById("roleAdmin");
-    if (adminRadio && adminRadio.checked) {
-      selectedRole = "admin";
-    }
+    var roleInput = document.getElementById("selectedRole");
+    var selectedRole = (roleInput && roleInput.value === "admin") ? "admin" : "customer";
 
     // Validation checks
     if (nameVal.length < 2) {
@@ -188,7 +243,7 @@ if (signupForm) {
     usersList.push(newUser);
     localStorage.setItem("gms_users", JSON.stringify(usersList));
 
-    // Show success screen and redirect to signin.html
+    // Show success screen and redirect to signin.html with role
     var submitBtn = document.getElementById("submitBtn");
     if (submitBtn) {
       submitBtn.disabled = true;

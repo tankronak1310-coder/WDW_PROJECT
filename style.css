@@ -1,0 +1,588 @@
+/* ================================================================
+   style.css — Garage Management System
+   Shared stylesheet for signup.html and signin.html
+   ================================================================
+
+   TABLE OF CONTENTS
+   -----------------
+   1.  Design Tokens (CSS Variables)
+   2.  Base / Body
+   3.  Hero Banner
+   4.  Accent Bar
+   5.  Card
+   6.  Form Controls (labels, inputs, selects)
+   7.  Eye Toggle Button (show/hide password)
+   8.  Primary Button (.btn-gms-primary)
+   9.  Checkbox Styles
+   10. Inline Validation (field-invalid / field-valid)
+   11. Success Screen (.gms-success)
+   12. Section Divider Label         [signup only]
+   13. Role Pill Selector            [signup only]
+   14. Role Description Box          [signup only]
+   15. Sign-in Footer Link           [signup only]
+   16. Card Title & Subtitle         [signin only]
+   17. Role Tab Switcher             [signin only]
+   18. Divider ("or" line)           [signin only]
+   19. Forgot Password Link          [signin only]
+   20. Sign-up Footer Link           [signin only]
+   21. Error Alert Banner            [signin only]
+   22. Success Icon Colours          [signin only]
+   23. Page Footer                   [signin only]
+   24. Responsive Overrides
+================================================================ */
+
+
+/* ================================================================
+   1. DESIGN TOKENS
+   All brand colours and shared values in one place.
+   Change a value here and it updates everywhere.
+================================================================ */
+:root {
+  --gms-primary:    #e63312;            /* engine-red – main brand colour   */
+  --gms-primary-dk: #b5250d;            /* darker red for hover states       */
+  --gms-dark:       #1a1a2e;            /* deep navy – hero background       */
+  --gms-surface:    #f4f6f9;            /* light grey page background        */
+  --gms-card:       #ffffff;            /* white card background             */
+  --gms-muted:      #6c757d;            /* muted grey for helper text        */
+  --gms-border:     #dee2e6;            /* default input border colour       */
+  --gms-focus:      rgba(230, 51, 18, 0.25); /* red focus ring shadow       */
+}
+
+
+/* ================================================================
+   2. BASE / BODY
+================================================================ */
+body {
+  background-color: var(--gms-surface);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ================================================================
+   3. HERO BANNER
+   Full-width dark gradient header shown on both pages.
+================================================================ */
+.gms-hero {
+  background: linear-gradient(135deg, var(--gms-dark) 0%, #16213e 60%, #0f3460 100%);
+  color: #fff;
+  padding: 2.5rem 1rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle tyre-tread diagonal texture overlay */
+.gms-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,.03) 0px,
+    rgba(255,255,255,.03) 2px,
+    transparent 2px,
+    transparent 12px
+  );
+  pointer-events: none;
+}
+
+.gms-hero .gms-logo-icon {
+  font-size: 3rem;
+  color: var(--gms-primary);
+  filter: drop-shadow(0 2px 6px rgba(230,51,18,.4));
+}
+
+.gms-hero h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+  margin-bottom: .35rem;
+}
+
+.gms-hero p {
+  font-size: .95rem;
+  color: rgba(255,255,255,.75);
+  margin-bottom: 0;
+}
+
+
+/* ================================================================
+   4. ACCENT BAR
+   Thin red gradient strip that sits directly below the hero.
+================================================================ */
+.gms-accent-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--gms-primary), #ff6b47);
+}
+
+
+/* ================================================================
+   5. CARD
+   White rounded panel that wraps the form content.
+================================================================ */
+.gms-card {
+  background: var(--gms-card);
+  border-radius: .75rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,.09);
+  padding: 2.25rem 2rem;
+}
+
+
+/* ================================================================
+   6. FORM CONTROLS
+   Overrides Bootstrap defaults with brand focus ring and sizing.
+================================================================ */
+.form-label {
+  font-size: .875rem;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: .3rem;
+}
+
+.form-control,
+.form-select {
+  border-color: var(--gms-border);
+  border-radius: .45rem;
+  font-size: .9rem;
+  padding: .55rem .85rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+/* Brand-coloured focus ring */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--gms-primary);
+  box-shadow: 0 0 0 3px var(--gms-focus);
+  outline: none;
+}
+
+/* Keep focused input on top of the eye-button inside input-group */
+.input-group .form-control:focus {
+  z-index: 3;
+}
+
+
+/* ================================================================
+   7. EYE TOGGLE BUTTON
+   The show/hide password button attached to password inputs.
+================================================================ */
+.btn-eye {
+  border: 1px solid var(--gms-border);
+  border-left: none;
+  background: #fff;
+  color: var(--gms-muted);
+  border-radius: 0 .45rem .45rem 0;
+  padding: 0 .75rem;
+  cursor: pointer;
+  transition: color .2s;
+}
+
+.btn-eye:hover { color: var(--gms-primary); }
+
+.btn-eye:focus {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 1px;
+  z-index: 4;
+}
+
+
+/* ================================================================
+   8. PRIMARY BUTTON (.btn-gms-primary)
+   Used for "Create Account" and "Sign In" submit buttons.
+================================================================ */
+.btn-gms-primary {
+  background: var(--gms-primary);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .4px;
+  padding: .7rem 1.5rem;
+  border-radius: .45rem;
+  transition: background .2s, transform .1s, box-shadow .2s;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+.btn-gms-primary:hover {
+  background: var(--gms-primary-dk);
+  box-shadow: 0 4px 14px rgba(230,51,18,.35);
+  transform: translateY(-1px);
+}
+
+.btn-gms-primary:active {
+  transform: translateY(0);
+}
+
+.btn-gms-primary:focus-visible {
+  outline: 3px solid var(--gms-focus);
+  outline-offset: 2px;
+}
+
+.btn-gms-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+
+/* ================================================================
+   9. CHECKBOX STYLES
+   Applied to Terms checkbox (signup) and Remember Me (signin).
+================================================================ */
+.form-check-input:checked {
+  background-color: var(--gms-primary);
+  border-color: var(--gms-primary);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 3px var(--gms-focus);
+}
+
+
+/* ================================================================
+   10. INLINE VALIDATION
+   .field-invalid — shows error message, red border
+   .field-valid   — shows green border on success
+================================================================ */
+.invalid-feedback {
+  font-size: .8rem;
+  display: none;           /* hidden by default, JS adds .field-invalid */
+}
+
+/* Show error message */
+.field-invalid .invalid-feedback  { display: block; }
+
+/* Red borders on invalid fields */
+.field-invalid .form-control,
+.field-invalid .form-select       { border-color: #dc3545; }
+.field-invalid .btn-eye           { border-color: #dc3545; }
+.field-invalid .form-check-input  { border-color: #dc3545; }
+
+/* Green border on valid fields */
+.field-valid .form-control,
+.field-valid .form-select         { border-color: #198754; }
+
+
+/* ================================================================
+   11. SUCCESS SCREEN (.gms-success)
+   Replaces the form after successful submission on both pages.
+================================================================ */
+.gms-success {
+  display: none;          /* shown by JS after successful submit */
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.gms-success .success-icon {
+  font-size: 3.5rem;
+}
+
+
+/* ================================================================
+   12. SECTION DIVIDER LABEL        [signup.html only]
+   Small ALL-CAPS label that separates form sections.
+================================================================ */
+.gms-section-label {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gms-muted);
+  border-bottom: 1px solid var(--gms-border);
+  padding-bottom: .4rem;
+  margin-bottom: 1rem;
+}
+
+
+/* ================================================================
+   13. ROLE PILL SELECTOR            [signup.html only]
+   Radio buttons styled as clickable pill/chip toggles.
+================================================================ */
+.role-group {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+
+/* Hide the actual radio input visually */
+.role-group input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The visible pill label */
+.role-group label {
+  cursor: pointer;
+  padding: .5rem 1.3rem;
+  border: 1.5px solid var(--gms-border);
+  border-radius: 2rem;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--gms-muted);
+  background: #fff;
+  transition: all .2s;
+  user-select: none;
+}
+
+/* Active/selected pill */
+.role-group input[type="radio"]:checked + label {
+  background: var(--gms-primary);
+  border-color: var(--gms-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(230,51,18,.3);
+}
+
+/* Hover state */
+.role-group label:hover {
+  border-color: var(--gms-primary);
+  color: var(--gms-primary);
+}
+
+/* Keyboard focus ring on the pill */
+.role-group input[type="radio"]:focus-visible + label {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+}
+
+
+/* ================================================================
+   14. ROLE DESCRIPTION BOX          [signup.html only]
+   Short description shown below the pills after role selection.
+================================================================ */
+.role-desc {
+  font-size: .8rem;
+  color: var(--gms-muted);
+  background: #f8f9fa;
+  border-left: 3px solid var(--gms-primary);
+  border-radius: 0 .35rem .35rem 0;
+  padding: .5rem .75rem;
+  margin-top: .6rem;
+  display: none;           /* shown by JS when a role is selected */
+}
+
+.role-desc.visible {
+  display: block;
+}
+
+
+/* ================================================================
+   15. SIGN-IN FOOTER LINK           [signup.html only]
+   "Already have an account? Sign in here" line at the bottom.
+================================================================ */
+.signin-link {
+  font-size: .875rem;
+  text-align: center;
+  color: var(--gms-muted);
+}
+
+.signin-link a {
+  color: var(--gms-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signin-link a:hover { text-decoration: underline; }
+
+.signin-link a:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+
+/* ================================================================
+   16. CARD TITLE & SUBTITLE         [signin.html only]
+   "Welcome Back" heading and helper text inside the card.
+================================================================ */
+.gms-card-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--gms-dark);
+  margin-bottom: .25rem;
+}
+
+.gms-card-sub {
+  font-size: .875rem;
+  color: var(--gms-muted);
+  margin-bottom: 1.75rem;
+}
+
+
+/* ================================================================
+   17. ROLE TAB SWITCHER             [signin.html only]
+   Admin / Customer tab bar at the top of the sign-in form.
+================================================================ */
+.role-tabs {
+  display: flex;
+  border: 1.5px solid var(--gms-border);
+  border-radius: .5rem;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+}
+
+.role-tab-btn {
+  flex: 1;
+  padding: .55rem .5rem;
+  border: none;
+  background: #fff;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--gms-muted);
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+}
+
+/* Divider between the two tabs */
+.role-tab-btn:not(:last-child) {
+  border-right: 1.5px solid var(--gms-border);
+}
+
+/* Active / selected tab */
+.role-tab-btn.active {
+  background: var(--gms-primary);
+  color: #fff;
+}
+
+/* Hover on inactive tab */
+.role-tab-btn:hover:not(.active) {
+  background: #fff3f1;
+  color: var(--gms-primary);
+}
+
+/* Keyboard focus ring */
+.role-tab-btn:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: -2px;
+}
+
+
+/* ================================================================
+   18. DIVIDER ("or" LINE)           [signin.html only]
+   Horizontal rule with centred text between button and footer link.
+================================================================ */
+.gms-divider {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  color: var(--gms-muted);
+  font-size: .8rem;
+  margin: 1.4rem 0;
+}
+
+.gms-divider::before,
+.gms-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gms-border);
+}
+
+
+/* ================================================================
+   19. FORGOT PASSWORD LINK          [signin.html only]
+================================================================ */
+.forgot-link {
+  font-size: .8rem;
+  color: var(--gms-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-link:hover { text-decoration: underline; }
+
+.forgot-link:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+
+/* ================================================================
+   20. SIGN-UP FOOTER LINK           [signin.html only]
+   "Don't have an account? Create one here" line.
+================================================================ */
+.signup-link {
+  font-size: .875rem;
+  text-align: center;
+  color: var(--gms-muted);
+}
+
+.signup-link a {
+  color: var(--gms-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signup-link a:hover { text-decoration: underline; }
+
+.signup-link a:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+
+/* ================================================================
+   21. ERROR ALERT BANNER            [signin.html only]
+   Red banner shown when login credentials don't match.
+================================================================ */
+.gms-alert {
+  display: none;           /* shown by JS on login failure */
+  border-radius: .45rem;
+  font-size: .875rem;
+  padding: .75rem 1rem;
+  margin-bottom: 1.25rem;
+  border-left: 4px solid #dc3545;
+  background: #fff5f5;
+  color: #842029;
+}
+
+.gms-alert.visible {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+
+/* ================================================================
+   22. SUCCESS ICON COLOURS          [signin.html only]
+   Admin gets brand red; Customer gets Bootstrap blue.
+================================================================ */
+.gms-success .admin-icon    { color: var(--gms-primary); }
+.gms-success .customer-icon { color: #0d6efd; }
+
+
+/* ================================================================
+   23. PAGE FOOTER                   [signin.html only]
+   Copyright bar pinned to the bottom of the page.
+================================================================ */
+footer {
+  margin-top: auto;
+  padding: 1.25rem;
+  text-align: center;
+  font-size: .8rem;
+  color: var(--gms-muted);
+}
+
+
+/* ================================================================
+   24. RESPONSIVE OVERRIDES
+   Small-screen adjustments applied to both pages.
+================================================================ */
+@media (max-width: 575.98px) {
+  /* Tighter card padding on phones */
+  .gms-card {
+    padding: 1.5rem 1.25rem;
+  }
+}

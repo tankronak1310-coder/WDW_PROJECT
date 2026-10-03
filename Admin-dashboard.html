@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – Garage Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="admin-dashboard.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav class="adm-navbar navbar navbar-expand-lg" aria-label="Admin navigation">
+  <div class="container-fluid px-4">
+    <a class="adm-brand" href="#" data-section="dashboard">
+      <i class="bi bi-tools me-2"></i>GMS <span class="adm-brand-sub">Admin</span>
+    </a>
+    <button class="adm-toggler navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="adminNav">
+      <ul class="navbar-nav mx-auto gap-lg-1">
+        <li class="nav-item"><a class="adm-nav-link active" href="#" data-section="dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="adm-nav-link" href="#" data-section="vehicles"><i class="bi bi-car-front me-1"></i>Vehicles</a></li>
+        <li class="nav-item"><a class="adm-nav-link" href="#" data-section="repairs"><i class="bi bi-wrench-adjustable me-1"></i>Repairs</a></li>
+        <li class="nav-item"><a class="adm-nav-link" href="#" data-section="mechanics"><i class="bi bi-person-badge me-1"></i>Mechanics</a></li>
+        <li class="nav-item"><a class="adm-nav-link" href="#" data-section="customers"><i class="bi bi-people me-1"></i>Customers</a></li>
+        <li class="nav-item"><a class="adm-nav-link" href="#" data-section="contact"><i class="bi bi-telephone me-1"></i>Contact Us</a></li>
+      </ul>
+      <a class="adm-signout ms-lg-3" href="signin.html" id="adminSignOut"><i class="bi bi-box-arrow-right me-1"></i>Sign Out</a>
+    </div>
+  </div>
+</nav>
+<div class="gms-accent-bar"></div>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="adm-main" id="adminMain">
+
+  <!-- ──────────── DEMO NOTICE ──────────── -->
+  <div class="adm-demo-notice" role="alert">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    <strong>Demo Mode:</strong> All data is sample data. Changes are not saved to a real database.
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SECTION: DASHBOARD
+  ══════════════════════════════════════ -->
+  <section id="sec-dashboard" class="adm-section">
+
+    <!-- Page header -->
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title"><i class="bi bi-speedometer2 me-2"></i>Dashboard</h1>
+        <p class="adm-page-sub">Welcome back, <strong>Admin</strong>. Here's today's garage overview.</p>
+      </div>
+      <span class="adm-date-badge"><i class="bi bi-calendar3 me-1"></i><span id="todayDate"></span></span>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="row g-3 mb-4" id="summaryCards"></div>
+
+    <!-- Repairs table + Activity -->
+    <div class="row g-4">
+      <div class="col-12 col-xl-8">
+        <div class="adm-card">
+          <div class="adm-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span><i class="bi bi-table me-2"></i>Recent Repairs</span>
+            <div class="d-flex gap-2 flex-wrap">
+              <input type="search" class="adm-search-input" id="dashRepairSearch" placeholder="Search repairs…" aria-label="Search repairs"/>
+              <select class="adm-filter-select" id="dashStatusFilter" aria-label="Filter by status">
+                <option value="">All Statuses</option>
+                <option>Received</option>
+                <option>In Progress</option>
+                <option>Quality Check</option>
+                <option>Ready for Pickup</option>
+                <option>Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="adm-table-wrap">
+            <table class="adm-table" id="dashRepairTable" aria-label="Repairs table">
+              <thead>
+                <tr>
+                  <th>#</th><th>Customer</th><th>Vehicle</th><th>Reg No.</th>
+                  <th>Mechanic</th><th>Problem</th><th>Status</th><th>Drop-off</th><th>Bill</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dashRepairBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-4">
+        <div class="adm-card h-100">
+          <div class="adm-card-header"><i class="bi bi-activity me-2"></i>Recent Activity</div>
+          <div class="adm-card-body" id="activityFeed"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECTION: VEHICLES
+  ══════════════════════════════════════ -->
+  <section id="sec-vehicles" class="adm-section d-none">
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title"><i class="bi bi-car-front me-2"></i>Vehicles</h1>
+        <p class="adm-page-sub">All vehicles currently in the garage system.</p>
+      </div>
+      <button class="adm-btn-primary" id="addVehicleBtn"><i class="bi bi-plus-lg me-1"></i>Add Vehicle</button>
+    </div>
+    <div class="adm-card">
+      <div class="adm-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <span><i class="bi bi-car-front me-2"></i>Vehicle Records</span>
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+          <button class="adm-btn-danger d-none" id="clearSelectedBtn" aria-label="Clear selected vehicles">
+            <i class="bi bi-trash-fill me-1"></i>Clear Selected
+          </button>
+          <input type="search" class="adm-search-input" id="vehicleSearch" placeholder="Search vehicles…" aria-label="Search vehicles"/>
+        </div>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table" id="vehicleTable" aria-label="Vehicles table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAllVehicles" class="adm-checkbox" aria-label="Select all vehicles"/></th>
+              <th>#</th><th>Customer</th><th>Make / Model</th><th>Year</th>
+              <th>Reg No.</th><th>Color</th><th>Repair Status</th><th>Mechanic</th><th>Bill</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="vehicleBody"></tbody>
+        </table>
+      </div>
+      <div class="adm-vehicle-legend">
+        <i class="bi bi-info-circle me-1"></i>
+        Vehicles with <strong>Completed</strong> status are pre-checked. Select any and click <strong>Clear Selected</strong> to remove them.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECTION: REPAIRS
+  ══════════════════════════════════════ -->
+  <section id="sec-repairs" class="adm-section d-none">
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title"><i class="bi bi-wrench-adjustable me-2"></i>Repairs</h1>
+        <p class="adm-page-sub">Create, update, and manage all repair records.</p>
+      </div>
+      <button class="adm-btn-primary" id="addRepairBtn"><i class="bi bi-plus-lg me-1"></i>New Repair</button>
+    </div>
+    <div class="adm-card">
+      <div class="adm-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <span><i class="bi bi-clipboard2-pulse me-2"></i>All Repairs</span>
+        <div class="d-flex gap-2 flex-wrap">
+          <input type="search" class="adm-search-input" id="repairSearch" placeholder="Search repairs…" aria-label="Search repairs"/>
+          <select class="adm-filter-select" id="repairStatusFilter" aria-label="Filter by status">
+            <option value="">All Statuses</option>
+            <option>Received</option>
+            <option>In Progress</option>
+            <option>Quality Check</option>
+            <option>Ready for Pickup</option>
+            <option>Completed</option>
+          </select>
+        </div>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table" id="repairTable" aria-label="Repairs management table">
+          <thead>
+            <tr>
+              <th>#</th><th>Customer</th><th>Vehicle</th><th>Reg No.</th>
+              <th>Mechanic</th><th>Problem</th><th>Status</th><th>Drop-off</th><th>Parts</th><th>Labour</th><th>Total</th><th>Bill</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="repairBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECTION: MECHANICS
+  ══════════════════════════════════════ -->
+  <section id="sec-mechanics" class="adm-section d-none">
+    <div class="adm-page-header">
+      <h1 class="adm-page-title"><i class="bi bi-person-badge me-2"></i>Mechanics</h1>
+      <p class="adm-page-sub" style="margin:0">Manage your team and assign repairs.</p>
+    </div>
+    <div class="row g-4" id="mechanicsGrid"></div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECTION: CUSTOMERS
+  ══════════════════════════════════════ -->
+  <section id="sec-customers" class="adm-section d-none">
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title"><i class="bi bi-people me-2"></i>Customers</h1>
+        <p class="adm-page-sub">All registered customers and their repair history.</p>
+      </div>
+      <input type="search" class="adm-search-input" id="customerSearch" placeholder="Search customers…" style="max-width:260px" aria-label="Search customers"/>
+    </div>
+    <div class="row g-4" id="customersGrid"></div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SECTION: CONTACT US
+  ══════════════════════════════════════ -->
+  <section id="sec-contact" class="adm-section d-none">
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title"><i class="bi bi-telephone-fill me-2"></i>Contact Us</h1>
+        <p class="adm-page-sub">Garage contact details and customer message form.</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-12 col-lg-5">
+        <div class="adm-card mb-3">
+          <div class="adm-card-header"><i class="bi bi-info-circle me-2"></i>Garage Information</div>
+          <div class="adm-card-body">
+            <div class="adm-contact-item"><div class="adm-contact-icon"><i class="bi bi-geo-alt-fill"></i></div><div><div class="adm-contact-label">Address</div><div class="adm-contact-val">42 Motor Street, Industrial Area,<br>Ahmedabad, Gujarat – 380001</div></div></div>
+            <div class="adm-contact-item"><div class="adm-contact-icon"><i class="bi bi-telephone-fill"></i></div><div><div class="adm-contact-label">Phone</div><div class="adm-contact-val"><a href="tel:+917990001234" class="adm-link">+91 79 9000 1234</a></div></div></div>
+            <div class="adm-contact-item"><div class="adm-contact-icon"><i class="bi bi-envelope-fill"></i></div><div><div class="adm-contact-label">Email</div><div class="adm-contact-val"><a href="mailto:support@gms-garage.com" class="adm-link">support@gms-garage.com</a></div></div></div>
+            <div class="adm-contact-item border-0 pb-0 mb-0"><div class="adm-contact-icon"><i class="bi bi-clock-fill"></i></div><div><div class="adm-contact-label">Working Hours</div><div class="adm-contact-val">Mon–Sat: 8:00 AM – 7:00 PM<br>Sunday: 9:00 AM – 2:00 PM</div></div></div>
+          </div>
+        </div>
+        <div class="adm-tip-card"><i class="bi bi-lightbulb-fill adm-tip-icon"></i><div><strong>Tip:</strong> For urgent vehicle queries, call the hotline directly for fastest response.</div></div>
+      </div>
+      <div class="col-12 col-lg-7">
+        <div class="adm-card">
+          <div class="adm-card-header"><i class="bi bi-send me-2"></i>Send a Message</div>
+          <div class="adm-card-body">
+            <div class="adm-form-success d-none" id="contactSuccess" role="alert" tabindex="-1">
+              <i class="bi bi-check-circle-fill adm-success-icon"></i>
+              <h3 class="mt-2 mb-1 fw-bold">Message Sent!</h3>
+              <p class="text-muted mb-3">Our team will respond within 24 hours.</p>
+              <button class="adm-btn-outline" id="anotherMsgBtn"><i class="bi bi-arrow-counterclockwise me-1"></i>Send Another</button>
+            </div>
+            <form id="adminContactForm" novalidate aria-label="Contact form">
+              <div class="mb-3" id="acgrp-name">
+                <label for="acName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                <input type="text" id="acName" class="form-control" placeholder="Your name" aria-required="true" aria-describedby="acname-err"/>
+                <div class="invalid-feedback" id="acname-err" role="alert"><i class="bi bi-exclamation-circle me-1"></i>Please enter your name.</div>
+              </div>
+              <div class="mb-3" id="acgrp-email">
+                <label for="acEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                <input type="email" id="acEmail" class="form-control" placeholder="you@example.com" aria-required="true" aria-describedby="acemail-err"/>
+                <div class="invalid-feedback" id="acemail-err" role="alert"><i class="bi bi-exclamation-circle me-1"></i>Please enter a valid email.</div>
+              </div>
+              <div class="mb-3">
+                <label for="acSubject" class="form-label">Subject</label>
+                <select id="acSubject" class="form-select">
+                  <option value="">— Select topic —</option>
+                  <option>Repair Status</option><option>Billing</option>
+                  <option>Vehicle Pickup</option><option>Complaint</option><option>Other</option>
+                </select>
+              </div>
+              <div class="mb-4" id="acgrp-msg">
+                <label for="acMessage" class="form-label">Message <span class="text-danger">*</span></label>
+                <textarea id="acMessage" class="form-control" rows="5" placeholder="Describe your query…" aria-required="true" aria-describedby="acmsg-err"></textarea>
+                <div class="invalid-feedback" id="acmsg-err" role="alert"><i class="bi bi-exclamation-circle me-1"></i>Please enter a message (min 10 characters).</div>
+              </div>
+              <button type="submit" class="adm-btn-primary w-100" id="acSubmitBtn"><i class="bi bi-send-fill me-2"></i>Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="adm-footer">
+  <div class="container-fluid px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+    <span><i class="bi bi-tools me-1"></i>&copy; 2026 Garage Management System</span>
+    <span class="adm-footer-demo"><i class="bi bi-database-slash me-1"></i>Demo data — not connected to a database</span>
+  </div>
+</footer>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- Repair Detail Modal -->
+<div class="modal fade" id="repairDetailModal" tabindex="-1" aria-labelledby="repairDetailTitle" aria-modal="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content adm-modal">
+      <div class="modal-header adm-modal-header">
+        <h5 class="modal-title" id="repairDetailTitle"><i class="bi bi-clipboard2-pulse me-2"></i>Repair Details</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="repairDetailBody"></div>
+      <div class="modal-footer adm-modal-footer">
+        <button type="button" class="adm-btn-outline" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Status Modal -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusTitle" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content adm-modal">
+      <div class="modal-header adm-modal-header">
+        <h5 class="modal-title" id="updateStatusTitle"><i class="bi bi-arrow-repeat me-2"></i>Update Repair Status</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="updateStatusRepairId"/>
+        <div class="mb-3">
+          <label for="newStatusSelect" class="form-label fw-semibold">Select New Status</label>
+          <select id="newStatusSelect" class="form-select">
+            <option>Received</option>
+            <option>In Progress</option>
+            <option>Quality Check</option>
+            <option>Ready for Pickup</option>
+            <option>Completed</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="statusNote" class="form-label fw-semibold">Add Note (optional)</label>
+          <textarea id="statusNote" class="form-control" rows="3" placeholder="Add a mechanic note…"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer adm-modal-footer">
+        <button type="button" class="adm-btn-outline" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="adm-btn-primary" id="confirmStatusBtn"><i class="bi bi-check-lg me-1"></i>Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Mechanic Modal -->
+<div class="modal fade" id="assignMechanicModal" tabindex="-1" aria-labelledby="assignMechanicTitle" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content adm-modal">
+      <div class="modal-header adm-modal-header">
+        <h5 class="modal-title" id="assignMechanicTitle"><i class="bi bi-person-badge me-2"></i>Assign Mechanic</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="assignRepairId"/>
+        <div class="mb-3">
+          <label for="mechanicSelect" class="form-label fw-semibold">Select Mechanic</label>
+          <select id="mechanicSelect" class="form-select"></select>
+        </div>
+      </div>
+      <div class="modal-footer adm-modal-footer">
+        <button type="button" class="adm-btn-outline" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="adm-btn-primary" id="confirmAssignBtn"><i class="bi bi-check-lg me-1"></i>Assign</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bill Modal -->
+<div class="modal fade" id="billModal" tabindex="-1" aria-labelledby="billModalTitle" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content adm-modal">
+      <div class="modal-header adm-modal-header">
+        <h5 class="modal-title" id="billModalTitle"><i class="bi bi-receipt me-2"></i>View / Edit Bill</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="billRepairId"/>
+        <div class="mb-3">
+          <label for="billParts" class="form-label fw-semibold">Parts Cost (₹)</label>
+          <input type="number" id="billParts" class="form-control" min="0"/>
+        </div>
+        <div class="mb-3">
+          <label for="billLabor" class="form-label fw-semibold">Labour Cost (₹)</label>
+          <input type="number" id="billLabor" class="form-control" min="0"/>
+        </div>
+        <div class="mb-3">
+          <label for="billType" class="form-label fw-semibold">Bill Type</label>
+          <select id="billType" class="form-select">
+            <option value="estimated">Estimated</option>
+            <option value="final">Final</option>
+          </select>
+        </div>
+        <div class="adm-bill-total" id="billTotalPreview">Total: ₹0</div>
+      </div>
+      <div class="modal-footer adm-modal-footer">
+        <button type="button" class="adm-btn-outline" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="adm-btn-primary" id="saveBillBtn"><i class="bi bi-save me-1"></i>Save Bill</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Vehicle Modal -->
+<div class="modal fade" id="addVehicleModal" tabindex="-1" aria-labelledby="addVehicleTitle" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content adm-modal">
+      <div class="modal-header adm-modal-header">
+        <h5 class="modal-title" id="addVehicleTitle"><i class="bi bi-car-front me-2"></i>Add Vehicle</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="vehCustomer" class="form-label fw-semibold">Customer <span class="text-danger">*</span></label>
+          <select id="vehCustomer" class="form-select"></select>
+        </div>
+        <div class="row g-3">
+          <div class="col-6">
+            <label for="vehMake" class="form-label fw-semibold">Make <span class="text-danger">*</span></label>
+            <input type="text" id="vehMake" class="form-control" placeholder="e.g. Toyota"/>
+          </div>
+          <div class="col-6">
+            <label for="vehModel" class="form-label fw-semibold">Model <span class="text-danger">*</span></label>
+            <input type="text" id="vehModel" class="form-control" placeholder="e.g. Camry"/>
+          </div>
+          <div class="col-6">
+            <label for="vehYear" class="form-label fw-semibold">Year</label>
+            <input type="number" id="vehYear" class="form-control" placeholder="2024" min="1990" max="2030"/>
+          </div>
+          <div class="col-6">
+            <label for="vehColor" class="form-label fw-semibold">Color</label>
+            <input type="text" id="vehColor" class="form-control" placeholder="e.g. White"/>
+          </div>
+          <div class="col-12">
+            <label for="vehReg" class="form-label fw-semibold">Registration No. <span class="text-danger">*</span></label>
+            <input type="text" id="vehReg" class="form-control" placeholder="e.g. GJ-05-AB-1234"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer adm-modal-footer">
+        <button type="button" class="adm-btn-outline" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="adm-btn-primary" id="saveVehicleBtn"><i class="bi bi-save me-1"></i>Save Vehicle</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Repair Modal -->
+<div class="modal fade" id="addRepairModal" tabindex="-1" aria-labelledby="addRepairTitle" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content adm-modal">
+      <div class="modal-header adm-modal-header">
+        <h5 class="modal-title" id="addRepairTitle"><i class="bi bi-wrench me-2"></i>New Repair</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="repVehicle" class="form-label fw-semibold">Vehicle <span class="text-danger">*</span></label>
+          <select id="repVehicle" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+          <label for="repMechanic" class="form-label fw-semibold">Assign Mechanic</label>
+          <select id="repMechanic" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+          <label for="repProblem" class="form-label fw-semibold">Reported Problem <span class="text-danger">*</span></label>
+          <textarea id="repProblem" class="form-control" rows="3" placeholder="Describe the issue…"></textarea>
+        </div>
+        <div class="row g-3">
+          <div class="col-6">
+            <label for="repParts" class="form-label fw-semibold">Parts (₹)</label>
+            <input type="number" id="repParts" class="form-control" value="0" min="0"/>
+          </div>
+          <div class="col-6">
+            <label for="repLabor" class="form-label fw-semibold">Labour (₹)</label>
+            <input type="number" id="repLabor" class="form-control" value="0" min="0"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer adm-modal-footer">
+        <button type="button" class="adm-btn-outline" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="adm-btn-primary" id="saveRepairBtn"><i class="bi bi-save me-1"></i>Create Repair</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="adm-toast-wrap" aria-live="polite" aria-atomic="true">
+  <div id="admToast" class="adm-toast" role="alert">
+    <i class="bi bi-check-circle-fill me-2" id="toastIcon"></i>
+    <span id="toastMsg">Done</span>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmExE+qaKhSALbRQ5aLhUAFeFuqr" crossorigin="anonymous"></script>
+<script src="admin-data.js"></script>
+<script src="admin-dashboard.js"></script>
+</body>
+</html>

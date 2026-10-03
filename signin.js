@@ -134,7 +134,7 @@ form.addEventListener('submit', e => {
   submitBtn.innerHTML =
     '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Signing in…';
 
-  setTimeout(() => {
+  setTimeout(() => {   // 600ms — just enough to show the spinner
 
     if (!matchedUser) {
       // ── No match found – show error ──
@@ -166,8 +166,12 @@ form.addEventListener('submit', e => {
     successMsg.style.display = 'block';
     successMsg.focus();
 
-    // In a real app you would redirect here:
-    // window.location.href = isAdmin ? '/admin-dashboard.html' : '/customer-dashboard.html';
+    // Redirect to the correct dashboard after 1 second
+    setTimeout(() => {
+      window.location.href = isAdmin
+        ? 'admin-dashboard.html'
+        : 'customer-dashboard.html';
+    }, 1000);
 
   }, 1000);
 });

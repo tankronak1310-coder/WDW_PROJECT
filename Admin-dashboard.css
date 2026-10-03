@@ -1,0 +1,871 @@
+/* ================================================================
+   admin-dashboard.css — Garage Management System
+   Styles for admin-dashboard.html
+   (Relies on shared design tokens in style.css)
+   ================================================================
+
+   TABLE OF CONTENTS
+   -----------------
+   1.  Layout & Body
+   2.  Navbar
+   3.  Sign-Out Button
+   4.  Demo Notice Banner
+   5.  Main Content Area
+   6.  Page Header
+   7.  Summary / Stat Cards
+   8.  Stat Icon Colour Variants
+   9.  Content Card Shell
+   10. Card Header & Body
+   11. Table (adm-table)
+   12. Table Action Dropdown
+   13. Status Badges
+   14. Search Input & Filter Select
+   15. Activity Feed
+   16. Mechanic Cards
+   17. Customer Cards
+   18. Contact Info Items & Link
+   19. Tip Card
+   20. Contact Form Success
+   21. Bill Total Preview
+   22. Modals
+   23. Toast Notification
+   24. Primary & Outline Buttons
+   25. Date Badge
+   26. Footer
+   27. Responsive Overrides
+================================================================ */
+
+
+/* ================================================================
+   1. LAYOUT & BODY
+================================================================ */
+body {
+  background-color: var(--gms-surface);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ================================================================
+   2. NAVBAR
+================================================================ */
+.adm-navbar {
+  background: var(--gms-dark);
+  padding: .6rem 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.adm-brand {
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: .5px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: color .2s;
+}
+.adm-brand:hover { color: var(--gms-primary); }
+.adm-brand-sub {
+  background: var(--gms-primary);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: .15rem .45rem;
+  border-radius: .25rem;
+  margin-left: .4rem;
+}
+
+.adm-nav-link {
+  color: rgba(255,255,255,.72) !important;
+  font-weight: 600;
+  font-size: .85rem;
+  padding: .4rem .8rem !important;
+  border-radius: .4rem;
+  text-decoration: none;
+  transition: background .2s, color .2s;
+  display: flex;
+  align-items: center;
+}
+.adm-nav-link:hover,
+.adm-nav-link.active {
+  color: #fff !important;
+  background: rgba(255,255,255,.1);
+}
+.adm-nav-link:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+}
+
+.adm-toggler {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: .4rem;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: .25rem .55rem;
+}
+.adm-toggler:focus { outline: 2px solid var(--gms-primary); outline-offset: 2px; }
+
+
+/* ================================================================
+   3. SIGN-OUT BUTTON
+================================================================ */
+.adm-signout {
+  background: var(--gms-primary);
+  color: #fff !important;
+  font-weight: 700;
+  font-size: .82rem;
+  padding: .38rem .95rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background .2s, transform .1s;
+  white-space: nowrap;
+}
+.adm-signout:hover { background: var(--gms-primary-dk); transform: translateY(-1px); }
+.adm-signout:focus-visible { outline: 2px solid var(--gms-primary); outline-offset: 3px; }
+
+
+/* ================================================================
+   4. DEMO NOTICE BANNER
+================================================================ */
+.adm-demo-notice {
+  background: #fff8e1;
+  border-bottom: 1px solid #ffe082;
+  color: #7d5a00;
+  font-size: .82rem;
+  font-weight: 600;
+  padding: .55rem 1.5rem;
+  text-align: center;
+}
+
+
+/* ================================================================
+   5. MAIN CONTENT AREA
+================================================================ */
+.adm-main {
+  flex: 1;
+  padding: 1.5rem 1.5rem 2rem;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+
+/* ================================================================
+   6. PAGE HEADER
+================================================================ */
+.adm-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+.adm-page-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--gms-dark);
+  margin-bottom: .2rem;
+}
+.adm-page-sub {
+  font-size: .875rem;
+  color: var(--gms-muted);
+  margin: 0;
+}
+
+
+/* ================================================================
+   7. SUMMARY / STAT CARDS
+================================================================ */
+.adm-stat-card {
+  background: #fff;
+  border-radius: .65rem;
+  padding: 1.2rem 1.1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: box-shadow .2s, transform .2s;
+  height: 100%;
+}
+.adm-stat-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.11);
+  transform: translateY(-2px);
+}
+.adm-stat-icon-wrap {
+  width: 3rem;
+  height: 3rem;
+  border-radius: .55rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.adm-stat-info { min-width: 0; }
+.adm-stat-label {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--gms-muted);
+  margin-bottom: .15rem;
+}
+.adm-stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--gms-dark);
+  line-height: 1;
+}
+.adm-stat-sub {
+  font-size: .72rem;
+  color: var(--gms-muted);
+  margin-top: .2rem;
+}
+
+
+/* ================================================================
+   8. STAT ICON COLOUR VARIANTS
+================================================================ */
+.ic-blue    { background: rgba(13,110,253,.12);  color: #0d6efd; }
+.ic-orange  { background: rgba(230,51,18,.12);   color: var(--gms-primary); }
+.ic-green   { background: rgba(25,135,84,.12);   color: #198754; }
+.ic-purple  { background: rgba(111,66,193,.12);  color: #6f42c1; }
+.ic-yellow  { background: rgba(255,193,7,.18);   color: #b48a00; }
+
+
+/* ================================================================
+   9. CONTENT CARD SHELL
+================================================================ */
+.adm-card {
+  background: #fff;
+  border-radius: .75rem;
+  box-shadow: 0 2px 14px rgba(0,0,0,.07);
+  overflow: hidden;
+}
+
+
+/* ================================================================
+   10. CARD HEADER & BODY
+================================================================ */
+.adm-card-header {
+  background: var(--gms-dark);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: .7rem 1.2rem;
+}
+.adm-card-body { padding: 1.2rem; }
+
+
+/* ================================================================
+   11. TABLE
+================================================================ */
+.adm-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.adm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .82rem;
+  min-width: 900px;
+}
+.adm-table thead th {
+  background: #f8f9fa;
+  color: var(--gms-muted);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: .65rem .9rem;
+  border-bottom: 2px solid var(--gms-border);
+  white-space: nowrap;
+}
+.adm-table tbody tr {
+  border-bottom: 1px solid var(--gms-border);
+  transition: background .15s;
+}
+.adm-table tbody tr:hover { background: #fafbfc; }
+.adm-table tbody td {
+  padding: .7rem .9rem;
+  vertical-align: middle;
+  color: #343a40;
+}
+.adm-table tbody tr:last-child { border-bottom: none; }
+
+/* Truncate long problem text */
+.adm-problem-cell {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* ================================================================
+   12. TABLE ACTION DROPDOWN
+================================================================ */
+.adm-action-btn {
+  background: transparent;
+  border: 1.5px solid var(--gms-border);
+  border-radius: .4rem;
+  padding: .25rem .6rem;
+  font-size: .8rem;
+  color: var(--gms-muted);
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.adm-action-btn:hover { border-color: var(--gms-primary); color: var(--gms-primary); }
+.adm-action-btn:focus-visible { outline: 2px solid var(--gms-primary); outline-offset: 2px; }
+
+.adm-dropdown-menu {
+  min-width: 180px;
+  border: 1px solid var(--gms-border);
+  border-radius: .45rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12);
+  padding: .35rem 0;
+  font-size: .83rem;
+}
+.adm-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .45rem 1rem;
+  color: #343a40;
+  cursor: pointer;
+  transition: background .15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.adm-dropdown-item:hover { background: #f8f9fa; color: var(--gms-primary); }
+
+/* Small inline edit/delete buttons (vehicles) */
+.adm-icon-btn {
+  background: transparent;
+  border: none;
+  padding: .2rem .4rem;
+  border-radius: .3rem;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: color .2s;
+}
+.adm-icon-btn.edit  { color: #0d6efd; }
+.adm-icon-btn.del   { color: #dc3545; }
+.adm-icon-btn:hover { opacity: .75; }
+.adm-icon-btn:focus-visible { outline: 2px solid var(--gms-primary); outline-offset: 2px; }
+
+
+/* ================================================================
+   13. STATUS BADGES
+================================================================ */
+.adm-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: .28rem .75rem;
+  border-radius: 2rem;
+  white-space: nowrap;
+}
+.badge-received    { background: rgba(13,110,253,.12);  color: #0a58ca; }
+.badge-inprogress  { background: rgba(255,193,7,.2);    color: #92690a; }
+.badge-quality     { background: rgba(111,66,193,.12);  color: #5a21b6; }
+.badge-ready       { background: rgba(32,201,151,.15);  color: #0f6848; }
+.badge-completed   { background: rgba(25,135,84,.12);   color: #198754; }
+
+.adm-bill-chip {
+  font-size: .7rem;
+  font-weight: 700;
+  padding: .2rem .55rem;
+  border-radius: 2rem;
+}
+.bill-estimated { background: rgba(255,193,7,.18); color: #92690a; }
+.bill-final     { background: rgba(25,135,84,.12); color: #198754; }
+
+
+/* ================================================================
+   14. SEARCH INPUT & FILTER SELECT
+================================================================ */
+.adm-search-input,
+.adm-filter-select {
+  border: 1.5px solid var(--gms-border);
+  border-radius: .4rem;
+  font-size: .82rem;
+  padding: .38rem .75rem;
+  background: #fff;
+  color: #343a40;
+  transition: border-color .2s, box-shadow .2s;
+  height: 36px;
+}
+.adm-search-input:focus,
+.adm-filter-select:focus {
+  border-color: var(--gms-primary);
+  box-shadow: 0 0 0 3px var(--gms-focus);
+  outline: none;
+}
+.adm-search-input  { min-width: 180px; }
+.adm-filter-select { min-width: 150px; }
+
+
+/* ================================================================
+   15. ACTIVITY FEED
+================================================================ */
+.adm-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--gms-border);
+  font-size: .82rem;
+}
+.adm-activity-item:last-child { border-bottom: none; }
+.adm-activity-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .9rem;
+  flex-shrink: 0;
+}
+.adm-activity-time {
+  font-size: .72rem;
+  color: var(--gms-muted);
+  margin-top: .15rem;
+}
+
+
+/* ================================================================
+   16. MECHANIC CARDS
+================================================================ */
+.adm-mechanic-card {
+  background: #fff;
+  border-radius: .75rem;
+  box-shadow: 0 2px 14px rgba(0,0,0,.07);
+  padding: 1.4rem;
+  height: 100%;
+  transition: box-shadow .2s, transform .2s;
+}
+.adm-mechanic-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.11);
+  transform: translateY(-2px);
+}
+.adm-mechanic-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gms-dark), #0f3460);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.adm-mechanic-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gms-dark);
+}
+.adm-mechanic-spec {
+  font-size: .78rem;
+  color: var(--gms-primary);
+  font-weight: 600;
+}
+.adm-mechanic-meta {
+  font-size: .8rem;
+  color: var(--gms-muted);
+}
+.adm-avail-badge {
+  font-size: .7rem;
+  font-weight: 700;
+  padding: .2rem .65rem;
+  border-radius: 2rem;
+}
+.avail-available { background: rgba(25,135,84,.12); color: #198754; }
+.avail-busy      { background: rgba(230,51,18,.12); color: var(--gms-primary); }
+
+.adm-repair-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  background: #f8f9fa;
+  border: 1px solid var(--gms-border);
+  border-radius: .35rem;
+  font-size: .75rem;
+  padding: .2rem .55rem;
+  margin: .15rem;
+  color: #343a40;
+}
+
+
+/* ================================================================
+   17. CUSTOMER CARDS
+================================================================ */
+.adm-customer-card {
+  background: #fff;
+  border-radius: .75rem;
+  box-shadow: 0 2px 14px rgba(0,0,0,.07);
+  padding: 1.3rem;
+  height: 100%;
+  transition: box-shadow .2s, transform .2s;
+}
+.adm-customer-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.11);
+  transform: translateY(-2px);
+}
+.adm-customer-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gms-primary), #ff6b47);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.adm-customer-name {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--gms-dark);
+}
+.adm-customer-meta {
+  font-size: .78rem;
+  color: var(--gms-muted);
+}
+.adm-customer-history {
+  background: #f8f9fa;
+  border-radius: .45rem;
+  padding: .6rem .75rem;
+  margin-top: .75rem;
+}
+.adm-history-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .78rem;
+  padding: .25rem 0;
+  border-bottom: 1px solid var(--gms-border);
+  gap: .5rem;
+}
+.adm-history-row:last-child { border-bottom: none; }
+
+
+/* ================================================================
+   18. CONTACT INFO ITEMS & LINK
+================================================================ */
+.adm-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding-bottom: .9rem;
+  margin-bottom: .9rem;
+  border-bottom: 1px solid var(--gms-border);
+}
+.adm-contact-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  background: rgba(230,51,18,.1);
+  color: var(--gms-primary);
+  border-radius: .45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.adm-contact-label {
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gms-muted);
+  margin-bottom: .15rem;
+}
+.adm-contact-val { font-size: .875rem; color: #212529; line-height: 1.55; }
+.adm-link { color: var(--gms-primary); font-weight: 600; text-decoration: none; }
+.adm-link:hover { text-decoration: underline; }
+
+
+/* ================================================================
+   19. TIP CARD
+================================================================ */
+.adm-tip-card {
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-left: 4px solid #faad14;
+  border-radius: .55rem;
+  padding: .85rem 1rem;
+  font-size: .875rem;
+  color: #7d5a00;
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+}
+.adm-tip-icon { color: #faad14; font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+
+
+/* ================================================================
+   20. CONTACT FORM SUCCESS
+================================================================ */
+.adm-form-success {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+.adm-success-icon { font-size: 3.5rem; color: #198754; }
+
+
+/* ================================================================
+   21. BILL TOTAL PREVIEW
+================================================================ */
+.adm-bill-total {
+  background: rgba(25,135,84,.08);
+  border: 1.5px solid rgba(25,135,84,.25);
+  border-radius: .45rem;
+  padding: .75rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #198754;
+  text-align: center;
+  margin-top: .5rem;
+}
+
+
+/* ================================================================
+   22. MODALS
+================================================================ */
+.adm-modal { border-radius: .75rem; overflow: hidden; }
+.adm-modal-header {
+  background: var(--gms-dark);
+  color: #fff;
+  border-bottom: none;
+  padding: 1rem 1.25rem;
+}
+.adm-modal-header .modal-title { font-size: .95rem; font-weight: 700; }
+.adm-modal-footer {
+  border-top: 1px solid var(--gms-border);
+  padding: .75rem 1.25rem;
+  gap: .5rem;
+}
+
+/* Detail modal info rows */
+.adm-detail-row {
+  display: flex;
+  gap: .5rem;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--gms-border);
+  font-size: .875rem;
+}
+.adm-detail-row:last-child { border-bottom: none; }
+.adm-detail-key {
+  font-weight: 700;
+  color: var(--gms-muted);
+  min-width: 140px;
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding-top: .1rem;
+}
+
+/* Notes list in detail modal */
+.adm-note-entry {
+  background: #f8f9fa;
+  border-left: 3px solid var(--gms-primary);
+  border-radius: 0 .35rem .35rem 0;
+  padding: .55rem .75rem;
+  margin-bottom: .5rem;
+  font-size: .82rem;
+}
+.adm-note-meta { font-size: .72rem; font-weight: 700; color: var(--gms-primary); margin-bottom: .2rem; }
+
+
+/* ================================================================
+   23. TOAST NOTIFICATION
+================================================================ */
+.adm-toast-wrap {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+}
+.adm-toast {
+  background: var(--gms-dark);
+  color: #fff;
+  padding: .7rem 1.2rem;
+  border-radius: .5rem;
+  font-size: .85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .3s, transform .3s;
+  pointer-events: none;
+}
+.adm-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ================================================================
+   24. PRIMARY & OUTLINE BUTTONS
+================================================================ */
+.adm-btn-primary {
+  background: var(--gms-primary);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: .85rem;
+  padding: .5rem 1.15rem;
+  border-radius: .45rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background .2s, transform .1s, box-shadow .2s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.adm-btn-primary:hover {
+  background: var(--gms-primary-dk);
+  box-shadow: 0 3px 12px rgba(230,51,18,.3);
+  transform: translateY(-1px);
+}
+.adm-btn-primary:focus-visible { outline: 3px solid var(--gms-focus); outline-offset: 2px; }
+.adm-btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+.adm-btn-outline {
+  background: transparent;
+  border: 2px solid var(--gms-primary);
+  color: var(--gms-primary);
+  font-weight: 700;
+  font-size: .85rem;
+  padding: .45rem 1.1rem;
+  border-radius: .45rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background .2s, color .2s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.adm-btn-outline:hover { background: var(--gms-primary); color: #fff; }
+.adm-btn-outline:focus-visible { outline: 3px solid var(--gms-focus); outline-offset: 2px; }
+
+
+/* ================================================================
+   25. DATE BADGE
+================================================================ */
+.adm-date-badge {
+  background: rgba(230,51,18,.1);
+  color: var(--gms-primary);
+  font-size: .8rem;
+  font-weight: 700;
+  padding: .38rem .85rem;
+  border-radius: 2rem;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+
+/* ================================================================
+   26. FOOTER
+================================================================ */
+.adm-footer {
+  background: var(--gms-dark);
+  color: rgba(255,255,255,.6);
+  font-size: .78rem;
+  padding: .85rem 0;
+  margin-top: 2rem;
+}
+.adm-footer-demo { color: rgba(255,255,255,.4); font-size: .72rem; }
+
+
+/* ================================================================
+   27. RESPONSIVE OVERRIDES
+================================================================ */
+@media (max-width: 991.98px) {
+  .adm-main { padding: 1rem 1rem 1.5rem; }
+  .adm-stat-value { font-size: 1.25rem; }
+}
+
+@media (max-width: 575.98px) {
+  .adm-page-title { font-size: 1.15rem; }
+  .adm-search-input,
+  .adm-filter-select { width: 100%; min-width: unset; }
+  .adm-card-header { flex-direction: column; align-items: flex-start !important; }
+}
+
+
+/* ================================================================
+   28. VEHICLE CHECKBOX & CLEAR SELECTED
+================================================================ */
+
+/* Checkbox styling */
+.adm-checkbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: var(--gms-primary);
+  vertical-align: middle;
+}
+.adm-checkbox:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+}
+
+/* Highlight completed/pre-checked rows with a soft green tint */
+.adm-table tbody tr.row-completed {
+  background: rgba(25, 135, 84, .05);
+}
+.adm-table tbody tr.row-completed:hover {
+  background: rgba(25, 135, 84, .09);
+}
+
+/* Danger button (Clear Selected) */
+.adm-btn-danger {
+  background: #dc3545;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: .85rem;
+  padding: .5rem 1.1rem;
+  border-radius: .45rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background .2s, transform .1s;
+  white-space: nowrap;
+}
+.adm-btn-danger:hover   { background: #b02a37; transform: translateY(-1px); }
+.adm-btn-danger:focus-visible { outline: 3px solid rgba(220,53,69,.4); outline-offset: 2px; }
+
+/* Legend bar below vehicle table */
+.adm-vehicle-legend {
+  background: #f8f9fa;
+  border-top: 1px solid var(--gms-border);
+  font-size: .78rem;
+  color: var(--gms-muted);
+  padding: .55rem 1.2rem;
+}

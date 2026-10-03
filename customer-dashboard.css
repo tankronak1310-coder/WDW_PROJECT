@@ -1,0 +1,654 @@
+/* ================================================================
+   customer-dashboard.css — Garage Management System
+   Styles for customer-dashboard.html
+   (Relies on shared design tokens defined in style.css)
+   ================================================================
+
+   TABLE OF CONTENTS
+   -----------------
+   1.  Navbar
+   2.  Sign-Out Button
+   3.  Welcome Banner
+   4.  Avatar
+   5.  Stat Cards (summary row)
+   6.  Stat Icon Colour Variants
+   7.  Main Content Card (shared card shell)
+   8.  Card Header & Body
+   9.  Detail Group (label + value rows)
+   10. Registration Badge & Price Badge
+   11. Repair Status Stepper
+   12. Status Badge (Received / In Progress / Ready)
+   13. Spinning Gear Animation
+   14. Mechanic Notes
+   15. Page Header (Contact Us title)
+   16. Contact Info Items
+   17. Contact Link
+   18. Tip Card
+   19. Contact Form Success Screen
+   20. Outline Button (.btn-gms-outline)
+   21. Footer
+   22. Section Visibility Helper
+   23. Responsive Overrides
+================================================================ */
+
+
+/* ================================================================
+   1. NAVBAR
+   Dark navy bar with red brand accent.
+================================================================ */
+.gms-navbar {
+  background: var(--gms-dark);
+  padding: .75rem 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.gms-nav-brand {
+  color: #fff !important;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: .5px;
+  text-decoration: none;
+  transition: color .2s;
+}
+.gms-nav-brand:hover { color: var(--gms-primary) !important; }
+
+/* Nav links */
+.gms-nav-link {
+  color: rgba(255,255,255,.75) !important;
+  font-weight: 600;
+  font-size: .9rem;
+  border-radius: .4rem;
+  padding: .45rem .85rem !important;
+  transition: color .2s, background .2s;
+  text-decoration: none;
+}
+.gms-nav-link:hover,
+.gms-nav-link.active {
+  color: #fff !important;
+  background: rgba(255,255,255,.1);
+}
+.gms-nav-link:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+}
+
+/* Mobile hamburger icon */
+.gms-toggler {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: .4rem;
+  color: #fff;
+  font-size: 1.25rem;
+  padding: .3rem .6rem;
+  transition: border-color .2s;
+}
+.gms-toggler:focus { outline: 2px solid var(--gms-primary); outline-offset: 2px; }
+.gms-toggler:hover { border-color: var(--gms-primary); }
+
+
+/* ================================================================
+   2. SIGN-OUT BUTTON
+   Small red pill button in the navbar.
+================================================================ */
+.gms-signout-btn {
+  background: var(--gms-primary);
+  color: #fff !important;
+  font-weight: 700;
+  font-size: .85rem;
+  padding: .42rem 1rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background .2s, box-shadow .2s, transform .1s;
+}
+.gms-signout-btn:hover {
+  background: var(--gms-primary-dk);
+  box-shadow: 0 3px 10px rgba(230,51,18,.35);
+  transform: translateY(-1px);
+}
+.gms-signout-btn:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 3px;
+}
+
+
+/* ================================================================
+   3. WELCOME BANNER
+   Gradient strip greeting the logged-in customer.
+================================================================ */
+.gms-welcome-banner {
+  background: linear-gradient(135deg, var(--gms-dark) 0%, #16213e 60%, #0f3460 100%);
+  border-radius: .75rem;
+  padding: 1.5rem 1.75rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Same tyre-tread texture as the hero */
+.gms-welcome-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,.03) 0px,
+    rgba(255,255,255,.03) 2px,
+    transparent 2px,
+    transparent 12px
+  );
+  pointer-events: none;
+}
+
+.gms-welcome-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.gms-welcome-sub {
+  font-size: .875rem;
+  color: rgba(255,255,255,.7);
+}
+
+
+/* ================================================================
+   4. AVATAR
+   Circle icon placeholder shown in the welcome banner.
+================================================================ */
+.gms-avatar {
+  font-size: 3rem;
+  color: var(--gms-primary);
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(230,51,18,.4));
+  flex-shrink: 0;
+}
+
+
+/* ================================================================
+   5. STAT CARDS
+   Four small summary tiles shown below the welcome banner.
+================================================================ */
+.gms-stat-card {
+  background: #fff;
+  border-radius: .65rem;
+  padding: 1.1rem 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .4rem;
+  transition: box-shadow .2s, transform .2s;
+}
+.gms-stat-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.11);
+  transform: translateY(-2px);
+}
+
+.gms-stat-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.gms-stat-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gms-muted);
+}
+
+.gms-stat-value {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--gms-dark);
+}
+
+
+/* ================================================================
+   6. STAT ICON COLOUR VARIANTS
+   Soft tinted backgrounds for each stat icon.
+================================================================ */
+.bg-primary-soft  { background: rgba(13, 110, 253, .12); color: #0d6efd; }
+.bg-warning-soft  { background: rgba(255, 193,   7, .15); color: #b48a00; }
+.bg-success-soft  { background: rgba(25, 135,  84, .12); color: #198754; }
+.bg-red-soft      { background: rgba(230, 51,  18, .12); color: var(--gms-primary); }
+
+
+/* ================================================================
+   7. MAIN CONTENT CARD
+   Shared white card shell used throughout the dashboard.
+================================================================ */
+.gms-card {
+  background: #fff;
+  border-radius: .75rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,.07);
+  overflow: hidden;
+}
+
+
+/* ================================================================
+   8. CARD HEADER & BODY
+================================================================ */
+.gms-card-header {
+  background: var(--gms-dark);
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: .75rem 1.25rem;
+}
+
+.gms-card-body {
+  padding: 1.25rem;
+}
+
+
+/* ================================================================
+   9. DETAIL GROUP
+   Label + value rows inside the repair summary card.
+================================================================ */
+.gms-detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding-bottom: .85rem;
+  margin-bottom: .85rem;
+  border-bottom: 1px solid var(--gms-border);
+}
+
+.gms-detail-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gms-muted);
+}
+
+.gms-detail-value {
+  font-size: .9rem;
+  color: #212529;
+  line-height: 1.55;
+}
+
+
+/* ================================================================
+   10. REGISTRATION BADGE & PRICE BADGE
+================================================================ */
+.gms-reg-badge {
+  display: inline-block;
+  background: var(--gms-dark);
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: .25rem .75rem;
+  border-radius: .35rem;
+  font-family: 'Courier New', monospace;
+}
+
+.gms-price-badge {
+  display: inline-block;
+  background: rgba(25, 135, 84, .12);
+  color: #198754;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: .25rem .85rem;
+  border-radius: .35rem;
+}
+
+
+/* ================================================================
+   11. REPAIR STATUS STEPPER
+   Vertical step tracker showing repair progress.
+================================================================ */
+.gms-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.gms-step {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  position: relative;
+  padding-bottom: 1.1rem;
+}
+
+/* Vertical connector line between steps */
+.gms-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: .85rem;             /* centres on the dot */
+  top: 1.8rem;
+  width: 2px;
+  height: calc(100% - .6rem);
+  background: var(--gms-border);
+  transform: translateX(-50%);
+}
+
+/* Completed step line is red */
+.gms-step.completed:not(:last-child)::after {
+  background: var(--gms-primary);
+}
+
+/* Step dot circle */
+.gms-step-dot {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--gms-border);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  color: var(--gms-muted);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  transition: all .3s;
+}
+
+/* Completed dot — solid red */
+.gms-step.completed .gms-step-dot {
+  background: var(--gms-primary);
+  border-color: var(--gms-primary);
+  color: #fff;
+}
+
+/* Active dot — red outline + white fill */
+.gms-step.active .gms-step-dot {
+  border-color: var(--gms-primary);
+  color: var(--gms-primary);
+  box-shadow: 0 0 0 4px rgba(230,51,18,.15);
+}
+
+.gms-step-title {
+  font-size: .875rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+/* Inactive step title is muted */
+.gms-step:not(.completed):not(.active) .gms-step-title {
+  color: var(--gms-muted);
+}
+
+.gms-step-sub {
+  font-size: .78rem;
+  color: var(--gms-muted);
+  margin-top: .1rem;
+}
+
+
+/* ================================================================
+   12. STATUS BADGE
+   Coloured pill shown below the stepper.
+================================================================ */
+.gms-status-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: .82rem;
+  font-weight: 700;
+  padding: .35rem 1rem;
+  border-radius: 2rem;
+}
+
+.gms-status-badge.received {
+  background: rgba(13, 110, 253, .12);
+  color: #0d6efd;
+}
+
+.gms-status-badge.in-progress {
+  background: rgba(255, 193, 7, .18);
+  color: #b48a00;
+}
+
+.gms-status-badge.ready {
+  background: rgba(25, 135, 84, .12);
+  color: #198754;
+}
+
+
+/* ================================================================
+   13. SPINNING GEAR ANIMATION
+   Applied to .spin class on bi-gear-fill icons.
+================================================================ */
+@keyframes spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 2s linear infinite;
+}
+
+
+/* ================================================================
+   14. MECHANIC NOTES
+   Individual note entries inside the notes card.
+================================================================ */
+.gms-note {
+  padding-bottom: .85rem;
+  margin-bottom: .85rem;
+  border-bottom: 1px solid var(--gms-border);
+}
+
+.gms-note-meta {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--gms-primary);
+  margin-bottom: .3rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.gms-note-text {
+  font-size: .875rem;
+  color: #495057;
+  line-height: 1.6;
+}
+
+
+/* ================================================================
+   15. PAGE HEADER (Contact Us heading)
+================================================================ */
+.gms-page-header {
+  border-left: 4px solid var(--gms-primary);
+  padding-left: 1rem;
+}
+
+.gms-page-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--gms-dark);
+  margin-bottom: .25rem;
+}
+
+.gms-page-sub {
+  font-size: .9rem;
+  color: var(--gms-muted);
+  margin-bottom: 0;
+}
+
+
+/* ================================================================
+   16. CONTACT INFO ITEMS
+   Address / phone / email / hours rows.
+================================================================ */
+.gms-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--gms-border);
+}
+
+.gms-contact-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  background: rgba(230,51,18,.1);
+  color: var(--gms-primary);
+  border-radius: .45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.gms-contact-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gms-muted);
+  margin-bottom: .2rem;
+}
+
+.gms-contact-value {
+  font-size: .9rem;
+  color: #212529;
+  line-height: 1.55;
+}
+
+
+/* ================================================================
+   17. CONTACT LINK
+   Phone and email anchor tags inside contact info.
+================================================================ */
+.gms-contact-link {
+  color: var(--gms-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.gms-contact-link:hover { text-decoration: underline; }
+.gms-contact-link:focus-visible {
+  outline: 2px solid var(--gms-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+
+/* ================================================================
+   18. TIP CARD
+   Yellow info box on the contact page.
+================================================================ */
+.gms-tip-card {
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-left: 4px solid #faad14;
+  border-radius: .55rem;
+  padding: .85rem 1rem;
+  font-size: .875rem;
+  color: #7d5a00;
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+}
+
+.gms-tip-icon {
+  color: #faad14;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: .1rem;
+}
+
+
+/* ================================================================
+   19. CONTACT FORM SUCCESS SCREEN
+   Shown after the contact form is submitted.
+================================================================ */
+.gms-form-success {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.gms-form-success-icon {
+  font-size: 3.5rem;
+  color: #198754;
+}
+
+
+/* ================================================================
+   20. OUTLINE BUTTON (.btn-gms-outline)
+   Used for "Send Another Message" after form success.
+================================================================ */
+.btn-gms-outline {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 2px solid var(--gms-primary);
+  color: var(--gms-primary);
+  font-weight: 700;
+  font-size: .875rem;
+  padding: .5rem 1.25rem;
+  border-radius: .45rem;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  text-decoration: none;
+}
+.btn-gms-outline:hover {
+  background: var(--gms-primary);
+  color: #fff;
+}
+.btn-gms-outline:focus-visible {
+  outline: 3px solid var(--gms-focus);
+  outline-offset: 2px;
+}
+
+
+/* ================================================================
+   21. FOOTER
+   Sticky bottom bar showing copyright and logged-in user.
+================================================================ */
+.gms-footer {
+  background: var(--gms-dark);
+  color: rgba(255,255,255,.65);
+  font-size: .8rem;
+  padding: .9rem 0;
+  margin-top: auto;
+}
+
+
+/* ================================================================
+   22. SECTION VISIBILITY HELPER
+   JS toggles .d-none to show/hide dashboard vs contact sections.
+================================================================ */
+.gms-section {
+  animation: fadeIn .25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+
+/* ================================================================
+   23. RESPONSIVE OVERRIDES
+================================================================ */
+@media (max-width: 575.98px) {
+  .gms-welcome-title { font-size: 1.1rem; }
+  .gms-card-body     { padding: 1rem; }
+  .gms-stat-value    { font-size: .85rem; }
+}
+
+@media (max-width: 767.98px) {
+  /* Stack welcome banner avatar + text vertically on very small screens */
+  .gms-welcome-banner .d-flex { flex-direction: column; }
+}

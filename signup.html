@@ -1,15 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create Account â€“ MechControl</title>
+  <title>Register Account – MechControl</title>
 
   <!-- Bootstrap 5 CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
     crossorigin="anonymous"
   />
   <!-- Bootstrap Icons -->
@@ -17,219 +16,205 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     rel="stylesheet"
   />
-
-  <!-- All custom styles live in style.css -->
+  <!-- Shared Style -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <!-- â•â•â•â• HERO â•â•â•â• -->
-  <header class="gms-hero">
-    <i class="bi bi-tools gms-logo-icon" aria-hidden="true"></i>
-    <h1>MechControl</h1>
-    <p>Create your account and manage vehicle services smoothly.</p>
+
+  <!-- ════ STATIC TOP NAVBAR (Exact same on every page) ════ -->
+  <header class="mc-navbar">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a href="index.html" class="mc-brand">
+        <i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
+        <span>MechControl</span>
+      </a>
+      <a href="signin.html" class="text-white-50 text-decoration-none small">
+        Already registered? <span class="text-white fw-bold">Sign In &rarr;</span>
+      </a>
+    </div>
   </header>
-  <div class="gms-accent-bar" role="presentation"></div>
+  <div class="mc-accent-bar" role="presentation"></div>
 
-  <!-- â•â•â•â• MAIN â•â•â•â• -->
-  <main class="container py-4 py-md-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-        <div class="gms-card">
+  <!-- ════ MAIN AUTH WRAPPER (Horizontal Split-Screen) ════ -->
+  <main class="auth-wrapper">
+    <div class="auth-split-card">
+      <div class="row g-0">
 
-          <!-- Success screen -->
-          <div class="gms-success" id="successMsg" role="alert" aria-live="polite" tabindex="-1">
-            <i class="bi bi-check-circle-fill success-icon" aria-hidden="true"></i>
-            <h2 class="mt-3 mb-2 fw-bold">Account Created!</h2>
-            <p class="text-muted mb-4">Welcome aboard. You can now sign in to your garage dashboard.</p>
-            <a href="signin.html" class="btn-gms-primary" style="width:auto; display:inline-block; padding:.6rem 2rem; text-decoration:none; border-radius:.45rem;">
-              Go to Sign In
-            </a>
-          </div>
-
-          <!-- Registration form -->
-          <form id="signupForm" novalidate aria-label="Create account form">
-
-            <!-- â”€ Personal Info â”€ -->
-            <p class="gms-section-label">Personal Information</p>
-
-            <!-- Full Name -->
-            <div class="mb-3" id="grp-name">
-              <label for="fullName" class="form-label">
-                Full Name <span class="text-danger" aria-hidden="true">*</span>
-              </label>
-              <input
-                type="text" id="fullName" name="fullName"
-                class="form-control" placeholder="e.g. Alex Mitchell"
-                autocomplete="name" aria-required="true" aria-describedby="fullName-error"
-              />
-              <div class="invalid-feedback" id="fullName-error" role="alert">
-                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>Please enter your full name.
-              </div>
+        <!-- ── LEFT COLUMN: Brand Overview & Value ── -->
+        <div class="col-lg-5 auth-brand-side">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="bi bi-gear-wide-connected text-danger fs-3"></i>
+              <span class="fs-4 fw-bold tracking-tight text-white">MechControl</span>
             </div>
-
-            <!-- Email -->
-            <div class="mb-3" id="grp-email">
-              <label for="email" class="form-label">
-                Email Address <span class="text-danger" aria-hidden="true">*</span>
-              </label>
-              <input
-                type="email" id="email" name="email"
-                class="form-control" placeholder="you@example.com"
-                autocomplete="email" aria-required="true" aria-describedby="email-error"
-              />
-              <div class="invalid-feedback" id="email-error" role="alert">
-                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>Please enter a valid email address.
-              </div>
-            </div>
-
-            <!-- Phone -->
-            <div class="mb-3" id="grp-phone">
-              <label for="phone" class="form-label">
-                Phone Number <span class="text-danger" aria-hidden="true">*</span>
-              </label>
-              <input
-                type="tel" id="phone" name="phone"
-                class="form-control" placeholder="e.g. 9876543210"
-                autocomplete="tel" aria-required="true"
-                aria-describedby="phone-error phone-hint"
-                maxlength="10" inputmode="numeric" pattern="[0-9]{10}"
-              />
-              <div class="form-text text-muted mt-1" id="phone-hint" style="font-size:.78rem;">
-                Enter a 10-digit mobile number.
-              </div>
-              <div class="invalid-feedback" id="phone-error" role="alert">
-                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>Please enter a valid 10-digit mobile number.
-              </div>
-            </div>
-
-            <!-- â”€ Role â”€ -->
-            <p class="gms-section-label mt-4">Your Role</p>
-
-            <div class="mb-4" id="grp-role">
-              <fieldset>
-                <legend class="form-label mb-2">
-                  Select Role <span class="text-danger" aria-hidden="true">*</span>
-                </legend>
-
-                <!-- Admin & Customer pill radios -->
-                <div class="role-group" role="radiogroup" aria-describedby="role-error">
-                  <div>
-                    <input type="radio" name="role" id="roleAdmin" value="admin" />
-                    <label for="roleAdmin">
-                      <i class="bi bi-shield-lock-fill me-1" aria-hidden="true"></i>Admin
-                    </label>
-                  </div>
-                  <div>
-                    <input type="radio" name="role" id="roleCustomer" value="customer" />
-                    <label for="roleCustomer">
-                      <i class="bi bi-person-fill me-1" aria-hidden="true"></i>Customer
-                    </label>
-                  </div>
-                </div>
-
-                <!-- Dynamic description shown after selection -->
-                <div class="role-desc" id="roleDesc" aria-live="polite"></div>
-              </fieldset>
-
-              <div class="invalid-feedback" id="role-error" role="alert">
-                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>Please select a role.
-              </div>
-            </div>
-
-            <!-- â”€ Security â”€ -->
-            <p class="gms-section-label">Account Security</p>
-
-            <!-- Password -->
-            <div class="mb-3" id="grp-password">
-              <label for="password" class="form-label">
-                Password <span class="text-danger" aria-hidden="true">*</span>
-              </label>
-              <div class="input-group">
-                <input
-                  type="password" id="password" name="password"
-                  class="form-control" placeholder="Min. 8 characters"
-                  autocomplete="new-password" aria-required="true"
-                  aria-describedby="password-error password-hint"
-                />
-                <button type="button" class="btn-eye" id="togglePassword"
-                  aria-label="Show password" aria-pressed="false">
-                  <i class="bi bi-eye" id="eyeIcon" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="form-text text-muted mt-1" id="password-hint" style="font-size:.78rem;">
-                Use 8+ characters with a mix of letters and numbers.
-              </div>
-              <div class="invalid-feedback" id="password-error" role="alert">
-                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>Password must be at least 8 characters.
-              </div>
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mb-4" id="grp-confirm">
-              <label for="confirmPassword" class="form-label">
-                Confirm Password <span class="text-danger" aria-hidden="true">*</span>
-              </label>
-              <div class="input-group">
-                <input
-                  type="password" id="confirmPassword" name="confirmPassword"
-                  class="form-control" placeholder="Re-enter your password"
-                  autocomplete="new-password" aria-required="true"
-                  aria-describedby="confirm-error"
-                />
-                <button type="button" class="btn-eye" id="toggleConfirm"
-                  aria-label="Show confirm password" aria-pressed="false">
-                  <i class="bi bi-eye" id="eyeIconConfirm" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="invalid-feedback" id="confirm-error" role="alert">
-                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>Passwords do not match.
-              </div>
-            </div>
-
-            <!-- â”€ Terms â”€ -->
-            <div class="mb-4" id="grp-terms">
-              <div class="form-check">
-                <input
-                  class="form-check-input" type="checkbox" id="terms" name="terms"
-                  aria-required="true" aria-describedby="terms-error"
-                />
-                <label class="form-check-label" for="terms" style="font-size:.875rem;">
-                  I agree to the
-                  <a href="#" class="text-decoration-none fw-semibold" style="color:var(--gms-primary);">Terms of Service</a>
-                  and
-                  <a href="#" class="text-decoration-none fw-semibold" style="color:var(--gms-primary);">Privacy Policy</a>.
-                </label>
-              </div>
-              <div class="invalid-feedback" id="terms-error" role="alert">
-                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>You must accept the terms to continue.
-              </div>
-            </div>
-
-            <!-- Submit -->
-            <button type="submit" class="btn-gms-primary" id="submitBtn">
-              <i class="bi bi-person-plus-fill me-2" aria-hidden="true"></i>Create Account
-            </button>
-
-            <!-- Sign-in link -->
-            <p class="signin-link mt-4 mb-0">
-              Already have an account? <a href="signin.html">Sign in here</a>
+            <h2 class="fw-bold mb-3">Smart Workshop & Vehicle Management</h2>
+            <p class="text-white-50 small mb-4">
+              Join MechControl to connect vehicle owners and workshop mechanics in one unified, real-time platform.
             </p>
 
-          </form>
+            <div class="auth-feature-item">
+              <div class="auth-feature-icon"><i class="bi bi-speedometer2"></i></div>
+              <div>
+                <h6 class="fw-bold text-white mb-0 small">Live Service Tracking</h6>
+                <p class="text-white-50 small mb-0">Follow your vehicle from In Queue to Ready for Pickup.</p>
+              </div>
+            </div>
+
+            <div class="auth-feature-item">
+              <div class="auth-feature-icon"><i class="bi bi-tools"></i></div>
+              <div>
+                <h6 class="fw-bold text-white mb-0 small">Inspection Findings</h6>
+                <p class="text-white-50 small mb-0">Review & approve unexpected defects discovered by mechanics.</p>
+              </div>
+            </div>
+
+            <div class="auth-feature-item">
+              <div class="auth-feature-icon"><i class="bi bi-receipt"></i></div>
+              <div>
+                <h6 class="fw-bold text-white mb-0 small">Digital Invoices & Privacy</h6>
+                <p class="text-white-50 small mb-0">Transparent billing with automatic data cleanup on vehicle pickup.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-top border-secondary small text-white-50">
+            &copy; 2026 MechControl. All rights reserved.
+          </div>
         </div>
+
+        <!-- ── RIGHT COLUMN: Registration Form (Horizontal 2-Column Grid) ── -->
+        <div class="col-lg-7 auth-form-side">
+
+          <!-- Success Alert Screen -->
+          <div class="gms-success" id="successMsg" role="alert" tabindex="-1">
+            <i class="bi bi-check-circle-fill success-icon text-success" aria-hidden="true"></i>
+            <h3 class="mt-3 mb-2 fw-bold text-dark">Account Created!</h3>
+            <p class="text-muted small mb-4">Welcome to MechControl. Redirecting you to Sign In with your email & password…</p>
+            <div class="spinner-border text-danger" role="status">
+              <span class="visually-hidden">Loading…</span>
+            </div>
+          </div>
+
+          <!-- Registration Form -->
+          <form id="signupForm" novalidate aria-label="Create account form">
+            <div class="mb-4">
+              <h3 class="fw-bold text-dark mb-1">Create Account</h3>
+              <p class="text-muted small">New user or admin? Enter your details once to register, then use email & password to sign in.</p>
+            </div>
+
+            <!-- Error Banner -->
+            <div class="gms-alert" id="errorBanner" role="alert">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <span id="errorMsgText">Please check all required fields.</span>
+            </div>
+
+            <!-- Row 1: Full Name & Phone Number -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6" id="grp-name">
+                <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                <input
+                  type="text" id="fullName" name="fullName"
+                  class="form-control" placeholder="e.g. Rahul Mehta" required
+                />
+                <div class="invalid-feedback" id="fullName-error">Please enter your full name.</div>
+              </div>
+              <div class="col-md-6" id="grp-phone">
+                <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                <input
+                  type="tel" id="phone" name="phone"
+                  class="form-control" placeholder="e.g. 9876543210"
+                  maxlength="10" required
+                />
+                <div class="invalid-feedback" id="phone-error">Enter a valid 10-digit phone.</div>
+              </div>
+            </div>
+
+            <!-- Row 2: Email Address & Role Selector -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6" id="grp-email">
+                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                <input
+                  type="email" id="email" name="email"
+                  class="form-control" placeholder="you@example.com" required
+                />
+                <div class="invalid-feedback" id="email-error">Enter a valid email address.</div>
+              </div>
+              <div class="col-md-6" id="grp-role">
+                <label class="form-label">Select Account Role <span class="text-danger">*</span></label>
+                <div class="role-pills">
+                  <div class="role-pill-option">
+                    <input type="radio" id="roleCustomer" name="role" value="customer" checked />
+                    <label for="roleCustomer"><i class="bi bi-person-fill"></i> Customer</label>
+                  </div>
+                  <div class="role-pill-option">
+                    <input type="radio" id="roleAdmin" name="role" value="admin" />
+                    <label for="roleAdmin"><i class="bi bi-shield-lock-fill"></i> Admin</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 3: Password & Confirm Password -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6" id="grp-password">
+                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input
+                    type="password" id="password" name="password"
+                    class="form-control" placeholder="Min. 6 characters" required
+                  />
+                  <button type="button" class="btn-eye" id="togglePassword">
+                    <i class="bi bi-eye" id="eyeIcon"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback" id="password-error">Password must be at least 6 characters.</div>
+              </div>
+              <div class="col-md-6" id="grp-confirm">
+                <label for="confirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                <input
+                  type="password" id="confirmPassword" name="confirmPassword"
+                  class="form-control" placeholder="Re-enter password" required
+                />
+                <div class="invalid-feedback" id="confirm-error">Passwords do not match.</div>
+              </div>
+            </div>
+
+            <!-- Terms agreement -->
+            <div class="form-check mb-4" id="grp-terms">
+              <input class="form-check-input" type="checkbox" id="terms" required />
+              <label class="form-check-label small text-muted" for="terms">
+                I agree to the <a href="#" class="text-danger text-decoration-none">Terms of Service</a> & <a href="#" class="text-danger text-decoration-none">Privacy Policy</a>
+              </label>
+              <div class="invalid-feedback">You must agree before registering.</div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-mc-primary" id="submitBtn">
+              <i class="bi bi-person-plus-fill me-1"></i>Create Account
+            </button>
+
+            <!-- Bottom Redirect Link -->
+            <div class="mt-4 pt-2 border-top text-center small text-muted">
+              Already have an account? <a href="signin.html" class="fw-bold text-danger text-decoration-none">Sign in here &rarr;</a>
+            </div>
+
+          </form>
+
+        </div>
+
       </div>
     </div>
   </main>
 
-  <!-- Bootstrap 5 JS -->
+  <!-- Bootstrap 5 Bundle JS -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmExE+qaKhSALbRQ5aLhUAFeFuqr"
     crossorigin="anonymous"
   ></script>
 
-  <!-- All signup logic lives in signup.js -->
+  <!-- Registration Logic -->
   <script src="signup.js"></script>
+
 </body>
 </html>

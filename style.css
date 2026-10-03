@@ -1,23 +1,21 @@
 /* ================================================================
-   style.css — MechControl Design System & Form Styles
-   Full stylesheet for index.html, signup.html, and signin.html
+   style.css — MechControl Design System & Shared Styles
+   Consistent, minimal, high-contrast, professional across all pages.
    ================================================================ */
 
-/* ================================================================
-   1. DESIGN TOKENS
-   All brand colours and shared values in one place.
-================================================================ */
 :root {
-  --mc-primary:       #e63312;            /* MechControl engine-red */
-  --mc-primary-hover: #c4270b;            /* darker red for hover */
-  --mc-dark:          #0f172a;            /* deep slate navy */
-  --mc-surface:       #f8fafc;            /* light grey page background */
-  --mc-card:          #ffffff;            /* white card background */
-  --mc-muted:         #64748b;            /* muted grey for helper text */
-  --mc-border:        #e2e8f0;            /* default input border colour */
-  --mc-focus:         rgba(230, 51, 18, 0.25); /* red focus ring shadow */
-  --mc-success:       #10b981;
-  --mc-warning:       #f59e0b;
+  /* Brand Palette */
+  --mc-primary:       #e63312;       /* MechControl Engine Red */
+  --mc-primary-hover: #c4270b;       /* Darker red on hover */
+  --mc-dark:          #0f172a;       /* Deep slate navy header */
+  --mc-surface:       #f8fafc;       /* Crisp clean light slate background */
+  --mc-card:          #ffffff;       /* Pure white card surface */
+  --mc-border:        #e2e8f0;       /* Modern subtle border */
+  --mc-text:          #1e293b;       /* High-contrast readable slate text */
+  --mc-muted:         #64748b;       /* Secondary text */
+  --mc-success:       #10b981;       /* Green for ready/success */
+  --mc-warning:       #f59e0b;       /* Amber for inspection findings */
+  --mc-focus:         rgba(230, 51, 18, 0.25);
 
   /* Aliases for backwards compatibility */
   --gms-primary:      var(--mc-primary);
@@ -30,42 +28,50 @@
   --gms-focus:        var(--mc-focus);
 }
 
-/* ================================================================
-   2. BASE / BODY
-================================================================ */
+/* Base Body */
 body {
   background-color: var(--mc-surface);
+  color: var(--mc-text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #1e293b;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
 }
 
-/* Universal Brand Navigation */
+/* ================================================================
+   1. STATIC, UNIFORM TOP NAVBAR (Exact same height on all pages)
+   ================================================================ */
 .mc-navbar, .gms-navbar {
   background-color: var(--mc-dark);
-  padding: 0.85rem 1.5rem;
+  height: 64px;
+  padding: 0 1.5rem;
   border-bottom: 3px solid var(--mc-primary);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+  width: 100%;
 }
 
 .mc-brand, .gms-nav-brand, .gms-navbar-brand {
   color: #ffffff !important;
-  font-weight: 700;
-  font-size: 1.25rem;
+  font-weight: 800;
+  font-size: 1.3rem;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.55rem;
   letter-spacing: -0.3px;
+  line-height: 1;
 }
 
 .mc-brand i, .gms-nav-brand i, .gms-navbar-brand i {
   color: var(--mc-primary);
-  font-size: 1.35rem;
+  font-size: 1.45rem;
 }
 
 .mc-brand-badge {
@@ -79,65 +85,6 @@ body {
   text-transform: uppercase;
 }
 
-.mc-nav-link, .gms-nav-link {
-  color: #94a3b8 !important;
-  font-weight: 500;
-  font-size: 0.92rem;
-  padding: 0.45rem 0.85rem !important;
-  border-radius: 6px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-}
-
-.mc-nav-link:hover, .gms-nav-link:hover {
-  color: #ffffff !important;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.mc-nav-link.active, .gms-nav-link.active {
-  color: #ffffff !important;
-  background-color: rgba(230, 51, 18, 0.15);
-  border-left: 2px solid var(--mc-primary);
-}
-
-/* ================================================================
-   3. HERO BANNER
-================================================================ */
-.mc-hero, .gms-hero {
-  background-color: var(--mc-dark);
-  color: #ffffff;
-  text-align: center;
-  padding: 2.75rem 1.25rem 2.25rem;
-  position: relative;
-}
-
-.mc-hero h1, .gms-hero h1 {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.5px;
-}
-
-.mc-hero p, .gms-hero p {
-  color: #94a3b8;
-  font-size: 1.05rem;
-  margin-bottom: 0;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.mc-logo-icon, .gms-logo-icon {
-  font-size: 2.5rem;
-  color: var(--mc-primary);
-  margin-bottom: 0.75rem;
-  display: inline-block;
-}
-
-/* ================================================================
-   4. ACCENT BAR
-================================================================ */
 .mc-accent-bar, .gms-accent-bar {
   height: 3px;
   background: linear-gradient(90deg, var(--mc-primary) 0%, #ff6b4a 100%);
@@ -145,34 +92,79 @@ body {
 }
 
 /* ================================================================
-   5. CARD
-================================================================ */
-.mc-card, .gms-card {
-  background: var(--mc-card);
+   2. HORIZONTAL SPLIT-SCREEN AUTH CARD (Professional Layout)
+   ================================================================ */
+.auth-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+}
+
+.auth-split-card {
+  background: #ffffff;
   border: 1px solid var(--mc-border);
-  border-radius: .75rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  padding: 2.25rem;
-  transition: transform .2s ease;
+  border-radius: 14px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 980px;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+}
+
+.auth-brand-side {
+  background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #334155;
+}
+
+.auth-form-side {
+  background: #ffffff;
+  padding: 3rem 2.5rem;
+}
+
+.auth-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-feature-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(230, 51, 18, 0.15);
+  color: var(--mc-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
 }
 
 /* ================================================================
-   6. FORM CONTROLS
-================================================================ */
+   3. FORMS & INPUTS (Consistent Styling)
+   ================================================================ */
 .form-label {
-  font-size: .875rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #334155;
-  margin-bottom: .35rem;
+  margin-bottom: 0.35rem;
 }
 
 .form-control, .form-select {
   border: 1px solid var(--mc-border);
-  border-radius: .45rem;
-  padding: .6rem .85rem;
-  font-size: .925rem;
-  color: #1e293b;
-  transition: border-color .2s, box-shadow .2s;
+  border-radius: 6px;
+  padding: 0.62rem 0.85rem;
+  font-size: 0.92rem;
+  color: var(--mc-text);
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .form-control:focus, .form-select:focus {
@@ -181,22 +173,19 @@ body {
   outline: none;
 }
 
-/* ================================================================
-   7. EYE TOGGLE BUTTON
-   The show/hide password button attached to password inputs.
-================================================================ */
+/* Eye Toggle Button */
 .btn-eye {
   border: 1px solid var(--mc-border);
   border-left: none;
   background: #ffffff;
   color: var(--mc-muted);
-  border-radius: 0 .45rem .45rem 0;
-  padding: 0 .75rem;
+  border-radius: 0 6px 6px 0;
+  padding: 0 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color .2s, border-color .2s;
+  transition: color 0.15s ease;
 }
 
 .btn-eye:hover {
@@ -206,28 +195,25 @@ body {
 .btn-eye:focus {
   outline: 2px solid var(--mc-primary);
   outline-offset: 1px;
-  z-index: 4;
 }
 
-/* ================================================================
-   8. PRIMARY BUTTON (.btn-gms-primary & .btn-mc-primary)
-================================================================ */
+/* Primary Button */
 .btn-mc-primary, .btn-gms-primary {
   width: 100%;
-  padding: .7rem 1.25rem;
+  padding: 0.72rem 1.25rem;
   background: var(--mc-primary);
   border: 1px solid var(--mc-primary);
   color: #ffffff !important;
   font-weight: 600;
-  font-size: .95rem;
-  border-radius: .45rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: .5rem;
-  transition: background .2s, transform .1s, box-shadow .2s;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 }
 
 .btn-mc-primary:hover, .btn-gms-primary:hover {
@@ -240,192 +226,30 @@ body {
   transform: translateY(1px);
 }
 
-/* ================================================================
-   9. CHECKBOX STYLES
-================================================================ */
-.form-check-input {
-  border-color: var(--mc-border);
-  cursor: pointer;
-}
-
-.form-check-input:checked {
-  background-color: var(--mc-primary);
-  border-color: var(--mc-primary);
-}
-
-.form-check-input:focus {
-  box-shadow: 0 0 0 3px var(--mc-focus);
-  border-color: var(--mc-primary);
-}
-
-/* ================================================================
-   10. INLINE VALIDATION
-================================================================ */
-.field-invalid .invalid-feedback {
-  display: block;
-}
-
-.field-invalid .form-control,
-.field-invalid .form-select {
-  border-color: #dc3545;
-}
-
-.field-invalid .btn-eye {
-  border-color: #dc3545;
-}
-
-.field-valid .form-control,
-.field-valid .form-select {
-  border-color: #198754;
-}
-
-/* ================================================================
-   11. SUCCESS SCREEN (.gms-success)
-================================================================ */
-.gms-success, .mc-success {
-  display: none;
-  text-align: center;
-  padding: 2rem 1rem;
-}
-
-.gms-success .success-icon {
-  font-size: 3.5rem;
-}
-
-/* ================================================================
-   12. SECTION DIVIDER LABEL
-================================================================ */
-.gms-section-label {
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--mc-muted);
-  border-bottom: 1px solid var(--mc-border);
-  padding-bottom: .4rem;
-  margin-bottom: 1.25rem;
-}
-
-/* ================================================================
-   13. ROLE PILL SELECTOR (signup.html)
-================================================================ */
-.role-group {
-  display: flex;
-  gap: .6rem;
-  flex-wrap: wrap;
-}
-
-.role-group input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.role-group label {
-  cursor: pointer;
-  padding: .5rem 1.3rem;
-  border: 1.5px solid var(--mc-border);
-  border-radius: 2rem;
-  font-size: .875rem;
-  font-weight: 600;
-  color: var(--mc-muted);
-  background: #ffffff;
-  transition: all .2s;
-  user-select: none;
-}
-
-.role-group input[type="radio"]:checked + label {
-  background: var(--mc-primary);
-  border-color: var(--mc-primary);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(230, 51, 18, 0.3);
-}
-
-.role-group label:hover {
-  border-color: var(--mc-primary);
-  color: var(--mc-primary);
-}
-
-/* ================================================================
-   14. ROLE DESCRIPTION BOX
-================================================================ */
-.role-desc {
-  font-size: .8rem;
-  color: var(--mc-muted);
-  background: #f8fafc;
-  border-left: 3px solid var(--mc-primary);
-  border-radius: 0 .35rem .35rem 0;
-  padding: .5rem .75rem;
-  margin-top: .6rem;
-  display: none;
-}
-
-.role-desc.visible {
-  display: block;
-}
-
-/* ================================================================
-   15. SIGN-IN FOOTER LINK
-================================================================ */
-.signin-link {
-  font-size: .875rem;
-  text-align: center;
-  color: var(--mc-muted);
-}
-
-.signin-link a {
-  color: var(--mc-primary);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.signin-link a:hover {
-  text-decoration: underline;
-}
-
-/* ================================================================
-   16. CARD TITLE & SUBTITLE
-================================================================ */
-.mc-card-title, .gms-card-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: .25rem;
-}
-
-.mc-card-sub, .gms-card-sub {
-  font-size: .875rem;
-  color: var(--mc-muted);
-  margin-bottom: 1.75rem;
-}
-
-/* ================================================================
-   17. ROLE TAB SWITCHER (signin.html)
-================================================================ */
+/* Role Selector Tabs (Admin vs Customer) */
 .role-tabs {
   display: flex;
   border: 1.5px solid var(--mc-border);
-  border-radius: .5rem;
+  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   background-color: #ffffff;
 }
 
 .role-tab-btn {
   flex: 1;
-  padding: .55rem .5rem;
+  padding: 0.6rem 0.5rem;
   border: none;
   background: #ffffff;
-  font-size: .875rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--mc-muted);
   cursor: pointer;
-  transition: background .2s, color .2s;
+  transition: background 0.2s, color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .4rem;
+  gap: 0.4rem;
 }
 
 .role-tab-btn:not(:last-child) {
@@ -442,16 +266,63 @@ body {
   color: var(--mc-primary);
 }
 
-/* ================================================================
-   18. DIVIDER ("or" LINE)
-================================================================ */
+/* Role Pills for Registration Form */
+.role-pills {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.role-pill-option {
+  flex: 1;
+  position: relative;
+}
+
+.role-pill-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.role-pill-option label {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.62rem 0.5rem;
+  border: 1.5px solid var(--mc-border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mc-muted);
+  background: #ffffff;
+  transition: all 0.2s ease;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.role-pill-option input[type="radio"]:checked + label {
+  background: var(--mc-primary);
+  border-color: var(--mc-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(230, 51, 18, 0.25);
+}
+
+.role-pill-option label:hover {
+  border-color: var(--mc-primary);
+  color: var(--mc-primary);
+}
+
+/* Divider ("or" line) */
 .gms-divider {
   display: flex;
   align-items: center;
-  gap: .75rem;
+  gap: 0.75rem;
   color: var(--mc-muted);
-  font-size: .8rem;
-  margin: 1.4rem 0;
+  font-size: 0.8rem;
+  margin: 1.25rem 0;
 }
 
 .gms-divider::before,
@@ -462,83 +333,70 @@ body {
   background: var(--mc-border);
 }
 
-/* ================================================================
-   19. FORGOT PASSWORD LINK
-================================================================ */
-.forgot-link {
-  font-size: .8rem;
-  color: var(--mc-primary);
-  text-decoration: none;
-  font-weight: 600;
+/* Validation Feedback */
+.field-invalid .invalid-feedback {
+  display: block;
 }
 
-.forgot-link:hover {
-  text-decoration: underline;
+.field-invalid .form-control,
+.field-invalid .form-select,
+.field-invalid .btn-eye {
+  border-color: #dc3545;
 }
 
-/* ================================================================
-   20. SIGN-UP FOOTER LINK
-================================================================ */
-.signup-link {
-  font-size: .875rem;
+.field-valid .form-control,
+.field-valid .form-select {
+  border-color: #198754;
+}
+
+/* Success & Alert States */
+.gms-success, .mc-success {
+  display: none;
   text-align: center;
-  color: var(--mc-muted);
+  padding: 1.5rem 0.5rem;
 }
 
-.signup-link a {
-  color: var(--mc-primary);
-  font-weight: 600;
-  text-decoration: none;
+.success-icon {
+  font-size: 3.5rem;
+  color: var(--mc-success);
 }
 
-.signup-link a:hover {
-  text-decoration: underline;
-}
-
-/* ================================================================
-   21. ERROR ALERT BANNER
-================================================================ */
 .gms-alert {
   display: none;
-  border-radius: .45rem;
-  font-size: .875rem;
-  padding: .75rem 1rem;
-  margin-bottom: 1.25rem;
+  background-color: #fef2f2;
   border-left: 4px solid #dc3545;
-  background: #fff5f5;
-  color: #842029;
+  color: #991b1b;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-bottom: 1.25rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .gms-alert.visible {
   display: flex;
-  align-items: center;
-  gap: .5rem;
 }
 
-/* ================================================================
-   22. SUCCESS ICON COLOURS
-================================================================ */
-.gms-success .admin-icon    { color: var(--mc-primary); }
-.gms-success .customer-icon { color: #0d6efd; }
-
-/* ================================================================
-   23. PAGE FOOTER
-================================================================ */
+/* Footer */
 footer, .mc-footer {
   margin-top: auto;
-  padding: 1.25rem;
-  text-align: center;
-  font-size: .8rem;
-  color: var(--mc-muted);
   background-color: #ffffff;
   border-top: 1px solid var(--mc-border);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  color: var(--mc-muted);
+  font-size: 0.84rem;
 }
 
-/* ================================================================
-   24. RESPONSIVE OVERRIDES
-================================================================ */
-@media (max-width: 575.98px) {
-  .mc-card, .gms-card {
-    padding: 1.5rem 1.25rem;
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .auth-brand-side {
+    padding: 2rem 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid #334155;
+  }
+  .auth-form-side {
+    padding: 2rem 1.5rem;
   }
 }

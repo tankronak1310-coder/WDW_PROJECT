@@ -1,13 +1,15 @@
 /* ============================================================
-   signup.js — Garage Management System
-   Handles: user registration, validation, localStorage storage
+   signup.js — MechControl Account Registration Logic
+   Handles: registration, validation, localStorage storage,
+            and automatic redirection to signin.html
    ============================================================ */
 
-// ── DOM References ──────────────────────────────────────────
+// DOM References
 const form          = document.getElementById('signupForm');
 const submitBtn     = document.getElementById('submitBtn');
 const successMsg    = document.getElementById('successMsg');
-const roleDescEl    = document.getElementById('roleDesc');
+const errorBanner   = document.getElementById('errorBanner');
+const errorMsgText  = document.getElementById('errorMsgText');
 
 const fieldFullName = document.getElementById('fullName');
 const fieldEmail    = document.getElementById('email');
@@ -16,22 +18,7 @@ const fieldPassword = document.getElementById('password');
 const fieldConfirm  = document.getElementById('confirmPassword');
 const fieldTerms    = document.getElementById('terms');
 
-// ── Role descriptions (shown when user picks a role) ────────
-const roleDescriptions = {
-  admin:    '<strong>Admin</strong> – Full access to manage the garage system, staff, bookings, and reports.',
-  customer: '<strong>Customer</strong> – Book services, track your vehicle repairs, and view invoices.'
-};
-
-// Show description when a role pill is selected
-document.querySelectorAll('input[name="role"]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    roleDescEl.innerHTML = roleDescriptions[radio.value] || '';
-    roleDescEl.classList.add('visible');
-    validateRole();
-  });
-});
-
-// ── Helper: mark a field group valid or invalid ──────────────
+// Helper: mark a field group valid or invalid
 function setValidity(groupId, isValid) {
   const grp = document.getElementById(groupId);
   if (!grp) return;
@@ -39,171 +26,123 @@ function setValidity(groupId, isValid) {
   grp.classList.toggle('field-valid',   isValid);
 }
 
-// ── Helper: email format check ───────────────────────────────
+// Error banner helpers
+function showError(msg) {
+  if (errorMsgText) errorMsgText.textContent = msg;
+  if (errorBanner) errorBanner.classList.add('visible');
+}
+
+function hideError() {
+  if (errorBanner) errorBanner.classList.remove('visible');
+}
+
+// Helper: email format check
 function isValidEmail(val) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val.trim());
 }
 
-// ── Helper: exactly 10 digits ────────────────────────────────
+// Helper: phone 10 digits check
 function isValidPhone(val) {
   return /^\d{10}$/.test(val.trim());
 }
 
-// ── Helper: get selected role value ─────────────────────────
-function getRole() {
-  const checked = document.querySelector('input[name="role"]:checked');
-  return checked ? checked.value : '';
-}
-
-// ── Allow only digits while typing in phone field ───────────
-fieldPhone.addEventListener('input', function () {
-  this.value = this.value.replace(/\D/g, '');
-});
-
-// ── Per-field validators (return true = valid) ───────────────
-function validateName() {
-  const ok = fieldFullName.value.trim().length > 0;
-  setValidity('grp-name', ok);
-  return ok;
-}
-
-function validateEmail() {
-  const ok = isValidEmail(fieldEmail.value);
-  setValidity('grp-email', ok);
-  return ok;
-}
-
-function validatePhone() {
-  const ok = isValidPhone(fieldPhone.value);
-  setValidity('grp-phone', ok);
-  return ok;
-}
-
-function validateRole() {
-  const ok = getRole() !== '';
-  setValidity('grp-role', ok);
-  return ok;
-}
-
-function validatePassword() {
-  const ok = fieldPassword.value.length >= 8;
-  setValidity('grp-password', ok);
-  return ok;
-}
-
-function validateConfirm() {
-  const ok = fieldConfirm.value === fieldPassword.value && fieldConfirm.value.length > 0;
-  setValidity('grp-confirm', ok);
-  return ok;
-}
-
-function validateTerms() {
-  const ok = fieldTerms.checked;
-  setValidity('grp-terms', ok);
-  return ok;
-}
-
-// ── Live validation: fire when user leaves a field ───────────
-fieldFullName.addEventListener('blur',   validateName);
-fieldEmail   .addEventListener('blur',   validateEmail);
-fieldPhone   .addEventListener('blur',   validatePhone);
-fieldPassword.addEventListener('blur',   validatePassword);
-fieldConfirm .addEventListener('blur',   validateConfirm);
-fieldTerms   .addEventListener('change', validateTerms);
-
-// Re-check confirm password whenever main password changes
-fieldPassword.addEventListener('input', () => {
-  if (fieldConfirm.value.length > 0) validateConfirm();
-});
-
-// ── Show / Hide password toggle ──────────────────────────────
-function wireToggle(btnId, inputEl, iconId) {
-  const btn  = document.getElementById(btnId);
-  const icon = document.getElementById(iconId);
-
-  btn.addEventListener('click', () => {
-    const hidden   = inputEl.type === 'password';
-    inputEl.type   = hidden ? 'text' : 'password';
-    icon.className = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
-    btn.setAttribute('aria-label',   hidden ? 'Hide password' : 'Show password');
-    btn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+// Restrict phone input to numbers only
+if (fieldPhone) {
+  fieldPhone.addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '');
+    hideError();
   });
 }
 
-wireToggle('togglePassword', fieldPassword, 'eyeIcon');
-wireToggle('toggleConfirm',  fieldConfirm,  'eyeIconConfirm');
+// Show/Hide password toggle
+const toggleBtn = document.getElementById('togglePassword');
+const eyeIcon   = document.getElementById('eyeIcon');
+if (toggleBtn && eyeIcon && fieldPassword) {
+  toggleBtn.addEventListener('click', () => {
+    const hidden = fieldPassword.type === 'password';
+    fieldPassword.type = hidden ? 'text' : 'password';
+    eyeIcon.className  = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+  });
+}
 
-// ── localStorage helpers ─────────────────────────────────────
-
-// Read the users array from localStorage (returns [] if nothing saved yet)
-function getUsers() {
+// Read users from localStorage
+function getStoredUsers() {
   return JSON.parse(localStorage.getItem('gms_users') || '[]');
 }
 
-// Save the updated users array back to localStorage
-function saveUsers(users) {
-  localStorage.setItem('gms_users', JSON.stringify(users));
+// Form Submission
+if (form) {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    hideError();
+
+    // 1. Validation
+    const nameVal  = fieldFullName.value.trim();
+    const emailVal = fieldEmail.value.trim().toLowerCase();
+    const phoneVal = fieldPhone.value.trim();
+    const passVal  = fieldPassword.value;
+    const confVal  = fieldConfirm.value;
+    const termsOk  = fieldTerms.checked;
+
+    const nameOk  = nameVal.length >= 2;
+    const emailOk = isValidEmail(emailVal);
+    const phoneOk = isValidPhone(phoneVal);
+    const passOk  = passVal.length >= 6;
+    const confOk  = confVal === passVal && confVal.length > 0;
+
+    setValidity('grp-name', nameOk);
+    setValidity('grp-email', emailOk);
+    setValidity('grp-phone', phoneOk);
+    setValidity('grp-password', passOk);
+    setValidity('grp-confirm', confOk);
+    setValidity('grp-terms', termsOk);
+
+    if (!nameOk || !emailOk || !phoneOk || !passOk || !confOk || !termsOk) {
+      showError('Please correct the highlighted fields before submitting.');
+      return;
+    }
+
+    // Get selected role
+    const roleRadio = document.querySelector('input[name="role"]:checked');
+    const selectedRole = roleRadio ? roleRadio.value : 'customer';
+
+    // 2. Check if email already registered
+    const existingUsers = getStoredUsers();
+    const duplicate = existingUsers.find(u => u.email.toLowerCase() === emailVal);
+
+    if (duplicate) {
+      showError('This email is already registered! Please sign in with your email & password.');
+      setValidity('grp-email', false);
+      fieldEmail.focus();
+      return;
+    }
+
+    // 3. Save new user object
+    const newUser = {
+      name: nameVal,
+      email: emailVal,
+      phone: phoneVal,
+      role: selectedRole,
+      password: passVal,
+      registeredAt: new Date().toLocaleDateString()
+    };
+
+    existingUsers.push(newUser);
+    localStorage.setItem('gms_users', JSON.stringify(existingUsers));
+
+    // 4. Show success screen & redirect to signin.html
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Account…';
+
+    setTimeout(() => {
+      form.style.display = 'none';
+      successMsg.style.display = 'block';
+
+      // Redirect to signin.html with the registered role pre-selected!
+      setTimeout(() => {
+        window.location.href = 'signin.html?role=' + selectedRole;
+      }, 1200);
+    }, 600);
+
+  });
 }
-
-// ── Form Submit ──────────────────────────────────────────────
-form.addEventListener('submit', e => {
-  e.preventDefault();
-
-  // Run all validators
-  const allValid = [
-    validateName(),
-    validateEmail(),
-    validatePhone(),
-    validateRole(),
-    validatePassword(),
-    validateConfirm(),
-    validateTerms()
-  ].every(Boolean);
-
-  // If any field is invalid, focus the first bad one and stop
-  if (!allValid) {
-    const first = form.querySelector('.field-invalid input');
-    if (first) first.focus();
-    return;
-  }
-
-  // ── Step 1: Load existing users ──
-  const users = getUsers();
-
-  // ── Step 2: Check if email already registered ──
-  const alreadyExists = users.find(
-    u => u.email === fieldEmail.value.trim().toLowerCase()
-  );
-
-  if (alreadyExists) {
-    setValidity('grp-email', false);
-    document.getElementById('email-error').innerHTML =
-      '<i class="bi bi-exclamation-circle me-1"></i>This email is already registered.';
-    fieldEmail.focus();
-    return;
-  }
-
-  // ── Step 3: Build the new user object ──
-  const newUser = {
-    name:     fieldFullName.value.trim(),
-    email:    fieldEmail.value.trim().toLowerCase(),
-    phone:    fieldPhone.value.trim(),
-    role:     getRole(),            // "admin" or "customer"
-    password: fieldPassword.value   // plain text — fine for demo/viva
-  };
-
-  // ── Step 4: Add to array and save ──
-  users.push(newUser);
-  saveUsers(users);
-
-  // ── Step 5: Show success screen ──
-  submitBtn.disabled = true;
-  submitBtn.innerHTML =
-    '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Creating account…';
-
-  setTimeout(() => {
-    form.style.display       = 'none';
-    successMsg.style.display = 'block';
-    successMsg.focus();
-  }, 1000);
-});

@@ -1,13 +1,11 @@
 /* ================================================================
-   admin-dashboard.js — Garage Management System
-   Written in BASIC JavaScript (easy to understand and explain)
+   admin-dashboard.js — MechControl Admin Dashboard
+   Written in Basic, Easy-to-Understand JavaScript
    ================================================================ */
 
 // ----------------------------------------------------------------
 // 1. DEFAULT DATA (Used if no data is stored in the browser yet)
 // ----------------------------------------------------------------
-
-// List of mechanics working in the garage
 var DEFAULT_MECHANICS = [
   { id: 1, name: "Rajesh Kumar", phone: "98765-41122", specialty: "Bikes & Engines", status: "working" },
   { id: 2, name: "Vikram Sharma", phone: "98765-43344", specialty: "Brakes & Suspension", status: "working" },
@@ -17,7 +15,6 @@ var DEFAULT_MECHANICS = [
   { id: 6, name: "Manoj Rathod", phone: "98765-42233", specialty: "Denting & Painting", status: "leave" }
 ];
 
-// Initial list of vehicle repair jobs
 var DEFAULT_JOBS = [
   {
     id: "JOB-101",
@@ -26,7 +23,7 @@ var DEFAULT_JOBS = [
     vehicleType: "Bike",
     vehicleModel: "Royal Enfield Classic 350",
     plateNumber: "GJ-01-EE-4512",
-    reportedIssue: "Engine knocking noise and 10,000 km regular service.",
+    reportedIssue: "Engine knocking noise and 10,000 km periodic service.",
     mechanicId: 1,
     mechanicName: "Rajesh Kumar",
     status: "repairing",
@@ -37,7 +34,7 @@ var DEFAULT_JOBS = [
     discoveredIssues: [
       {
         id: 1,
-        description: "Front brake pads worn out; needs replacement.",
+        description: "Front brake pads heavily worn; rotor skim recommended.",
         estimatedCost: 850,
         approvalStatus: "approved"
       }
@@ -52,7 +49,7 @@ var DEFAULT_JOBS = [
     vehicleType: "Scooter",
     vehicleModel: "Honda Activa 6G",
     plateNumber: "GJ-27-AK-7890",
-    reportedIssue: "Self starter not working properly.",
+    reportedIssue: "Self-starter not working and poor pickup.",
     mechanicId: 3,
     mechanicName: "Amit Patel",
     status: "awaiting-parts",
@@ -63,7 +60,7 @@ var DEFAULT_JOBS = [
     discoveredIssues: [
       {
         id: 1,
-        description: "Battery voltage is low (dead cell); new battery required.",
+        description: "Battery voltage dead cell; replacement required.",
         estimatedCost: 1400,
         approvalStatus: "pending"
       }
@@ -78,7 +75,7 @@ var DEFAULT_JOBS = [
     vehicleType: "Bike",
     vehicleModel: "Yamaha MT-15",
     plateNumber: "GJ-06-BQ-3321",
-    reportedIssue: "Chain adjustment and fork oil seal change.",
+    reportedIssue: "Chain slack adjustment, front fork oil seal replacement.",
     mechanicId: 2,
     mechanicName: "Vikram Sharma",
     status: "ready",
@@ -97,7 +94,7 @@ var DEFAULT_JOBS = [
     vehicleType: "Car",
     vehicleModel: "Hyundai i20 Sportz",
     plateNumber: "GJ-01-MJ-9901",
-    reportedIssue: "AC blowing warm air, needs gas refilling.",
+    reportedIssue: "AC blowing warm air, cabin filter replacement.",
     mechanicId: 5,
     mechanicName: "Imran Khan",
     status: "repairing",
@@ -108,7 +105,7 @@ var DEFAULT_JOBS = [
     discoveredIssues: [
       {
         id: 1,
-        description: "AC condenser coil blocked with dust; needs cleaning.",
+        description: "AC condenser coil blocked with debris; foam clean needed.",
         estimatedCost: 650,
         approvalStatus: "approved"
       }
@@ -118,17 +115,15 @@ var DEFAULT_JOBS = [
   }
 ];
 
-// Current filter values
+// Current filter state
 var currentStatusFilter = "all";
 var currentSearchText = "";
 var currentVehicleType = "all";
 var activeJobIdForIssue = null;
 
 // ----------------------------------------------------------------
-// 2. HELPER FUNCTIONS: Read & Write from LocalStorage
+// 2. HELPER FUNCTIONS: Read & Write LocalStorage
 // ----------------------------------------------------------------
-
-// Get mechanics list from browser storage
 function getMechanics() {
   var saved = localStorage.getItem("gms_mechanics");
   if (saved == null) {
@@ -138,12 +133,10 @@ function getMechanics() {
   return JSON.parse(saved);
 }
 
-// Save mechanics list to browser storage
 function saveMechanics(list) {
   localStorage.setItem("gms_mechanics", JSON.stringify(list));
 }
 
-// Get jobs list from browser storage
 function getJobs() {
   var saved = localStorage.getItem("gms_jobs");
   if (saved == null) {
@@ -153,31 +146,53 @@ function getJobs() {
   return JSON.parse(saved);
 }
 
-// Save jobs list to browser storage
 function saveJobs(list) {
   localStorage.setItem("gms_jobs", JSON.stringify(list));
 }
 
 // ----------------------------------------------------------------
-// 3. STARTUP FUNCTION (Runs automatically when page loads)
+// 3. STARTUP & TAB SWITCHING
 // ----------------------------------------------------------------
 window.onload = function() {
   startLiveClock();
   fillMechanicDropdown();
   updateTopCounters();
+  displayQuickTable();
   displayJobs();
+  displayMechanicsRoster();
+  displayCustomers();
   setupButtonListeners();
 };
 
-// Simple live clock in header
 function startLiveClock() {
   setInterval(function() {
     var now = new Date();
-    var clockElement = document.getElementById("liveClock");
-    if (clockElement) {
-      clockElement.innerHTML = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+    var clockEl = document.getElementById("liveClock");
+    if (clockEl) {
+      clockEl.innerHTML = '<i class="bi bi-clock me-1"></i>' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
   }, 1000);
+}
+
+function switchAdminTab(tabName) {
+  // Hide all sections
+  var sections = document.querySelectorAll(".admin-tab-section");
+  for (var i = 0; i < sections.length; i++) {
+    sections[i].classList.remove("active");
+  }
+
+  // Deactivate all tab links
+  var tabs = document.querySelectorAll(".adm-tab-link");
+  for (var j = 0; j < tabs.length; j++) {
+    tabs[j].classList.remove("active");
+  }
+
+  // Show selected section
+  var targetSection = document.getElementById("section-" + tabName);
+  var targetTab = document.getElementById("tab-" + tabName);
+
+  if (targetSection) targetSection.classList.add("active");
+  if (targetTab) targetTab.classList.add("active");
 }
 
 // ----------------------------------------------------------------
@@ -188,7 +203,7 @@ function fillMechanicDropdown() {
   if (!dropdown) return;
 
   var mechanics = getMechanics();
-  var html = '<option value="">-- Select a Mechanic --</option>';
+  var html = '<option value="">-- Choose Assigned Mechanic --</option>';
 
   for (var i = 0; i < mechanics.length; i++) {
     var m = mechanics[i];
@@ -203,20 +218,20 @@ function fillMechanicDropdown() {
 }
 
 // ----------------------------------------------------------------
-// 5. UPDATE TOP KPI COUNTERS (Total working mechanics, bikes, revenue)
+// 5. UPDATE TOP KPI COUNTERS (Requirement 3)
 // ----------------------------------------------------------------
 function updateTopCounters() {
   var mechanics = getMechanics();
   var jobs = getJobs();
 
-  var workingMechanicsCount = 0;
-  var onLeaveMechanicsCount = 0;
+  var workingCount = 0;
+  var leaveCount = 0;
 
   for (var i = 0; i < mechanics.length; i++) {
     if (mechanics[i].status == "working") {
-      workingMechanicsCount++;
+      workingCount++;
     } else {
-      onLeaveMechanicsCount++;
+      leaveCount++;
     }
   }
 
@@ -236,7 +251,6 @@ function updateTopCounters() {
       completedCount++;
     }
 
-    // Add up total cost
     var jobTotal = job.baseCost + job.laborCost;
     if (job.discoveredIssues) {
       for (var k = 0; k < job.discoveredIssues.length; k++) {
@@ -248,58 +262,31 @@ function updateTopCounters() {
     totalRevenue += jobTotal;
   }
 
-  // Put numbers into HTML elements
-  document.getElementById("statMechanicsWorking").innerText = workingMechanicsCount;
-  document.getElementById("statMechanicsLeave").innerText = onLeaveMechanicsCount;
+  document.getElementById("statMechanicsWorking").innerText = workingCount;
+  document.getElementById("statMechanicsLeave").innerText = leaveCount;
   document.getElementById("statRepairingCount").innerText = repairingCount;
   document.getElementById("statReadyCount").innerText = readyCount;
   document.getElementById("statCompletedCount").innerText = completedCount;
-  document.getElementById("statTotalRevenue").innerText = "Rs. " + totalRevenue;
+  document.getElementById("statTotalRevenue").innerText = "₹" + totalRevenue.toLocaleString("en-IN");
+  
+  var dutySummary = document.getElementById("mechanicDutySummary");
+  if (dutySummary) dutySummary.innerText = workingCount;
 }
 
 // ----------------------------------------------------------------
-// 6. DISPLAY JOBS ON SCREEN (Cards)
+// 6. DISPLAY QUICK RECENT REPAIRS TABLE on Dashboard
 // ----------------------------------------------------------------
-function displayJobs() {
-  var container = document.getElementById("jobsContainer");
-  if (!container) return;
+function displayQuickTable() {
+  var tbody = document.getElementById("quickTableBody");
+  if (!tbody) return;
 
   var jobs = getJobs();
   var mechanics = getMechanics();
-
   var html = "";
-  var countShown = 0;
 
   for (var i = 0; i < jobs.length; i++) {
     var job = jobs[i];
 
-    // Filter by Status
-    if (currentStatusFilter != "all" && job.status != currentStatusFilter) {
-      continue;
-    }
-
-    // Filter by Vehicle Type
-    if (currentVehicleType != "all" && job.vehicleType.toLowerCase() != currentVehicleType.toLowerCase()) {
-      continue;
-    }
-
-    // Filter by Search Query
-    if (currentSearchText.trim() != "") {
-      var searchLower = currentSearchText.toLowerCase();
-      var matchName = job.customerName.toLowerCase().indexOf(searchLower) != -1;
-      var matchPhone = job.customerPhone.indexOf(searchLower) != -1;
-      var matchPlate = job.plateNumber.toLowerCase().indexOf(searchLower) != -1;
-      var matchModel = job.vehicleModel.toLowerCase().indexOf(searchLower) != -1;
-      var matchId = job.id.toLowerCase().indexOf(searchLower) != -1;
-
-      if (!matchName && !matchPhone && !matchPlate && !matchModel && !matchId) {
-        continue;
-      }
-    }
-
-    countShown++;
-
-    // Find assigned mechanic
     var assignedMechanic = null;
     for (var m = 0; m < mechanics.length; m++) {
       if (mechanics[m].id == job.mechanicId) {
@@ -307,129 +294,187 @@ function displayJobs() {
         break;
       }
     }
+    var mechName = assignedMechanic ? assignedMechanic.name : (job.mechanicName || "Unassigned");
 
-    var mechanicName = assignedMechanic ? assignedMechanic.name : (job.mechanicName || "Not Assigned");
-    var mechanicPhone = assignedMechanic ? assignedMechanic.phone : "N/A";
-    var mechanicSpecialty = assignedMechanic ? assignedMechanic.specialty : "General Service";
-
-    // Calculate total cost
+    // Total cost
     var extraCost = 0;
-    var extraIssuesHtml = "";
+    if (job.discoveredIssues) {
+      for (var k = 0; k < job.discoveredIssues.length; k++) {
+        if (job.discoveredIssues[k].approvalStatus == "approved") extraCost += job.discoveredIssues[k].estimatedCost;
+      }
+    }
+    var totalCost = job.baseCost + job.laborCost + extraCost;
+
+    var badgeClass = "bg-secondary";
+    var badgeText = "In Queue";
+    if (job.status == "repairing") { badgeClass = "bg-primary"; badgeText = "In Progress"; }
+    else if (job.status == "awaiting-parts") { badgeClass = "bg-warning text-dark"; badgeText = "Awaiting Parts"; }
+    else if (job.status == "ready") { badgeClass = "bg-success"; badgeText = "Ready for Pickup"; }
+    else if (job.status == "completed") { badgeClass = "bg-dark"; badgeText = "Completed"; }
+
+    html += '<tr>';
+    html += '  <td><strong>' + job.id + '</strong></td>';
+    html += '  <td><strong>' + job.customerName + '</strong><div class="small text-muted">' + job.customerPhone + '</div></td>';
+    html += '  <td>' + job.vehicleModel + ' <span class="badge bg-light text-dark border">' + job.plateNumber + '</span></td>';
+    html += '  <td>' + mechName + '</td>';
+    html += '  <td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>';
+    html += '  <td><small class="text-muted">' + job.estimatedDuration + '</small></td>';
+    html += '  <td><strong>₹' + totalCost.toLocaleString("en-IN") + '</strong></td>';
+    html += '  <td class="text-end">';
+    html += '    <button class="btn btn-sm btn-outline-secondary py-1 px-2 me-1" onclick="showCustomerPreview(\'' + job.id + '\')"><i class="bi bi-eye"></i></button>';
+    html += '    <button class="btn btn-sm btn-outline-primary py-1 px-2" onclick="showInvoice(\'' + job.id + '\')"><i class="bi bi-receipt"></i></button>';
+    html += '  </td>';
+    html += '</tr>';
+  }
+
+  tbody.innerHTML = html;
+}
+
+// ----------------------------------------------------------------
+// 7. DISPLAY FULL JOB CARDS on Repairs & Vehicles Tab
+// ----------------------------------------------------------------
+function displayJobs() {
+  var container = document.getElementById("jobsContainer");
+  if (!container) return;
+
+  var jobs = getJobs();
+  var mechanics = getMechanics();
+  var html = "";
+  var count = 0;
+
+  for (var i = 0; i < jobs.length; i++) {
+    var job = jobs[i];
+
+    // Filter checks
+    if (currentStatusFilter != "all" && job.status != currentStatusFilter) continue;
+    if (currentVehicleType != "all" && job.vehicleType.toLowerCase() != currentVehicleType.toLowerCase()) continue;
+
+    if (currentSearchText.trim() != "") {
+      var s = currentSearchText.toLowerCase();
+      var m1 = job.customerName.toLowerCase().indexOf(s) != -1;
+      var m2 = job.customerPhone.indexOf(s) != -1;
+      var m3 = job.plateNumber.toLowerCase().indexOf(s) != -1;
+      var m4 = job.vehicleModel.toLowerCase().indexOf(s) != -1;
+      var m5 = job.id.toLowerCase().indexOf(s) != -1;
+      if (!m1 && !m2 && !m3 && !m4 && !m5) continue;
+    }
+
+    count++;
+
+    // Find mechanic
+    var mech = null;
+    for (var m = 0; m < mechanics.length; m++) {
+      if (mechanics[m].id == job.mechanicId) {
+        mech = mechanics[m];
+        break;
+      }
+    }
+    var mechName = mech ? mech.name : (job.mechanicName || "Unassigned");
+    var mechPhone = mech ? mech.phone : "N/A";
+    var mechSpecialty = mech ? mech.specialty : "General Service";
+
+    // Extra discovered issues
+    var extraCost = 0;
+    var extraHtml = "";
 
     if (job.discoveredIssues && job.discoveredIssues.length > 0) {
       for (var e = 0; e < job.discoveredIssues.length; e++) {
-        var issue = job.discoveredIssues[e];
-        if (issue.approvalStatus == "approved") {
-          extraCost += issue.estimatedCost;
-        }
+        var iss = job.discoveredIssues[e];
+        if (iss.approvalStatus == "approved") extraCost += iss.estimatedCost;
 
-        var approvalBadge = '<span class="badge bg-warning text-dark">Pending Customer Approval</span>';
-        if (issue.approvalStatus == "approved") {
-          approvalBadge = '<span class="badge bg-success">Approved by Customer</span>';
-        } else if (issue.approvalStatus == "declined") {
-          approvalBadge = '<span class="badge bg-danger">Declined by Customer</span>';
-        }
+        var appBadge = '<span class="badge bg-warning text-dark">Pending Customer Approval</span>';
+        if (iss.approvalStatus == "approved") appBadge = '<span class="badge bg-success">Approved by Customer</span>';
+        if (iss.approvalStatus == "declined") appBadge = '<span class="badge bg-danger">Declined by Customer</span>';
 
-        extraIssuesHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom small">';
-        extraIssuesHtml += '  <div><strong>' + issue.description + '</strong> (Rs. ' + issue.estimatedCost + ')</div>';
-        extraIssuesHtml += '  <div>' + approvalBadge;
-        extraIssuesHtml += '    <button class="btn btn-sm btn-outline-success py-0 px-1 ms-1" onclick="changeIssueApproval(\'' + job.id + '\', ' + issue.id + ', \'approved\')">Yes</button>';
-        extraIssuesHtml += '    <button class="btn btn-sm btn-outline-danger py-0 px-1 ms-1" onclick="changeIssueApproval(\'' + job.id + '\', ' + issue.id + ', \'declined\')">No</button>';
-        extraIssuesHtml += '  </div>';
-        extraIssuesHtml += '</div>';
+        extraHtml += '<div class="d-flex justify-content-between align-items-center py-2 border-bottom small">';
+        extraHtml += '  <div><i class="bi bi-tools text-warning me-1"></i><strong>' + iss.description + '</strong> (₹' + iss.estimatedCost + ')</div>';
+        extraHtml += '  <div>' + appBadge;
+        extraHtml += '    <button class="btn btn-sm btn-outline-success py-0 px-2 ms-1" onclick="changeIssueApproval(\'' + job.id + '\', ' + iss.id + ', \'approved\')">Yes</button>';
+        extraHtml += '    <button class="btn btn-sm btn-outline-danger py-0 px-2 ms-1" onclick="changeIssueApproval(\'' + job.id + '\', ' + iss.id + ', \'declined\')">No</button>';
+        extraHtml += '  </div>';
+        extraHtml += '</div>';
       }
     } else {
-      extraIssuesHtml = '<div class="text-muted small">No extra problems found by mechanic.</div>';
+      extraHtml = '<div class="text-muted small">No extra problems discovered by mechanic.</div>';
     }
 
-    var totalCost = job.baseCost + job.laborCost + extraCost;
+    var grandTotal = job.baseCost + job.laborCost + extraCost;
 
-    // Status Label and Badge
-    var statusBadgeClass = "bg-secondary";
+    var statusClass = "bg-secondary";
     var statusText = "In Queue";
+    if (job.status == "repairing") { statusClass = "bg-primary"; statusText = "In Progress"; }
+    else if (job.status == "awaiting-parts") { statusClass = "bg-warning text-dark"; statusText = "Awaiting Parts"; }
+    else if (job.status == "ready") { statusClass = "bg-success"; statusText = "Ready for Pickup"; }
+    else if (job.status == "completed") { statusClass = "bg-dark"; statusText = "Completed"; }
 
-    if (job.status == "repairing") {
-      statusBadgeClass = "bg-primary";
-      statusText = "Repair In Progress";
-    } else if (job.status == "awaiting-parts") {
-      statusBadgeClass = "bg-warning text-dark";
-      statusText = "Awaiting Parts";
-    } else if (job.status == "ready") {
-      statusBadgeClass = "bg-success";
-      statusText = "Ready for Pickup";
-    } else if (job.status == "completed") {
-      statusBadgeClass = "bg-dark";
-      statusText = "Completed";
-    }
-
-    // Vehicle Icon
     var vehicleIcon = "bi-bicycle";
     if (job.vehicleType == "Car") vehicleIcon = "bi-car-front";
     if (job.vehicleType == "Scooter") vehicleIcon = "bi-moped";
 
     // Requirement 4: Pickup & Privacy Notice
-    var pickupBoxHtml = "";
+    var privacyBoxHtml = "";
     if (job.status == "ready" || job.status == "completed") {
-      pickupBoxHtml += '<div class="pickup-notice-box">';
-      pickupBoxHtml += '  <div class="pickup-notice-title"><i class="bi bi-shield-check me-1"></i> Customer Pickup & Data Privacy Notice:</div>';
-      pickupBoxHtml += '  <div class="pickup-notice-text">When the customer collects their vehicle and pays Rs. ' + totalCost + ', please delete/archive this customer record from the active garage database to protect personal customer data.</div>';
-      pickupBoxHtml += '  <button class="btn btn-sm btn-danger" onclick="deleteCustomerJob(\'' + job.id + '\')">';
-      pickupBoxHtml += '    <i class="bi bi-trash me-1"></i> Mark as Picked Up & Delete Active Record';
-      pickupBoxHtml += '  </button>';
-      pickupBoxHtml += '</div>';
+      privacyBoxHtml += '<div class="pickup-privacy-box">';
+      privacyBoxHtml += '  <div class="pickup-privacy-title"><i class="bi bi-shield-check"></i> Vehicle Ready – Customer Pickup & Privacy Guideline:</div>';
+      privacyBoxHtml += '  <div class="pickup-privacy-text">When the customer collects their vehicle and pays ₹' + grandTotal + ', please delete/archive this customer personal record to comply with garage data privacy rules.</div>';
+      privacyBoxHtml += '  <button class="btn btn-sm btn-danger fw-bold" onclick="deleteCustomerJob(\'' + job.id + '\')">';
+      privacyBoxHtml += '    <i class="bi bi-trash3-fill me-1"></i>Mark as Picked Up & Purge Active Data';
+      privacyBoxHtml += '  </button>';
+      privacyBoxHtml += '</div>';
     }
 
-    // Build the complete Job Card HTML
-    html += '<div class="col-12 col-md-6 mb-4">';
-    html += '  <div class="job-card">';
+    // Build Job Card HTML
+    html += '<div class="col-12 col-xl-6 mb-4">';
+    html += '  <div class="vehicle-job-card">';
 
     // Header
-    html += '    <div class="job-header d-flex justify-content-between align-items-center">';
-    html += '      <div>';
-    html += '        <strong>' + job.id + '</strong> ';
-    html += '        <span class="plate-badge"><i class="bi ' + vehicleIcon + ' me-1"></i>' + job.plateNumber + '</span> ';
-    html += '        <span class="badge ' + statusBadgeClass + '">' + statusText + '</span>';
+    html += '    <div class="job-card-header">';
+    html += '      <div class="d-flex align-items-center gap-2">';
+    html += '        <strong>' + job.id + '</strong>';
+    html += '        <span class="plate-badge"><i class="bi ' + vehicleIcon + ' me-1"></i>' + job.plateNumber + '</span>';
+    html += '        <span class="badge ' + statusClass + '">' + statusText + '</span>';
     html += '      </div>';
     html += '      <div>';
-    html += '        <button class="btn btn-sm btn-outline-secondary me-1" onclick="showCustomerPreview(\'' + job.id + '\')">Customer View</button>';
-    html += '        <button class="btn btn-sm btn-outline-primary" onclick="showInvoice(\'' + job.id + '\')">Invoice</button>';
+    html += '        <button class="btn btn-sm btn-outline-secondary py-1 px-2 me-1" onclick="showCustomerPreview(\'' + job.id + '\')"><i class="bi bi-eye me-1"></i>Customer View</button>';
+    html += '        <button class="btn btn-sm btn-outline-primary py-1 px-2" onclick="showInvoice(\'' + job.id + '\')"><i class="bi bi-receipt me-1"></i>Invoice</button>';
     html += '      </div>';
     html += '    </div>';
 
     // Body
-    html += '    <div class="job-body">';
+    html += '    <div class="job-card-body">';
 
-    // Customer & Vehicle Info
-    html += '      <div class="row mb-2">';
+    // Info row
+    html += '      <div class="row g-2 mb-3">';
     html += '        <div class="col-6">';
-    html += '          <div class="text-muted small">CUSTOMER:</div>';
-    html += '          <strong>' + job.customerName + '</strong>';
-    html += '          <div class="small text-muted"><i class="bi bi-telephone me-1"></i>' + job.customerPhone + '</div>';
+    html += '          <small class="text-muted d-block">CUSTOMER</small>';
+    html += '          <div class="fw-bold text-dark">' + job.customerName + '</div>';
+    html += '          <div class="small text-muted"><i class="bi bi-telephone text-primary me-1"></i>' + job.customerPhone + '</div>';
     html += '        </div>';
     html += '        <div class="col-6">';
-    html += '          <div class="text-muted small">VEHICLE:</div>';
-    html += '          <strong>' + job.vehicleModel + '</strong> (' + job.vehicleType + ')';
+    html += '          <small class="text-muted d-block">VEHICLE MODEL</small>';
+    html += '          <div class="fw-bold text-dark">' + job.vehicleModel + '</div>';
+    html += '          <span class="badge bg-light text-dark border">' + job.vehicleType + '</span>';
     html += '        </div>';
     html += '      </div>';
 
-    // Problem Reported
-    html += '      <div class="p-2 mb-2 bg-light border rounded small">';
-    html += '        <strong>Problem Reported:</strong> ' + job.reportedIssue;
+    // Reported issue
+    html += '      <div class="p-2 mb-3 bg-light rounded border-start border-3 border-secondary small">';
+    html += '        <strong>Reported Issue:</strong> ' + job.reportedIssue;
     html += '      </div>';
 
-    // Mechanic & Estimated Duration
-    html += '      <div class="row mb-2 align-items-center">';
+    // Mechanic and Duration
+    html += '      <div class="row g-2 mb-3 align-items-center">';
     html += '        <div class="col-7">';
-    html += '          <div class="text-muted small">ASSIGNED MECHANIC:</div>';
-    html += '          <div class="mechanic-assigned-box">';
-    html += '            <strong>' + mechanicName + '</strong>';
-    html += '            <div class="small text-muted">' + mechanicSpecialty + ' | Ph: ' + mechanicPhone + '</div>';
+    html += '          <small class="text-muted d-block mb-1">ASSIGNED MECHANIC</small>';
+    html += '          <div class="assigned-mechanic-box">';
+    html += '            <div class="fw-bold small">' + mechName + '</div>';
+    html += '            <div class="small text-muted">' + mechSpecialty + ' | Ph: ' + mechPhone + '</div>';
     html += '          </div>';
     html += '        </div>';
     html += '        <div class="col-5">';
-    html += '          <div class="text-muted small">REPAIR TIME:</div>';
-    html += '          <div class="p-2 bg-light border rounded text-center">';
-    html += '            <strong class="text-primary small">' + job.estimatedDuration + '</strong>';
+    html += '          <small class="text-muted d-block mb-1">ESTIMATED REPAIR TIME</small>';
+    html += '          <div class="p-2 bg-light rounded border text-center">';
+    html += '            <strong class="text-primary small d-block">' + job.estimatedDuration + '</strong>';
     html += '            <div class="progress my-1" style="height: 6px;">';
     html += '              <div class="progress-bar bg-success" style="width: ' + job.progressPercent + '%;"></div>';
     html += '            </div>';
@@ -438,28 +483,28 @@ function displayJobs() {
     html += '        </div>';
     html += '      </div>';
 
-    // Requirement 2: Unexpected Mechanic Findings Box
+    // Unexpected findings (Requirement 2)
     html += '      <div class="discovered-issue-box">';
     html += '        <div class="d-flex justify-content-between align-items-center mb-1">';
-    html += '          <span class="discovered-issue-title"><i class="bi bi-exclamation-triangle-fill me-1"></i> Extra Problems Discovered by Mechanic:</span>';
+    html += '          <span class="discovered-issue-title"><i class="bi bi-exclamation-triangle-fill"></i> Extra Problems Discovered by Mechanic:</span>';
     html += '          <button class="btn btn-sm btn-outline-warning text-dark fw-bold py-0 px-2" onclick="openAddIssueModal(\'' + job.id + '\')">+ Add Extra Finding</button>';
     html += '        </div>';
-    html += '        <div>' + extraIssuesHtml + '</div>';
+    html += '        <div>' + extraHtml + '</div>';
     html += '      </div>';
 
-    // Requirement 5: Cost Breakdown & Status Selector
-    html += '      <div class="row align-items-center mt-3 pt-2 border-top">';
+    // Costs & Status dropdown
+    html += '      <div class="row align-items-center mt-3 pt-3 border-top">';
     html += '        <div class="col-7">';
-    html += '          <div class="text-muted small">TOTAL BILL AMOUNT:</div>';
-    html += '          <h5 class="fw-bold mb-0 text-dark">Rs. ' + totalCost + ' <span class="badge bg-info text-dark" style="font-size: 11px;">' + job.paymentStatus + '</span></h5>';
-    html += '          <div class="text-muted" style="font-size: 11px;">Base: Rs. ' + job.baseCost + ' | Labor: Rs. ' + job.laborCost + ' | Extra: Rs. ' + extraCost + '</div>';
+    html += '          <small class="text-muted d-block">TOTAL BILL AMOUNT</small>';
+    html += '          <h5 class="fw-bold mb-0 text-dark">₹' + grandTotal.toLocaleString("en-IN") + ' <span class="badge bg-info text-dark" style="font-size: 11px;">' + job.paymentStatus + '</span></h5>';
+    html += '          <div class="text-muted small" style="font-size: 11px;">Base: ₹' + job.baseCost + ' | Labor: ₹' + job.laborCost + ' | Extra: ₹' + extraCost + '</div>';
     html += '        </div>';
     html += '        <div class="col-5 text-end">';
     html += '          <div class="dropdown">';
-    html += '            <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">Change Status</button>';
+    html += '            <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">Change Stage</button>';
     html += '            <ul class="dropdown-menu dropdown-menu-end shadow">';
     html += '              <li><a class="dropdown-item" href="javascript:void(0)" onclick="updateStatus(\'' + job.id + '\', \'pending\', 10)">In Queue (10%)</a></li>';
-    html += '              <li><a class="dropdown-item" href="javascript:void(0)" onclick="updateStatus(\'' + job.id + '\', \'repairing\', 60)">Repairing (60%)</a></li>';
+    html += '              <li><a class="dropdown-item" href="javascript:void(0)" onclick="updateStatus(\'' + job.id + '\', \'repairing\', 60)">In Progress (60%)</a></li>';
     html += '              <li><a class="dropdown-item" href="javascript:void(0)" onclick="updateStatus(\'' + job.id + '\', \'awaiting-parts\', 35)">Awaiting Parts (35%)</a></li>';
     html += '              <li><a class="dropdown-item text-success fw-bold" href="javascript:void(0)" onclick="updateStatus(\'' + job.id + '\', \'ready\', 100)">Ready for Pickup (100%)</a></li>';
     html += '            </ul>';
@@ -467,23 +512,104 @@ function displayJobs() {
     html += '        </div>';
     html += '      </div>';
 
-    // Requirement 4: Pickup & Data Delete Notice
-    html += pickupBoxHtml;
+    // Customer Pickup & Privacy Notice
+    html += privacyBoxHtml;
 
-    html += '    </div>'; // end job-body
-    html += '  </div>';   // end job-card
-    html += '</div>';     // end col
+    html += '    </div>';
+    html += '  </div>';
+    html += '</div>';
   }
 
-  if (countShown == 0) {
-    html = '<div class="col-12 text-center p-4 bg-white border rounded text-muted">No vehicle records found for this filter.</div>';
+  if (count == 0) {
+    html = '<div class="col-12 text-center py-5 bg-white border rounded text-muted">No vehicle records found matching this search or filter.</div>';
   }
 
   container.innerHTML = html;
 }
 
 // ----------------------------------------------------------------
-// 7. CHANGE JOB REPAIR STATUS
+// 8. DISPLAY MECHANICS ROSTER (Requirement 3)
+// ----------------------------------------------------------------
+function displayMechanicsRoster() {
+  var tbody = document.getElementById("mechanicsRosterBody");
+  if (!tbody) return;
+
+  var mechanics = getMechanics();
+  var jobs = getJobs();
+  var html = "";
+
+  for (var i = 0; i < mechanics.length; i++) {
+    var m = mechanics[i];
+
+    var loadCount = 0;
+    for (var j = 0; j < jobs.length; j++) {
+      if (jobs[j].mechanicId == m.id && (jobs[j].status == "repairing" || jobs[j].status == "awaiting-parts")) {
+        loadCount++;
+      }
+    }
+
+    var isWorking = m.status == "working";
+    var dutyBadge = isWorking ? '<span class="badge bg-success">Working Today</span>' : '<span class="badge bg-secondary">On Leave</span>';
+    var actionBtn = isWorking
+      ? '<button class="btn btn-sm btn-outline-danger" onclick="toggleMechanicDuty(' + m.id + ')">Mark On Leave</button>'
+      : '<button class="btn btn-sm btn-outline-success" onclick="toggleMechanicDuty(' + m.id + ')">Mark Working</button>';
+
+    html += '<tr>';
+    html += '  <td><strong>' + m.name + '</strong></td>';
+    html += '  <td><span class="badge bg-light text-dark border">' + m.specialty + '</span></td>';
+    html += '  <td>' + m.phone + '</td>';
+    html += '  <td>' + dutyBadge + '</td>';
+    html += '  <td><span class="badge bg-primary">' + loadCount + ' Active Vehicles</span></td>';
+    html += '  <td class="text-end">' + actionBtn + '</td>';
+    html += '</tr>';
+  }
+
+  tbody.innerHTML = html;
+}
+
+function toggleMechanicDuty(mechanicId) {
+  var mechanics = getMechanics();
+  for (var i = 0; i < mechanics.length; i++) {
+    if (mechanics[i].id == mechanicId) {
+      mechanics[i].status = (mechanics[i].status == "working") ? "leave" : "working";
+      break;
+    }
+  }
+  saveMechanics(mechanics);
+  updateTopCounters();
+  fillMechanicDropdown();
+  displayMechanicsRoster();
+}
+
+// ----------------------------------------------------------------
+// 9. DISPLAY CUSTOMERS DIRECTORY
+// ----------------------------------------------------------------
+function displayCustomers() {
+  var tbody = document.getElementById("customersDirectoryBody");
+  if (!tbody) return;
+
+  var jobs = getJobs();
+  var html = "";
+
+  for (var i = 0; i < jobs.length; i++) {
+    var job = jobs[i];
+    html += '<tr>';
+    html += '  <td><strong>' + job.customerName + '</strong></td>';
+    html += '  <td><i class="bi bi-telephone text-primary me-1"></i>' + job.customerPhone + '</td>';
+    html += '  <td>' + job.vehicleModel + ' (' + job.vehicleType + ')</td>';
+    html += '  <td><span class="plate-badge">' + job.plateNumber + '</span></td>';
+    html += '  <td><span class="badge bg-secondary">' + job.status.toUpperCase() + '</span></td>';
+    html += '  <td class="text-end">';
+    html += '    <a href="tel:' + job.customerPhone + '" class="btn btn-sm btn-outline-success py-1 px-2"><i class="bi bi-telephone me-1"></i>Call</a>';
+    html += '  </td>';
+    html += '</tr>';
+  }
+
+  tbody.innerHTML = html;
+}
+
+// ----------------------------------------------------------------
+// 10. UPDATE REPAIR STATUS & APPROVALS
 // ----------------------------------------------------------------
 function updateStatus(jobId, newStatus, percent) {
   var jobs = getJobs();
@@ -491,20 +617,17 @@ function updateStatus(jobId, newStatus, percent) {
     if (jobs[i].id == jobId) {
       jobs[i].status = newStatus;
       jobs[i].progressPercent = percent;
-      if (newStatus == "ready") {
-        jobs[i].estimatedDuration = "Ready for Pickup";
-      }
+      if (newStatus == "ready") jobs[i].estimatedDuration = "Ready for Pickup";
+      if (newStatus == "repairing") jobs[i].estimatedDuration = "Today by 5:30 PM";
       break;
     }
   }
   saveJobs(jobs);
   updateTopCounters();
+  displayQuickTable();
   displayJobs();
 }
 
-// ----------------------------------------------------------------
-// 8. APPROVE OR DECLINE AN EXTRA DISCOVERED PROBLEM
-// ----------------------------------------------------------------
 function changeIssueApproval(jobId, issueId, newApproval) {
   var jobs = getJobs();
   for (var i = 0; i < jobs.length; i++) {
@@ -520,31 +643,32 @@ function changeIssueApproval(jobId, issueId, newApproval) {
   }
   saveJobs(jobs);
   updateTopCounters();
+  displayQuickTable();
   displayJobs();
 }
 
 // ----------------------------------------------------------------
-// 9. DELETE/ARCHIVE CUSTOMER DATA ON PICKUP (Requirement 4)
+// 11. DELETE CUSTOMER RECORD ON PICKUP (Requirement 4)
 // ----------------------------------------------------------------
 function deleteCustomerJob(jobId) {
-  var confirmDelete = confirm("Has the customer picked up this vehicle and paid the bill?\n\nClick OK to delete/archive this customer personal data according to garage privacy guidelines.");
-  if (confirmDelete) {
+  var ok = confirm("CONFIRM VEHICLE PICKUP & PRIVACY DATA PURGE:\n\nHas the customer collected the vehicle and paid the bill?\n\nClick OK to purge/archive this customer personal data according to garage data privacy guidelines.");
+  if (ok) {
     var jobs = getJobs();
     var newList = [];
     for (var i = 0; i < jobs.length; i++) {
-      if (jobs[i].id != jobId) {
-        newList.push(jobs[i]);
-      }
+      if (jobs[i].id != jobId) newList.push(jobs[i]);
     }
     saveJobs(newList);
     updateTopCounters();
+    displayQuickTable();
     displayJobs();
-    alert("Record deleted. Customer data has been removed from active garage floor.");
+    displayCustomers();
+    alert("Record purged. Customer data has been removed from active garage floor.");
   }
 }
 
 // ----------------------------------------------------------------
-// 10. ADD A NEW VEHICLE (Check-in Form Submit)
+// 12. NEW VEHICLE CHECK-IN FORM SUBMIT
 // ----------------------------------------------------------------
 function handleNewVehicleForm(event) {
   event.preventDefault();
@@ -558,8 +682,8 @@ function handleNewVehicleForm(event) {
   var mechanicSelect = document.getElementById("mechanicSelect");
   var mechanicId = parseInt(mechanicSelect.value);
   var duration = document.getElementById("newEstimatedDuration").value || "Tomorrow 5:00 PM";
-  var baseCost = parseFloat(document.getElementById("newBaseCost").value) || 500;
-  var laborCost = parseFloat(document.getElementById("newLaborCost").value) || 300;
+  var baseCost = parseFloat(document.getElementById("newBaseCost").value) || 800;
+  var laborCost = parseFloat(document.getElementById("newLaborCost").value) || 350;
 
   var mechanics = getMechanics();
   var assignedName = "Unassigned";
@@ -596,17 +720,20 @@ function handleNewVehicleForm(event) {
 
   document.getElementById("newVehicleForm").reset();
 
-  // Close modal
-  var modalElement = document.getElementById("checkinModal");
-  var modalInstance = bootstrap.Modal.getInstance(modalElement);
-  if (modalInstance) modalInstance.hide();
+  var modalEl = document.getElementById("checkinModal");
+  var modalInst = bootstrap.Modal.getInstance(modalEl);
+  if (modalInst) modalInst.hide();
 
   updateTopCounters();
+  displayQuickTable();
   displayJobs();
+  displayMechanicsRoster();
+  displayCustomers();
+  switchAdminTab("repairs");
 }
 
 // ----------------------------------------------------------------
-// 11. ADD EXTRA PROBLEM FOUND BY MECHANIC (Requirement 2)
+// 13. ADD EXTRA DISCOVERED PROBLEM (Requirement 2)
 // ----------------------------------------------------------------
 function openAddIssueModal(jobId) {
   activeJobIdForIssue = jobId;
@@ -615,28 +742,26 @@ function openAddIssueModal(jobId) {
   document.getElementById("issueCost").value = "";
   document.getElementById("issueApproval").value = "pending";
 
-  var modalElement = document.getElementById("addIssueModal");
-  var modalInstance = new bootstrap.Modal(modalElement);
-  modalInstance.show();
+  var modalEl = document.getElementById("addIssueModal");
+  var modalInst = new bootstrap.Modal(modalEl);
+  modalInst.show();
 }
 
 function handleAddIssueForm(event) {
   event.preventDefault();
   if (!activeJobIdForIssue) return;
 
-  var description = document.getElementById("issueDescription").value;
+  var desc = document.getElementById("issueDescription").value;
   var cost = parseFloat(document.getElementById("issueCost").value) || 0;
   var approval = document.getElementById("issueApproval").value;
 
   var jobs = getJobs();
   for (var i = 0; i < jobs.length; i++) {
     if (jobs[i].id == activeJobIdForIssue) {
-      if (!jobs[i].discoveredIssues) {
-        jobs[i].discoveredIssues = [];
-      }
+      if (!jobs[i].discoveredIssues) jobs[i].discoveredIssues = [];
       jobs[i].discoveredIssues.push({
         id: new Date().getTime(),
-        description: description,
+        description: desc,
         estimatedCost: cost,
         approvalStatus: approval
       });
@@ -646,81 +771,23 @@ function handleAddIssueForm(event) {
 
   saveJobs(jobs);
 
-  var modalElement = document.getElementById("addIssueModal");
-  var modalInstance = bootstrap.Modal.getInstance(modalElement);
-  if (modalInstance) modalInstance.hide();
+  var modalEl = document.getElementById("addIssueModal");
+  var modalInst = bootstrap.Modal.getInstance(modalEl);
+  if (modalInst) modalInst.hide();
 
   updateTopCounters();
+  displayQuickTable();
   displayJobs();
 }
 
 // ----------------------------------------------------------------
-// 12. MECHANIC ROSTER MANAGEMENT (Working vs On Leave)
-// ----------------------------------------------------------------
-function openMechanicsModal() {
-  var mechanics = getMechanics();
-  var jobs = getJobs();
-  var tableBody = document.getElementById("mechanicsListContainer");
-  var html = "";
-
-  for (var i = 0; i < mechanics.length; i++) {
-    var m = mechanics[i];
-
-    // Count how many active jobs this mechanic is working on
-    var activeJobsCount = 0;
-    for (var j = 0; j < jobs.length; j++) {
-      if (jobs[j].mechanicId == m.id && (jobs[j].status == "repairing" || jobs[j].status == "awaiting-parts")) {
-        activeJobsCount++;
-      }
-    }
-
-    var isWorking = m.status == "working";
-    var statusBadge = isWorking ? '<span class="badge bg-success">Working Today</span>' : '<span class="badge bg-secondary">On Leave</span>';
-    var actionButton = isWorking
-      ? '<button class="btn btn-sm btn-outline-danger" onclick="toggleMechanicDuty(' + m.id + ')">Mark On Leave</button>'
-      : '<button class="btn btn-sm btn-outline-success" onclick="toggleMechanicDuty(' + m.id + ')">Mark Working</button>';
-
-    html += '<tr>';
-    html += '  <td><strong>' + m.name + '</strong><div class="small text-muted">' + m.phone + '</div></td>';
-    html += '  <td>' + m.specialty + '</td>';
-    html += '  <td>' + statusBadge + '</td>';
-    html += '  <td><span class="badge bg-primary">' + activeJobsCount + ' Active Vehicles</span></td>';
-    html += '  <td class="text-end">' + actionButton + '</td>';
-    html += '</tr>';
-  }
-
-  tableBody.innerHTML = html;
-
-  var modalElement = document.getElementById("mechanicsModal");
-  var modalInstance = new bootstrap.Modal(modalElement);
-  modalInstance.show();
-}
-
-function toggleMechanicDuty(mechanicId) {
-  var mechanics = getMechanics();
-  for (var i = 0; i < mechanics.length; i++) {
-    if (mechanics[i].id == mechanicId) {
-      mechanics[i].status = (mechanics[i].status == "working") ? "leave" : "working";
-      break;
-    }
-  }
-  saveMechanics(mechanics);
-  updateTopCounters();
-  fillMechanicDropdown();
-  openMechanicsModal();
-}
-
-// ----------------------------------------------------------------
-// 13. SHOW INVOICE MODAL (Requirement 5)
+// 14. SHOW INVOICE (Requirement 5)
 // ----------------------------------------------------------------
 function showInvoice(jobId) {
   var jobs = getJobs();
   var job = null;
   for (var i = 0; i < jobs.length; i++) {
-    if (jobs[i].id == jobId) {
-      job = jobs[i];
-      break;
-    }
+    if (jobs[i].id == jobId) { job = jobs[i]; break; }
   }
   if (!job) return;
 
@@ -731,105 +798,105 @@ function showInvoice(jobId) {
       var iss = job.discoveredIssues[k];
       if (iss.approvalStatus == "approved") {
         extraCost += iss.estimatedCost;
-        extraRows += '<tr><td>Extra Finding: ' + iss.description + '</td><td class="text-end">Rs. ' + iss.estimatedCost + '</td></tr>';
+        extraRows += '<tr><td>Inspection Finding: ' + iss.description + '</td><td class="text-end">₹' + iss.estimatedCost.toLocaleString("en-IN") + '</td></tr>';
       }
     }
   }
 
-  var grandTotal = job.baseCost + job.laborCost + extraCost;
+  var total = job.baseCost + job.laborCost + extraCost;
 
-  var invoiceHtml = '';
-  invoiceHtml += '<div class="border p-3 bg-white">';
-  invoiceHtml += '  <div class="d-flex justify-content-between mb-3 border-bottom pb-2">';
-  invoiceHtml += '    <h4 class="text-danger fw-bold"><i class="bi bi-tools me-2"></i>Garage Management System</h4>';
-  invoiceHtml += '    <div class="text-end"><strong>Invoice #' + job.id + '</strong><div class="small text-muted">' + job.createdAt + '</div></div>';
-  invoiceHtml += '  </div>';
-  invoiceHtml += '  <div class="row mb-3">';
-  invoiceHtml += '    <div class="col-6"><strong>Billed To:</strong><br>' + job.customerName + '<br>Phone: ' + job.customerPhone + '<br>Vehicle: ' + job.vehicleModel + ' (' + job.plateNumber + ')</div>';
-  invoiceHtml += '    <div class="col-6 text-end"><strong>Mechanic:</strong> ' + job.mechanicName + '<br>Status: <span class="badge bg-success">' + job.status + '</span><br>Payment: ' + job.paymentStatus + '</div>';
-  invoiceHtml += '  </div>';
-  invoiceHtml += '  <table class="table table-bordered">';
-  invoiceHtml += '    <thead class="table-light"><tr><th>Service / Item</th><th class="text-end">Cost</th></tr></thead>';
-  invoiceHtml += '    <tbody>';
-  invoiceHtml += '      <tr><td>Primary Problem: ' + job.reportedIssue + '</td><td class="text-end">Rs. ' + job.baseCost + '</td></tr>';
-  invoiceHtml += '      <tr><td>Mechanic Labor & Inspection Charges</td><td class="text-end">Rs. ' + job.laborCost + '</td></tr>';
-  invoiceHtml +=         extraRows;
-  invoiceHtml += '      <tr class="table-light fw-bold"><td>GRAND TOTAL</td><td class="text-end text-danger">Rs. ' + grandTotal + '</td></tr>';
-  invoiceHtml += '    </tbody>';
-  invoiceHtml += '  </table>';
-  invoiceHtml += '</div>';
+  var html = '';
+  html += '<div class="border p-3 bg-white rounded">';
+  html += '  <div class="d-flex justify-content-between mb-3 border-bottom pb-2">';
+  html += '    <h4 class="text-danger fw-bold"><i class="bi bi-gear-wide-connected me-2"></i>MechControl</h4>';
+  html += '    <div class="text-end"><strong>Invoice #' + job.id + '</strong><div class="small text-muted">' + job.createdAt + '</div></div>';
+  html += '  </div>';
+  html += '  <div class="row mb-3 small">';
+  html += '    <div class="col-6"><strong>Customer:</strong><br>' + job.customerName + '<br>Phone: ' + job.customerPhone + '<br>Vehicle: ' + job.vehicleModel + ' (' + job.plateNumber + ')</div>';
+  html += '    <div class="col-6 text-end"><strong>Serviced By:</strong><br>' + job.mechanicName + '<br>Status: <span class="badge bg-success">' + job.status.toUpperCase() + '</span><br>Payment: ' + job.paymentStatus + '</div>';
+  html += '  </div>';
+  html += '  <table class="table table-bordered">';
+  html += '    <thead class="table-light small"><tr><th>Service Item / Description</th><th class="text-end">Cost</th></tr></thead>';
+  html += '    <tbody>';
+  html += '      <tr><td>Primary Problem: ' + job.reportedIssue + '</td><td class="text-end">₹' + job.baseCost.toLocaleString("en-IN") + '</td></tr>';
+  html += '      <tr><td>Mechanic Labor & Inspection Charges</td><td class="text-end">₹' + job.laborCost.toLocaleString("en-IN") + '</td></tr>';
+  html +=         extraRows;
+  html += '      <tr class="table-light fw-bold"><td>GRAND TOTAL AMOUNT</td><td class="text-end text-danger">₹' + total.toLocaleString("en-IN") + '</td></tr>';
+  html += '    </tbody>';
+  html += '  </table>';
+  html += '</div>';
 
-  document.getElementById("invoiceModalContent").innerHTML = invoiceHtml;
-  var modalElement = document.getElementById("invoiceModal");
-  var modalInstance = new bootstrap.Modal(modalElement);
-  modalInstance.show();
+  document.getElementById("invoiceModalContent").innerHTML = html;
+  var modalEl = document.getElementById("invoiceModal");
+  var modalInst = new bootstrap.Modal(modalEl);
+  modalInst.show();
 }
 
 // ----------------------------------------------------------------
-// 14. SHOW CUSTOMER PREVIEW (What the customer sees on their phone)
+// 15. CUSTOMER LIVE VIEW PREVIEW
 // ----------------------------------------------------------------
 function showCustomerPreview(jobId) {
   var jobs = getJobs();
   var job = null;
   for (var i = 0; i < jobs.length; i++) {
-    if (jobs[i].id == jobId) {
-      job = jobs[i];
-      break;
-    }
+    if (jobs[i].id == jobId) { job = jobs[i]; break; }
   }
   if (!job) return;
 
-  var previewHtml = '';
-  previewHtml += '<div class="text-center p-3 bg-white border rounded">';
-  previewHtml += '  <div class="badge bg-danger mb-2">Live Vehicle Status</div>';
-  previewHtml += '  <h5 class="fw-bold mb-1">' + job.vehicleModel + '</h5>';
-  previewHtml += '  <div class="badge bg-dark mb-3">' + job.plateNumber + '</div>';
-  previewHtml += '  <div class="p-3 bg-light rounded mb-3">';
-  previewHtml += '    <div class="text-muted small">CURRENT STAGE:</div>';
-  previewHtml += '    <h6 class="fw-bold text-primary text-uppercase mb-2">' + job.status + '</h6>';
-  previewHtml += '    <div class="progress mb-2"><div class="progress-bar bg-success" style="width: ' + job.progressPercent + '%;"></div></div>';
-  previewHtml += '    <div class="small text-muted">Estimated Ready: <strong>' + job.estimatedDuration + '</strong></div>';
-  previewHtml += '  </div>';
-  previewHtml += '  <div class="p-2 border rounded bg-light mb-2 text-start">';
-  previewHtml += '    <small class="text-muted d-block">YOUR ASSIGNED MECHANIC:</small>';
-  previewHtml += '    <strong>' + job.mechanicName + '</strong>';
-  previewHtml += '  </div>';
-  previewHtml += '  <div class="small text-muted mt-2"><i class="bi bi-shield-check text-success me-1"></i>Garage Live Customer Tracking</div>';
-  previewHtml += '</div>';
+  var extra = "";
+  if (job.discoveredIssues && job.discoveredIssues.length > 0) {
+    extra += '<div class="alert alert-warning small text-start mt-2 mb-0"><strong>Mechanic Found Additional Issue:</strong><ul class="mb-0 ps-3">';
+    for (var k = 0; k < job.discoveredIssues.length; k++) {
+      extra += '<li>' + job.discoveredIssues[k].description + ' (₹' + job.discoveredIssues[k].estimatedCost + ') - <strong>' + job.discoveredIssues[k].approvalStatus.toUpperCase() + '</strong></li>';
+    }
+    extra += '</ul></div>';
+  }
 
-  document.getElementById("customerViewContent").innerHTML = previewHtml;
-  var modalElement = document.getElementById("customerViewModal");
-  var modalInstance = new bootstrap.Modal(modalElement);
-  modalInstance.show();
+  var html = '';
+  html += '<div class="text-center p-3 bg-white border rounded">';
+  html += '  <div class="badge bg-danger mb-2">MechControl Live Customer View</div>';
+  html += '  <h5 class="fw-bold mb-1">' + job.vehicleModel + '</h5>';
+  html += '  <div class="badge bg-dark mb-3">' + job.plateNumber + '</div>';
+  html += '  <div class="p-3 bg-light rounded mb-2">';
+  html += '    <small class="text-muted d-block">CURRENT REPAIR STAGE</small>';
+  html += '    <h6 class="fw-bold text-primary text-uppercase mb-2">' + job.status.replace("-", " ") + '</h6>';
+  html += '    <div class="progress mb-2"><div class="progress-bar bg-success" style="width: ' + job.progressPercent + '%;"></div></div>';
+  html += '    <small class="text-muted">Estimated Ready: <strong>' + job.estimatedDuration + '</strong></small>';
+  html += '  </div>';
+  html += '  <div class="p-2 border rounded bg-light text-start mb-2 small">';
+  html += '    <strong>Assigned Mechanic:</strong> ' + job.mechanicName;
+  html += '  </div>';
+  html +=    extra;
+  html += '</div>';
+
+  document.getElementById("customerViewContent").innerHTML = html;
+  var modalEl = document.getElementById("customerViewModal");
+  var modalInst = new bootstrap.Modal(modalEl);
+  modalInst.show();
 }
 
 // ----------------------------------------------------------------
-// 15. BUTTON & SEARCH EVENT LISTENERS
+// 16. EVENT LISTENERS
 // ----------------------------------------------------------------
 function setupButtonListeners() {
-  // Live search input
-  var searchInput = document.getElementById("searchInput");
-  if (searchInput) {
-    searchInput.oninput = function() {
-      currentSearchText = searchInput.value;
+  var search = document.getElementById("searchInput");
+  if (search) {
+    search.oninput = function() {
+      currentSearchText = search.value;
       displayJobs();
     };
   }
 
-  // Filter Buttons (All, In Progress, Ready, etc.)
-  var filterButtons = document.querySelectorAll(".filter-btn");
-  for (var i = 0; i < filterButtons.length; i++) {
-    filterButtons[i].onclick = function() {
-      for (var j = 0; j < filterButtons.length; j++) {
-        filterButtons[j].classList.remove("active");
-      }
+  var pills = document.querySelectorAll(".filter-pill");
+  for (var i = 0; i < pills.length; i++) {
+    pills[i].onclick = function() {
+      for (var j = 0; j < pills.length; j++) pills[j].classList.remove("active");
       this.classList.add("active");
       currentStatusFilter = this.getAttribute("data-status");
       displayJobs();
     };
   }
 
-  // Vehicle Type Dropdown
   var typeSelect = document.getElementById("vehicleTypeFilter");
   if (typeSelect) {
     typeSelect.onchange = function() {
@@ -838,14 +905,9 @@ function setupButtonListeners() {
     };
   }
 
-  // Forms
-  var newVehicleForm = document.getElementById("newVehicleForm");
-  if (newVehicleForm) {
-    newVehicleForm.onsubmit = handleNewVehicleForm;
-  }
+  var newForm = document.getElementById("newVehicleForm");
+  if (newForm) newForm.onsubmit = handleNewVehicleForm;
 
-  var addIssueForm = document.getElementById("addIssueForm");
-  if (addIssueForm) {
-    addIssueForm.onsubmit = handleAddIssueForm;
-  }
+  var issueForm = document.getElementById("addIssueForm");
+  if (issueForm) issueForm.onsubmit = handleAddIssueForm;
 }

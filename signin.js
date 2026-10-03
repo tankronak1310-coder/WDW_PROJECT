@@ -1,5 +1,5 @@
 /* ============================================================
-   signin.js — Garage Management System
+   signin.js — MechControl Sign-In Logic
    Handles: role tab switch, validation, localStorage login check
    ============================================================ */
 
@@ -73,30 +73,55 @@ function validatePassword() {
 }
 
 // ── Live validation on blur ──────────────────────────────────
-fieldEmail   .addEventListener('blur', validateEmail);
+fieldEmail.addEventListener('blur', validateEmail);
 fieldPassword.addEventListener('blur', validatePassword);
 
 // Clear error banner when user starts typing again
-fieldEmail   .addEventListener('input', hideError);
+fieldEmail.addEventListener('input', hideError);
 fieldPassword.addEventListener('input', hideError);
 
 // ── Show / Hide password toggle ──────────────────────────────
 const toggleBtn = document.getElementById('togglePassword');
 const eyeIcon   = document.getElementById('eyeIcon');
 
-toggleBtn.addEventListener('click', () => {
-  const hidden       = fieldPassword.type === 'password';
-  fieldPassword.type = hidden ? 'text' : 'password';
-  eyeIcon.className  = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
-  toggleBtn.setAttribute('aria-label',   hidden ? 'Hide password' : 'Show password');
-  toggleBtn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
-});
+if (toggleBtn && eyeIcon) {
+  toggleBtn.addEventListener('click', () => {
+    const hidden       = fieldPassword.type === 'password';
+    fieldPassword.type = hidden ? 'text' : 'password';
+    eyeIcon.className  = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+    toggleBtn.setAttribute('aria-label',   hidden ? 'Hide password' : 'Show password');
+    toggleBtn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+  });
+}
 
-// ── localStorage helper ──────────────────────────────────────
-
-// Read the users array saved by signup.js
+// ── localStorage helper with Demo Accounts ────────────────────
 function getUsers() {
-  return JSON.parse(localStorage.getItem('gms_users') || '[]');
+  let users = JSON.parse(localStorage.getItem('gms_users') || '[]');
+
+  // Check if default demo admin exists
+  const hasAdmin = users.some(u => u.email === 'admin@mechcontrol.com' || u.email === 'admin@garage.com');
+  if (!hasAdmin) {
+    users.push({
+      name: 'Workshop Admin',
+      email: 'admin@mechcontrol.com',
+      password: 'admin',
+      role: 'admin'
+    });
+  }
+
+  // Check if default demo customer exists
+  const hasCustomer = users.some(u => u.email === 'customer@mechcontrol.com' || u.email === 'alex@email.com');
+  if (!hasCustomer) {
+    users.push({
+      name: 'Rahul Mehta',
+      email: 'customer@mechcontrol.com',
+      password: 'customer',
+      role: 'customer'
+    });
+  }
+
+  localStorage.setItem('gms_users', JSON.stringify(users));
+  return users;
 }
 
 // ── Form Submit ──────────────────────────────────────────────
@@ -114,19 +139,18 @@ form.addEventListener('submit', e => {
     return;
   }
 
-  const selectedRole  = roleInput.value;                        // "admin" or "customer"
+  const selectedRole  = roleInput.value; // "admin" or "customer"
   const enteredEmail  = fieldEmail.value.trim().toLowerCase();
   const enteredPass   = fieldPassword.value;
 
-  // ── Step 1: Load users array from localStorage ──
+  // 1. Load users array from localStorage
   const users = getUsers();
 
-  // ── Step 2: Find a matching user object ──
-  // Must match email + password + role (all three must be correct)
+  // 2. Find a matching user object
   const matchedUser = users.find(u =>
-    u.email    === enteredEmail &&
-    u.password === enteredPass  &&
-    u.role     === selectedRole
+    u.email.toLowerCase() === enteredEmail &&
+    u.password            === enteredPass  &&
+    u.role                === selectedRole
   );
 
   // Show spinner while "checking"
@@ -134,33 +158,33 @@ form.addEventListener('submit', e => {
   submitBtn.innerHTML =
     '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Signing in…';
 
-  setTimeout(() => {   // 600ms — just enough to show the spinner
+  setTimeout(() => {
 
     if (!matchedUser) {
-      // ── No match found – show error ──
       submitBtn.disabled = false;
       submitBtn.innerHTML =
         '<i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Sign In';
-      showError('Invalid email, password, or role. Please try again.');
+      showError('Invalid email, password, or role for ' + selectedRole.toUpperCase() + '. Please try again.');
       fieldPassword.focus();
       return;
     }
 
-    // ── Step 3: Match found – show success screen ──
+    // 3. Match found – show success screen
     const isAdmin = matchedUser.role === 'admin';
 
     const successIcon    = document.getElementById('successIcon');
     const successHeading = document.getElementById('successHeading');
     const successSub     = document.getElementById('successSub');
 
-    // Different icon colour for admin vs customer
-    successIcon.className      = `bi ${isAdmin
-      ? 'bi-shield-check-fill admin-icon'
-      : 'bi-person-check-fill customer-icon'} success-icon`;
-
-    // Greet the user by their actual name from the stored object
-    successHeading.textContent = `Welcome back, ${matchedUser.name}!`;
-    successSub.textContent     = `Signed in as ${isAdmin ? 'Admin' : 'Customer'} — redirecting to your dashboard…`;
+    if (successIcon) {
+      successIcon.className = `bi ${isAdmin ? 'bi-shield-check-fill text-danger' : 'bi-person-check-fill text-success'} success-icon`;
+    }
+    if (successHeading) {
+      successHeading.textContent = `Welcome back, ${matchedUser.name}!`;
+    }
+    if (successSub) {
+      successSub.textContent = `Signed in as ${isAdmin ? 'Admin' : 'Customer'} — loading your MechControl dashboard…`;
+    }
 
     form.style.display       = 'none';
     successMsg.style.display = 'block';
@@ -173,5 +197,5 @@ form.addEventListener('submit', e => {
         : 'customer-dashboard.html';
     }, 1000);
 
-  }, 1000);
+  }, 800);
 });

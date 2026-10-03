@@ -1,588 +1,334 @@
 /* ================================================================
-   style.css — Garage Management System
-   Shared stylesheet for signup.html and signin.html
-   ================================================================
+   style.css — MechControl Design System
+   Consistent, minimal, and professional styling across all pages.
+   ================================================================ */
 
-   TABLE OF CONTENTS
-   -----------------
-   1.  Design Tokens (CSS Variables)
-   2.  Base / Body
-   3.  Hero Banner
-   4.  Accent Bar
-   5.  Card
-   6.  Form Controls (labels, inputs, selects)
-   7.  Eye Toggle Button (show/hide password)
-   8.  Primary Button (.btn-gms-primary)
-   9.  Checkbox Styles
-   10. Inline Validation (field-invalid / field-valid)
-   11. Success Screen (.gms-success)
-   12. Section Divider Label         [signup only]
-   13. Role Pill Selector            [signup only]
-   14. Role Description Box          [signup only]
-   15. Sign-in Footer Link           [signup only]
-   16. Card Title & Subtitle         [signin only]
-   17. Role Tab Switcher             [signin only]
-   18. Divider ("or" line)           [signin only]
-   19. Forgot Password Link          [signin only]
-   20. Sign-up Footer Link           [signin only]
-   21. Error Alert Banner            [signin only]
-   22. Success Icon Colours          [signin only]
-   23. Page Footer                   [signin only]
-   24. Responsive Overrides
-================================================================ */
-
-
-/* ================================================================
-   1. DESIGN TOKENS
-   All brand colours and shared values in one place.
-   Change a value here and it updates everywhere.
-================================================================ */
 :root {
-  --gms-primary:    #e63312;            /* engine-red – main brand colour   */
-  --gms-primary-dk: #b5250d;            /* darker red for hover states       */
-  --gms-dark:       #1a1a2e;            /* deep navy – hero background       */
-  --gms-surface:    #f4f6f9;            /* light grey page background        */
-  --gms-card:       #ffffff;            /* white card background             */
-  --gms-muted:      #6c757d;            /* muted grey for helper text        */
-  --gms-border:     #dee2e6;            /* default input border colour       */
-  --gms-focus:      rgba(230, 51, 18, 0.25); /* red focus ring shadow       */
+  /* Brand Colours */
+  --mc-primary:       #e63312;       /* MechControl Engine Red */
+  --mc-primary-hover: #c4270b;       /* Darker red on hover */
+  --mc-dark:          #0f172a;       /* Deep slate navy */
+  --mc-surface:       #f8fafc;       /* Crisp clean background */
+  --mc-card:          #ffffff;       /* Pure white card surface */
+  --mc-border:        #e2e8f0;       /* Subtle modern border */
+  --mc-text:          #1e293b;       /* High-contrast readable slate text */
+  --mc-muted:         #64748b;       /* Secondary descriptive text */
+  --mc-success:       #10b981;       /* Green for ready/available */
+  --mc-warning:       #f59e0b;       /* Amber for pending/issues */
+  --mc-info:          #0ea5e9;       /* Cyan blue for in progress */
+
+  /* Aliases for backwards compatibility */
+  --gms-primary:      var(--mc-primary);
+  --gms-primary-dk:   var(--mc-primary-hover);
+  --gms-dark:         var(--mc-dark);
+  --gms-surface:      var(--mc-surface);
+  --gms-card:         var(--mc-card);
+  --gms-muted:        var(--mc-muted);
+  --gms-border:       var(--mc-border);
+  --gms-focus:        rgba(230, 51, 18, 0.25);
 }
 
-
-/* ================================================================
-   2. BASE / BODY
-================================================================ */
+/* Base Body */
 body {
-  background-color: var(--gms-surface);
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--mc-surface);
+  color: var(--mc-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-
-/* ================================================================
-   3. HERO BANNER
-   Full-width dark gradient header shown on both pages.
-================================================================ */
-.gms-hero {
-  background: linear-gradient(135deg, var(--gms-dark) 0%, #16213e 60%, #0f3460 100%);
-  color: #fff;
-  padding: 2.5rem 1rem 2rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+/* Universal Brand Navigation */
+.mc-navbar, .gms-navbar {
+  background-color: var(--mc-dark);
+  padding: 0.85rem 1.5rem;
+  border-bottom: 3px solid var(--mc-primary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* Subtle tyre-tread diagonal texture overlay */
-.gms-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(255,255,255,.03) 0px,
-    rgba(255,255,255,.03) 2px,
-    transparent 2px,
-    transparent 12px
-  );
-  pointer-events: none;
-}
-
-.gms-hero .gms-logo-icon {
-  font-size: 3rem;
-  color: var(--gms-primary);
-  filter: drop-shadow(0 2px 6px rgba(230,51,18,.4));
-}
-
-.gms-hero h1 {
-  font-size: 1.75rem;
+.mc-brand, .gms-nav-brand, .gms-navbar-brand {
+  color: #ffffff !important;
   font-weight: 700;
-  letter-spacing: .5px;
-  margin-bottom: .35rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: -0.3px;
 }
 
-.gms-hero p {
-  font-size: .95rem;
-  color: rgba(255,255,255,.75);
-  margin-bottom: 0;
+.mc-brand i, .gms-nav-brand i, .gms-navbar-brand i {
+  color: var(--mc-primary);
+  font-size: 1.35rem;
 }
 
-
-/* ================================================================
-   4. ACCENT BAR
-   Thin red gradient strip that sits directly below the hero.
-================================================================ */
-.gms-accent-bar {
-  height: 4px;
-  background: linear-gradient(90deg, var(--gms-primary), #ff6b47);
-}
-
-
-/* ================================================================
-   5. CARD
-   White rounded panel that wraps the form content.
-================================================================ */
-.gms-card {
-  background: var(--gms-card);
-  border-radius: .75rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,.09);
-  padding: 2.25rem 2rem;
-}
-
-
-/* ================================================================
-   6. FORM CONTROLS
-   Overrides Bootstrap defaults with brand focus ring and sizing.
-================================================================ */
-.form-label {
-  font-size: .875rem;
+.mc-brand-badge {
+  background-color: rgba(230, 51, 18, 0.2);
+  border: 1px solid rgba(230, 51, 18, 0.5);
+  color: #ff765e;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
   font-weight: 600;
-  color: #343a40;
-  margin-bottom: .3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.form-control,
-.form-select {
-  border-color: var(--gms-border);
-  border-radius: .45rem;
-  font-size: .9rem;
-  padding: .55rem .85rem;
-  transition: border-color .2s, box-shadow .2s;
+.mc-nav-link, .gms-nav-link {
+  color: #94a3b8 !important;
+  font-weight: 500;
+  font-size: 0.92rem;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
-/* Brand-coloured focus ring */
-.form-control:focus,
-.form-select:focus {
-  border-color: var(--gms-primary);
-  box-shadow: 0 0 0 3px var(--gms-focus);
+.mc-nav-link:hover, .gms-nav-link:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.mc-nav-link.active, .gms-nav-link.active {
+  color: #ffffff !important;
+  background-color: rgba(230, 51, 18, 0.15);
+  border-left: 2px solid var(--mc-primary);
+}
+
+/* Accent Divider Bar */
+.mc-accent-bar, .gms-accent-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--mc-primary) 0%, #ff6b4a 100%);
+  width: 100%;
+}
+
+/* Hero Section */
+.mc-hero, .gms-hero {
+  background-color: var(--mc-dark);
+  color: #ffffff;
+  text-align: center;
+  padding: 2.75rem 1.25rem 2.25rem;
+  position: relative;
+}
+
+.mc-hero h1, .gms-hero h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.mc-hero p, .gms-hero p {
+  color: #94a3b8;
+  font-size: 1.05rem;
+  margin-bottom: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mc-logo-icon, .gms-logo-icon {
+  font-size: 2.5rem;
+  color: var(--mc-primary);
+  margin-bottom: 0.75rem;
+  display: inline-block;
+}
+
+/* Cards */
+.mc-card, .gms-card {
+  background-color: var(--mc-card);
+  border: 1px solid var(--mc-border);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  margin-bottom: 1.5rem;
+}
+
+.mc-card-title, .gms-card-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--mc-text);
+  margin-bottom: 0.35rem;
+}
+
+.mc-card-sub, .gms-card-sub {
+  color: var(--mc-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Form Controls */
+.form-label {
+  font-weight: 600;
+  font-size: 0.86rem;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+  border: 1px solid var(--mc-border);
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.92rem;
+  color: var(--mc-text);
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--mc-primary);
+  box-shadow: 0 0 0 3px rgba(230, 51, 18, 0.15);
   outline: none;
 }
 
-/* Keep focused input on top of the eye-button inside input-group */
-.input-group .form-control:focus {
-  z-index: 3;
-}
-
-
-/* ================================================================
-   7. EYE TOGGLE BUTTON
-   The show/hide password button attached to password inputs.
-================================================================ */
-.btn-eye {
-  border: 1px solid var(--gms-border);
-  border-left: none;
-  background: #fff;
-  color: var(--gms-muted);
-  border-radius: 0 .45rem .45rem 0;
-  padding: 0 .75rem;
-  cursor: pointer;
-  transition: color .2s;
-}
-
-.btn-eye:hover { color: var(--gms-primary); }
-
-.btn-eye:focus {
-  outline: 2px solid var(--gms-primary);
-  outline-offset: 1px;
-  z-index: 4;
-}
-
-
-/* ================================================================
-   8. PRIMARY BUTTON (.btn-gms-primary)
-   Used for "Create Account" and "Sign In" submit buttons.
-================================================================ */
-.btn-gms-primary {
-  background: var(--gms-primary);
-  border: none;
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: .4px;
-  padding: .7rem 1.5rem;
-  border-radius: .45rem;
-  transition: background .2s, transform .1s, box-shadow .2s;
-  width: 100%;
-  display: block;
-  text-align: center;
-}
-
-.btn-gms-primary:hover {
-  background: var(--gms-primary-dk);
-  box-shadow: 0 4px 14px rgba(230,51,18,.35);
-  transform: translateY(-1px);
-}
-
-.btn-gms-primary:active {
-  transform: translateY(0);
-}
-
-.btn-gms-primary:focus-visible {
-  outline: 3px solid var(--gms-focus);
-  outline-offset: 2px;
-}
-
-.btn-gms-primary:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-
-/* ================================================================
-   9. CHECKBOX STYLES
-   Applied to Terms checkbox (signup) and Remember Me (signin).
-================================================================ */
-.form-check-input:checked {
-  background-color: var(--gms-primary);
-  border-color: var(--gms-primary);
-}
-
-.form-check-input:focus {
-  box-shadow: 0 0 0 3px var(--gms-focus);
-}
-
-
-/* ================================================================
-   10. INLINE VALIDATION
-   .field-invalid — shows error message, red border
-   .field-valid   — shows green border on success
-================================================================ */
-.invalid-feedback {
-  font-size: .8rem;
-  display: none;           /* hidden by default, JS adds .field-invalid */
-}
-
-/* Show error message */
-.field-invalid .invalid-feedback  { display: block; }
-
-/* Red borders on invalid fields */
-.field-invalid .form-control,
-.field-invalid .form-select       { border-color: #dc3545; }
-.field-invalid .btn-eye           { border-color: #dc3545; }
-.field-invalid .form-check-input  { border-color: #dc3545; }
-
-/* Green border on valid fields */
-.field-valid .form-control,
-.field-valid .form-select         { border-color: #198754; }
-
-
-/* ================================================================
-   11. SUCCESS SCREEN (.gms-success)
-   Replaces the form after successful submission on both pages.
-================================================================ */
-.gms-success {
-  display: none;          /* shown by JS after successful submit */
-  text-align: center;
-  padding: 2rem 1rem;
-}
-
-.gms-success .success-icon {
-  font-size: 3.5rem;
-}
-
-
-/* ================================================================
-   12. SECTION DIVIDER LABEL        [signup.html only]
-   Small ALL-CAPS label that separates form sections.
-================================================================ */
-.gms-section-label {
-  font-size: .7rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--gms-muted);
-  border-bottom: 1px solid var(--gms-border);
-  padding-bottom: .4rem;
-  margin-bottom: 1rem;
-}
-
-
-/* ================================================================
-   13. ROLE PILL SELECTOR            [signup.html only]
-   Radio buttons styled as clickable pill/chip toggles.
-================================================================ */
-.role-group {
-  display: flex;
-  gap: .6rem;
-  flex-wrap: wrap;
-}
-
-/* Hide the actual radio input visually */
-.role-group input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The visible pill label */
-.role-group label {
-  cursor: pointer;
-  padding: .5rem 1.3rem;
-  border: 1.5px solid var(--gms-border);
-  border-radius: 2rem;
-  font-size: .875rem;
+/* Primary Button */
+.btn-mc-primary, .btn-gms-primary {
+  background-color: var(--mc-primary);
+  border: 1px solid var(--mc-primary);
+  color: #ffffff !important;
   font-weight: 600;
-  color: var(--gms-muted);
-  background: #fff;
-  transition: all .2s;
-  user-select: none;
-}
-
-/* Active/selected pill */
-.role-group input[type="radio"]:checked + label {
-  background: var(--gms-primary);
-  border-color: var(--gms-primary);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(230,51,18,.3);
-}
-
-/* Hover state */
-.role-group label:hover {
-  border-color: var(--gms-primary);
-  color: var(--gms-primary);
-}
-
-/* Keyboard focus ring on the pill */
-.role-group input[type="radio"]:focus-visible + label {
-  outline: 2px solid var(--gms-primary);
-  outline-offset: 2px;
-}
-
-
-/* ================================================================
-   14. ROLE DESCRIPTION BOX          [signup.html only]
-   Short description shown below the pills after role selection.
-================================================================ */
-.role-desc {
-  font-size: .8rem;
-  color: var(--gms-muted);
-  background: #f8f9fa;
-  border-left: 3px solid var(--gms-primary);
-  border-radius: 0 .35rem .35rem 0;
-  padding: .5rem .75rem;
-  margin-top: .6rem;
-  display: none;           /* shown by JS when a role is selected */
-}
-
-.role-desc.visible {
-  display: block;
-}
-
-
-/* ================================================================
-   15. SIGN-IN FOOTER LINK           [signup.html only]
-   "Already have an account? Sign in here" line at the bottom.
-================================================================ */
-.signin-link {
-  font-size: .875rem;
-  text-align: center;
-  color: var(--gms-muted);
-}
-
-.signin-link a {
-  color: var(--gms-primary);
-  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 6px;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
 }
 
-.signin-link a:hover { text-decoration: underline; }
-
-.signin-link a:focus-visible {
-  outline: 2px solid var(--gms-primary);
-  outline-offset: 2px;
-  border-radius: 2px;
+.btn-mc-primary:hover, .btn-gms-primary:hover {
+  background-color: var(--mc-primary-hover);
+  border-color: var(--mc-primary-hover);
+  box-shadow: 0 4px 12px rgba(230, 51, 18, 0.25);
 }
 
-
-/* ================================================================
-   16. CARD TITLE & SUBTITLE         [signin.html only]
-   "Welcome Back" heading and helper text inside the card.
-================================================================ */
-.gms-card-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--gms-dark);
-  margin-bottom: .25rem;
+.btn-mc-outline {
+  background-color: transparent;
+  border: 1px solid var(--mc-primary);
+  color: var(--mc-primary) !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
 }
 
-.gms-card-sub {
-  font-size: .875rem;
-  color: var(--gms-muted);
-  margin-bottom: 1.75rem;
+.btn-mc-outline:hover {
+  background-color: var(--mc-primary);
+  color: #ffffff !important;
 }
 
+.btn-mc-dark {
+  background-color: var(--mc-dark);
+  border: 1px solid var(--mc-dark);
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
 
-/* ================================================================
-   17. ROLE TAB SWITCHER             [signin.html only]
-   Admin / Customer tab bar at the top of the sign-in form.
-================================================================ */
+.btn-mc-dark:hover {
+  background-color: #1e293b;
+  border-color: #1e293b;
+}
+
+/* Role Selector Tabs in Sign-in */
 .role-tabs {
   display: flex;
-  border: 1.5px solid var(--gms-border);
-  border-radius: .5rem;
-  overflow: hidden;
-  margin-bottom: 1.75rem;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+  gap: 4px;
 }
 
 .role-tab-btn {
   flex: 1;
-  padding: .55rem .5rem;
   border: none;
-  background: #fff;
-  font-size: .875rem;
+  background: transparent;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--gms-muted);
+  color: var(--mc-muted);
+  border-radius: 6px;
   cursor: pointer;
-  transition: background .2s, color .2s;
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .4rem;
+  gap: 0.4rem;
 }
 
-/* Divider between the two tabs */
-.role-tab-btn:not(:last-child) {
-  border-right: 1.5px solid var(--gms-border);
-}
-
-/* Active / selected tab */
 .role-tab-btn.active {
-  background: var(--gms-primary);
-  color: #fff;
+  background-color: #ffffff;
+  color: var(--mc-text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Hover on inactive tab */
-.role-tab-btn:hover:not(.active) {
-  background: #fff3f1;
-  color: var(--gms-primary);
-}
-
-/* Keyboard focus ring */
-.role-tab-btn:focus-visible {
-  outline: 2px solid var(--gms-primary);
-  outline-offset: -2px;
-}
-
-
-/* ================================================================
-   18. DIVIDER ("or" LINE)           [signin.html only]
-   Horizontal rule with centred text between button and footer link.
-================================================================ */
-.gms-divider {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  color: var(--gms-muted);
-  font-size: .8rem;
-  margin: 1.4rem 0;
-}
-
-.gms-divider::before,
-.gms-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--gms-border);
-}
-
-
-/* ================================================================
-   19. FORGOT PASSWORD LINK          [signin.html only]
-================================================================ */
-.forgot-link {
-  font-size: .8rem;
-  color: var(--gms-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.forgot-link:hover { text-decoration: underline; }
-
-.forgot-link:focus-visible {
-  outline: 2px solid var(--gms-primary);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-
-/* ================================================================
-   20. SIGN-UP FOOTER LINK           [signin.html only]
-   "Don't have an account? Create one here" line.
-================================================================ */
-.signup-link {
-  font-size: .875rem;
+/* Success & Alert States */
+.gms-success, .mc-success {
+  display: none;
   text-align: center;
-  color: var(--gms-muted);
+  padding: 1.5rem 0.5rem;
 }
 
-.signup-link a {
-  color: var(--gms-primary);
-  font-weight: 600;
-  text-decoration: none;
+.success-icon {
+  font-size: 3.5rem;
+  color: var(--mc-success);
 }
 
-.signup-link a:hover { text-decoration: underline; }
-
-.signup-link a:focus-visible {
-  outline: 2px solid var(--gms-primary);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-
-/* ================================================================
-   21. ERROR ALERT BANNER            [signin.html only]
-   Red banner shown when login credentials don't match.
-================================================================ */
 .gms-alert {
-  display: none;           /* shown by JS on login failure */
-  border-radius: .45rem;
-  font-size: .875rem;
-  padding: .75rem 1rem;
+  display: none;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
   margin-bottom: 1.25rem;
-  border-left: 4px solid #dc3545;
-  background: #fff5f5;
-  color: #842029;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .gms-alert.visible {
   display: flex;
-  align-items: center;
-  gap: .5rem;
 }
 
-
-/* ================================================================
-   22. SUCCESS ICON COLOURS          [signin.html only]
-   Admin gets brand red; Customer gets Bootstrap blue.
-================================================================ */
-.gms-success .admin-icon    { color: var(--gms-primary); }
-.gms-success .customer-icon { color: #0d6efd; }
-
-
-/* ================================================================
-   23. PAGE FOOTER                   [signin.html only]
-   Copyright bar pinned to the bottom of the page.
-================================================================ */
-footer {
+/* Footer */
+.mc-footer {
   margin-top: auto;
-  padding: 1.25rem;
+  background-color: #ffffff;
+  border-top: 1px solid var(--mc-border);
+  padding: 1.5rem 0;
   text-align: center;
-  font-size: .8rem;
-  color: var(--gms-muted);
+  color: var(--mc-muted);
+  font-size: 0.85rem;
 }
 
+.mc-footer a {
+  color: var(--mc-primary);
+  text-decoration: none;
+}
 
-/* ================================================================
-   24. RESPONSIVE OVERRIDES
-   Small-screen adjustments applied to both pages.
-================================================================ */
-@media (max-width: 575.98px) {
-  /* Tighter card padding on phones */
-  .gms-card {
-    padding: 1.5rem 1.25rem;
-  }
+.mc-footer a:hover {
+  text-decoration: underline;
 }
